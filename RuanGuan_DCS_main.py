@@ -360,6 +360,20 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             self.dialog_historical.close()  # 调用历史弹窗的关闭方法
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
+    @staticmethod  # 静态方法，不依赖实例对象
+    def get_localtime():
+        """获取本地时间的静态方法"""
+        from datetime import datetime , timedelta
+        now = datetime.now()  # 获取当前时间对象
+        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
+        # 返回格式化后的日期和时间字符串
+        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
+
+    def update_time(self):
+        """更新时间显示的方法"""
+        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
+        self.label_106.setText(time_start_str)  # 更新日期标签
+        self.label_107.setText(time_end_str)  # 更新时间标签
 
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
