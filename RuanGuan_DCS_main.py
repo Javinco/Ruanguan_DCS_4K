@@ -9,6 +9,7 @@ from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_alarm import Ui_Dialog_alarm
 from Data_Manager import DataManager, inserter
+from Ruanguan_Curve import RealTimeCurvePlotter
 
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
@@ -91,6 +92,20 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             "192.168.10.30"  # 新增IP参数
         )
 
+        # 添加实时曲线（示例配置）
+        self.curve_plotter = RealTimeCurvePlotter(
+            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory1_1_realtime_data_zdj",
+            params_config={
+                'main_param': 'parameter18',
+                'alarm_upper': 'parameter16',
+                'alarm_lower': 'parameter21',
+                'warning_upper': 'parameter17',
+                'warning_lower': 'parameter20'
+            },
+            y_limits=(-1, 1)
+        )
+
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, table_name, groups_config, ip):
         """启动异步插入线程的方法（工厂方法）"""
@@ -109,7 +124,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 工作完成后销毁worker对象
         worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
         # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)   # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 存储线程引用（防止被Python垃圾回收）
         self.threads[table_name] = (thread, worker)
