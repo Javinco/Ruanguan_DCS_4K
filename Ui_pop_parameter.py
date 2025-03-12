@@ -1924,6 +1924,12 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_105.setLineWidth(2)
         self.label_105.setAlignment(QtCore.Qt.AlignCenter)
         self.label_105.setObjectName("label_105")
+        self.label_106 = QtWidgets.QLabel(self.widget_main)
+        self.label_106.setGeometry(QtCore.QRect(40, 380, 54, 12))
+        self.label_106.setObjectName("label_106")
+        self.label_107 = QtWidgets.QLabel(self.widget_main)
+        self.label_107.setGeometry(QtCore.QRect(750, 380, 54, 12))
+        self.label_107.setObjectName("label_107")
         self.widget_title.raise_()
         self.frame_parameter.raise_()
         self.widget_pop_parameter_curve1.raise_()
@@ -1952,6 +1958,8 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_200.raise_()
         self.label_104.raise_()
         self.label_105.raise_()
+        self.label_106.raise_()
+        self.label_107.raise_()
 
         self.retranslateUi(Dialog_Pop_Parameter)
         self.pushButton_3.clicked.connect(Dialog_Pop_Parameter.showMinimized) # type: ignore
@@ -2108,4 +2116,6 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_200.setText(_translate("Dialog_Pop_Parameter", "变频器电流"))
         self.label_104.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_105.setText(_translate("Dialog_Pop_Parameter", "0.00"))
+        self.label_106.setText(_translate("Dialog_Pop_Parameter", "TextLabel"))
+        self.label_107.setText(_translate("Dialog_Pop_Parameter", "TextLabel"))
 import image_rc

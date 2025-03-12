@@ -4477,6 +4477,32 @@ border-top: 0.5px solid  rgb(0, 0, 0);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="label_106">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>380</y>
+      <width>54</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_107">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>380</y>
+      <width>54</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
    <zorder>widget_title</zorder>
    <zorder>frame_parameter</zorder>
    <zorder>widget_pop_parameter_curve1</zorder>
@@ -4505,6 +4531,8 @@ border-top: 0.5px solid  rgb(0, 0, 0);</string>
    <zorder>label_200</zorder>
    <zorder>label_104</zorder>
    <zorder>label_105</zorder>
+   <zorder>label_106</zorder>
+   <zorder>label_107</zorder>
   </widget>
  </widget>
  <resources>
