@@ -239,22 +239,22 @@
 # familycar = FamilyCar('奔驰', '京A66666', '武大郎')
 # familycar.start()
 # familycar.stop()
-table_name = "factory1_1_realtime_data_jcj"
-update_strategies = {
-    # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-    "factory1_1_realtime_data_jcj": 1,  # 挤出机实时数据
-    "factory1_1_realtime_data_fjj": 2,  # 放卷机实时数据
-    "factory1_1_realtime_data_zdj": 3,  # 自动机实时数据
-    "factory1_1_set_data_jcj": 4,  # 挤出机设定数据
-    "factory1_1_set_data_fjj": 5,  # 放卷机设定数据
-    "factory1_1_set_data_zdj": 6,  # 自动机设定数据
-    "factory1_1_set_data_curve": 7  # 曲线设定数据
-}
-
-# 使用海象运算符 := 在条件判断中同时完成赋值操作
-# 1. 从字典中获取对应表名的更新策略（函数对象）
-# 2. 如果找到对应策略（非None），执行该策略
-if strategy := update_strategies.get(table_name):
-    # 调用对应的更新方法，并传入获取到的数据
-    print(update_strategies.get(table_name))
-    print("strategy", strategy)
+# table_name = "factory1_1_realtime_data_jcj"
+# update_strategies = {
+#     # 键：表名字符串 -> 值：对应的更新方法（函数对象）
+#     "factory1_1_realtime_data_jcj": 1,  # 挤出机实时数据
+#     "factory1_1_realtime_data_fjj": 2,  # 放卷机实时数据
+#     "factory1_1_realtime_data_zdj": 3,  # 自动机实时数据
+#     "factory1_1_set_data_jcj": 4,  # 挤出机设定数据
+#     "factory1_1_set_data_fjj": 5,  # 放卷机设定数据
+#     "factory1_1_set_data_zdj": 6,  # 自动机设定数据
+#     "factory1_1_set_data_curve": 7  # 曲线设定数据
+# }
+#
+# # 使用海象运算符 := 在条件判断中同时完成赋值操作
+# # 1. 从字典中获取对应表名的更新策略（函数对象）
+# # 2. 如果找到对应策略（非None），执行该策略
+# if strategy := update_strategies.get(table_name):
+#     # 调用对应的更新方法，并传入获取到的数据
+#     print(update_strategies.get(table_name))
+#     print("strategy", strategy)
