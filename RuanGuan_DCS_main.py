@@ -44,6 +44,12 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 启动定时器（间隔1000毫秒=1秒）
         self.data_timer.start(1000)
 
+        # 初始化时间功能
+        self.timer = QTimer(self)  # 创建定时器对象
+        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.start(1000)  # 启动定时器（1秒间隔）
+        self.update_time()  # 立即更新时间显示
+
         # 创建线程管理器字典
         self.threads = {}
 
