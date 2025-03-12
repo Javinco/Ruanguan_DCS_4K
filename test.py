@@ -258,3 +258,6 @@
 #     # 调用对应的更新方法，并传入获取到的数据
 #     print(update_strategies.get(table_name))
 #     print("strategy", strategy)
+# 使用海象运算符 := 在条件判断中同时完成赋值操作
+# 1. 从字典中获取对应表名的更新策略（函数对象）
+# 2. 如果找到对应策略（非None），执行该策略
