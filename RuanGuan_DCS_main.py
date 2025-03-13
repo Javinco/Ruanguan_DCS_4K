@@ -70,45 +70,56 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (5, 2, ["parameter10"]),
                 (7, 2, ["parameter11"])
             ],
-            "192.168.10.30"  # 新增IP参数
+            "192.168.155.26"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址103读2寄存器，地址107读4寄存器，地址113读2寄存器），（所有参数一次性写入factory1_1_realtime_data_fjj表）
         self._start_insert_thread(
             "factory1_1_realtime_data_fjj",
             [
-                (103, 2, ["parameter1"]),
-                (107, 4, ["parameter2", "parameter4"]),
-                (113, 2, ["parameter3"])
+                (103, 2, ["parameter12"]),
+                (107, 4, ["parameter13", "parameter15"]),
+                (113, 2, ["parameter14"])
             ],
-            "192.168.10.30"  # 新增IP参数
+            "192.168.155.26"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_realtime_data_zdj表）
         self._start_insert_thread(
             "factory1_1_realtime_data_zdj",
             [
-                (221, 2, ["parameter1"]),
-                (217, 2, ["parameter2"]),
-                (203, 2, ["parameter3"]),
-                (231, 2, ["parameter4"]),
-                (235, 2, ["parameter5"]),
-                (239, 2, ["parameter6"])
+                (221, 2, ["parameter16"]),
+                (217, 2, ["parameter17"]),
+                (203, 2, ["parameter18"]),
+                (231, 2, ["parameter19"]),
+                (235, 2, ["parameter20"]),
+                (239, 2, ["parameter21"])
             ],
-            "192.168.10.30"  # 新增IP参数
+            "192.168.155.26"  # 新增IP参数
+        )
+
+        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_curve表）
+        self._start_insert_thread(
+            "factory1_1_set_data_curve",
+            [
+                (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                (103, 2, ["parameter4"]),
+                (211, 4, ["parameter5", "parameter6"])
+            ],
+            "192.168.155.26"  # 新增IP参数
         )
 
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_1_realtime_data_zdj",
+            table_name="factory1_1_set_data_curve",
             params_config={
-                'curve3': 'parameter18',
-                'curve1': 'parameter16',
-                'curve6': 'parameter21',
-                'curve4': 'parameter19',
-                'curve2': 'parameter17',
-                'curve5': 'parameter20'
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
             y_limits=(-1, 1)
         )
@@ -555,7 +566,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 (237, 4, ["parameter3", "parameter4"]),
                 (1, 2, ["parameter5"])
             ],
-            "192.168.10.30"  # 新增IP参数
+            "192.168.155.26"  # 新增IP参数
         )
 
     # ------------------------- 线程启动方法 -------------------------
