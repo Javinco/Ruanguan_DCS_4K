@@ -98,19 +98,36 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             "192.168.10.30"  # 新增IP参数
         )
 
-        # 添加实时曲线（示例配置）
+        # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             table_name="factory1_1_realtime_data_zdj",
             params_config={
-                'main_param': 'parameter18',
-                'alarm_upper': 'parameter16',
-                'alarm_lower': 'parameter21',
-                'warning_upper': 'parameter17',
-                'warning_lower': 'parameter20'
+                'curve3': 'parameter18',
+                'curve1': 'parameter16',
+                'curve6': 'parameter21',
+                'curve4': 'parameter19',
+                'curve2': 'parameter17',
+                'curve5': 'parameter20'
             },
             y_limits=(-1, 1)
         )
+
+        # 添加挤出机参数实时曲线（示例配置）
+        self.curve_jcj = RealTimeCurvePlotter(
+            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory1_1_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+
 
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, table_name, groups_config, ip):

@@ -261,3 +261,15 @@
 # 使用海象运算符 := 在条件判断中同时完成赋值操作
 # 1. 从字典中获取对应表名的更新策略（函数对象）
 # 2. 如果找到对应策略（非None），执行该策略
+
+
+# import time
+# now = time.time()
+# print(now)
+# a = time.localtime()
+# print(a)
+from datetime import datetime,timedelta
+now = datetime.now()
+ago = now - timedelta(minutes=10)
+print(ago.strftime('%H:%M:%S'))
+

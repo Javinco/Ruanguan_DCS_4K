@@ -106,30 +106,45 @@ class RealTimeCurvePlotter(QWidget):
         # 绘制主曲线（青蓝色实线）
         self.axes.plot(
             [now],  # X轴数据（当前时间）
-            [data.get(self.params_config['main_param'], 0)],  # Y轴数据（从数据中获取主参数值）
+            [data.get(self.params_config['curve3'], 0)],  # Y轴数据（从数据中获取主参数值）
             color='#00FFFF',  # 青蓝色
             marker='o',  # 数据点标记为圆形
+            linestyle='-'  # 实线样式
+        )
+        # # 绘制曲线4（绿色实线）
+        # self.axes.plot(
+        #     [now],  # X轴数据（当前时间）
+        #     [data.get(self.params_config['curve4'], 0)],  # Y轴数据（从数据中获取主参数值）
+        #     color='##00FF00',  # 绿色
+        #     marker='o',  # 数据点标记为圆形
+        #     linestyle='-'  # 实线样式
+        # )
+
+        # 绘制报警线（红色实线）
+        self.axes.axhline(
+            y=data.get(self.params_config['curve4'], 0),  # 报警上限值
+            color='#00FF00',    # 红色
             linestyle='-'  # 实线样式
         )
 
         # 绘制报警线（红色实线）
         self.axes.axhline(
-            y=data.get(self.params_config['alarm_upper'], 0),  # 报警上限值
+            y=data.get(self.params_config['curve1'], 0),  # 报警上限值
             color='#FF0000',    # 红色
             linestyle='-'  # 实线样式
         )
         self.axes.axhline(
-            y=data.get(self.params_config['alarm_lower'], 0),   # 报警下限值
+            y=data.get(self.params_config['curve6'], 0),   # 报警下限值
             color='#FF0000',    # 红色
             linestyle='-'   # 实线样式
         )
         self.axes.axhline(
-            y=data.get(self.params_config['warning_upper'], 0),
+            y=data.get(self.params_config['curve2'], 0),
             color='#FFFF00',    # 黄色
             linestyle='-'   # 实线样式
         )
         self.axes.axhline(
-            y=data.get(self.params_config['warning_lower'], 0),
+            y=data.get(self.params_config['curve5'], 0),
             color='#FFFF00',    # 红色
             linestyle='-'   # 实线样式
         )
