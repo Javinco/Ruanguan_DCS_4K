@@ -123,7 +123,7 @@ class RealTimeCurvePlotter(QWidget):
         # 绘制报警线（红色实线）
         self.axes.axhline(
             y=data.get(self.params_config['curve4'], 0),  # 报警上限值
-            color='#00FF00',    # 红色
+            color='#00FF00',    # 绿色
             linestyle='-'  # 实线样式
         )
 
