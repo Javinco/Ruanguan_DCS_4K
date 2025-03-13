@@ -636,6 +636,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def close_all_windows(self):
         """关闭所有窗口的方法"""
+        # 遍历所有线程并停止它们
+        for thread, worker in self.threads.values():
+            worker.stop()  # 停止工作线程
+            thread.quit()  # 退出线程
+            thread.wait()  # 等待线程退出
+
         self.pop_dialog.close()  # 关闭参数弹窗（会自动关闭其子弹窗）
         self.pop_alarm_dialog.close()  # 关闭报警弹窗
         self.close()  # 关闭主窗口
@@ -677,19 +683,27 @@ class InsertWorker(QObject):
         self.table_name = table_name  # 要操作的数据表名
         self.groups_config = groups_config  # 组配置参数
         self.ip = ip  # 网络设备IP地址
+        self._is_running = True  # 新增运行状态标志
 
     def run(self):
         """线程实际执行的方法（不要直接调用，通过信号触发）"""
+        from time import sleep
         try:
-            # 执行实际的插入操作（这是原阻塞操作）
-            inserter.insert_combined_mcgs_data(
-                table_name=self.table_name,
-                groups=self.groups_config,
-                ip=self.ip
-            )
+            while self._is_running: #添加循环结构
+                # 执行实际的插入操作（这是原阻塞操作）
+                inserter.insert_combined_mcgs_data(
+                    table_name=self.table_name,
+                    groups=self.groups_config,
+                    ip=self.ip
+                )
+                sleep(1)  # 每次插入间隔休眠1秒
         finally:
             # 无论成功失败都发送完成信号（保证线程正确退出）
             self.finished.emit()  # type: ignore[attr-defined]
+
+    def stop(self):
+        """停止线程的方法"""
+        self._is_running = False  # 设置标志为False，停止循环
 
 
 # ---------------------------------程序入口---------------------------------
