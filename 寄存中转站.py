@@ -705,3 +705,116 @@
 #         # 格式化输出错误信息（e包含具体错误类型和代码）
 #         print(f"数据库操作失败: {e}")  # 示例输出：数据库操作失败: 1146 (42S02): Table 'xxx' doesn't exist
 #         return None  # 返回空值表示查询失败
+
+
+# 曲线功能，坐标轴X轴有移动bug版本
+# class RealTimeCurvePlotter(QWidget):
+#     def __init__(self, parent_widget, table_name, params_config, y_limits=(-1, 1)):
+#         super().__init__()
+#         self.parent_widget = parent_widget
+#         self.table_name = table_name
+#         self.params_config = params_config
+#         self.y_limits = y_limits
+#         self.data_manager = DataManager()
+#
+#         self.setStyleSheet("background-color: rgb(192, 192, 192);")
+#
+#         self.figure = Figure(facecolor='black')
+#         self.canvas = FigureCanvas(self.figure)
+#         self.axes = self.figure.add_subplot(111)
+#
+#         # 预先计算刻度位置
+#         now = datetime.datetime.now()
+#         x_start = now - datetime.timedelta(minutes=10)
+#         x_end = now
+#         x_ticks = mdates.date2num([x_start + datetime.timedelta(minutes=i) for i in range(0, 11)])
+#         self.fixed_x_ticks = x_ticks
+#         self.fixed_x_ticklabels = [mdates.num2date(t).strftime('%H:%M') for t in x_ticks]
+#
+#         self._init_plot_style()
+#         self._setup_layout()
+#         self._init_timer()
+#
+#     def _setup_layout(self):
+#         layout = QVBoxLayout(self.parent_widget)
+#         layout.setContentsMargins(5, 5, 5, 5)  # 设置边距以显示坐标轴外区域
+#         layout.addWidget(self.canvas)
+#         self.parent_widget.setLayout(layout)
+#
+#     def _init_plot_style(self):
+#         self.axes.set_facecolor('black')
+#         self.axes.tick_params(axis='both', colors='white', width=4, labelsize=8)
+#         self.axes.spines['bottom'].set_color('white')
+#         self.axes.spines['bottom'].set_linewidth(2.0)
+#         self.axes.spines['top'].set_color('white')
+#         self.axes.spines['top'].set_linewidth(1.0)
+#         self.axes.spines['left'].set_color('white')
+#         self.axes.spines['left'].set_linewidth(2.0)
+#         self.axes.spines['right'].set_color('white')
+#         self.axes.spines['right'].set_linewidth(1.0)
+#         self.axes.set_ylim(self.y_limits)
+#         self.axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+#         self.figure.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+#
+#     def _init_timer(self):
+#         # 创建Qt定时器对象
+#         self.timer = QTimer(self)
+#         # 连接定时信号到更新曲线的槽函数
+#         self.timer.timeout.connect(self.update_plot)  # type: ignore[attr-defined]
+#         # 启动定时器（1000毫秒=1秒触发一次）
+#         self.timer.start(1000)
+#
+#     def update_plot(self):
+#         now = datetime.datetime.now()
+#         x_start = now - datetime.timedelta(minutes=10)
+#         x_end = now
+#         data = self.data_manager.get_realtime_data(self.table_name)
+#         if not data:
+#             return
+#
+#         if not hasattr(self, 'time_data'):
+#             self.time_data = []
+#             self.curve3_data = []
+#             self.curve4_data = []
+#
+#         self.time_data.append(now)
+#         self.curve3_data.append(data.get(self.params_config['curve3'], 0))
+#         self.curve4_data.append(data.get(self.params_config['curve4'], 0))
+#
+#         while self.time_data and (now - self.time_data[0]).seconds > 600:
+#             self.time_data.pop(0)
+#             self.curve3_data.pop(0)
+#             self.curve4_data.pop(0)
+#
+#         self.axes.cla()
+#
+#         if len(self.time_data) > 1:
+#             self.axes.plot(
+#                 self.time_data,
+#                 self.curve3_data,
+#                 color='#00FFFF',
+#                 linestyle='-',
+#                 label='Curve3'
+#             )
+#             self.axes.plot(
+#                 self.time_data,
+#                 self.curve4_data,
+#                 color='#00FF00',
+#                 linestyle='-',
+#                 label='Curve4'
+#             )
+#
+#             # 使用固定的X轴刻度位置和标签
+#             self.axes.set_xticks(self.fixed_x_ticks)
+#             self.axes.set_xticklabels(self.fixed_x_ticklabels)
+#
+#         self.axes.axhline(y=data.get(self.params_config['curve1'], 0), color='#FF0000', linestyle='-')
+#         self.axes.axhline(y=data.get(self.params_config['curve6'], 0), color='#FF0000', linestyle='-')
+#         self.axes.axhline(y=data.get(self.params_config['curve2'], 0), color='#FFFF00', linestyle='-')
+#         self.axes.axhline(y=data.get(self.params_config['curve5'], 0), color='#FFFF00', linestyle='-')
+#         self.axes.axhline(y=0, color='#FFFFFF', linestyle='--')
+#
+#         self.axes.set_xlim([x_start, x_end])
+#         self.axes.set_ylim(self.y_limits)
+#
+#         self.canvas.draw()
