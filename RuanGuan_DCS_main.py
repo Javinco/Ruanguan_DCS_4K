@@ -63,9 +63,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             "factory1_1_realtime_data_jcj",
             [
                 (11, 4, ["parameter1", "parameter2"]),
-                (21, 8, ["parameter3", "parameter4", "parameter5", "parameter6"]),
-                (15, 2, ["parameter7"]),
-                (31, 2, ["parameter8"]),
+                (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
                 (1, 2, ["parameter9"]),
                 (5, 2, ["parameter10"]),
                 (7, 2, ["parameter11"])
@@ -88,8 +86,8 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self._start_insert_thread(
             "factory1_1_realtime_data_zdj",
             [
-                (221, 2, ["parameter16"]),
-                (217, 2, ["parameter17"]),
+                (201, 2, ["parameter16"]),
+                (221, 2, ["parameter17"]),
                 (203, 2, ["parameter18"]),
                 (231, 2, ["parameter19"]),
                 (235, 2, ["parameter20"]),
@@ -109,6 +107,36 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             "192.168.155.26"  # 新增IP参数
         )
 
+        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_jcj表）
+        self._start_insert_thread(
+            "factory1_1_set_data_jcj",
+            [
+                (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                (3, 2, ["parameter6"])
+            ],
+            "192.168.155.26"  # 新增IP参数
+        )
+        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_fjj表）
+        self._start_insert_thread(
+            "factory1_1_set_data_fjj",
+            [
+                (101, 2, ["parameter1"]),
+                (105, 2, ["parameter2"]),
+                (123, 2, ["parameter3"])
+            ],
+            "192.168.155.26"  # 新增IP参数
+        )
+        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_zdj表）
+        self._start_insert_thread(
+            "factory1_1_set_data_zdj",
+            [
+                (201, 2, ["parameter1"]),
+                (217, 2, ["parameter2"]),
+                (209, 2, ["parameter3"]),
+                (233, 2, ["parameter4"])
+            ],
+            "192.168.155.26"  # 新增IP参数
+        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
