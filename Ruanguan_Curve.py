@@ -1,10 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.dates as mdates
 from Data_Manager import DataManager
-from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtCore import QTimer
 import datetime
 
 
@@ -22,14 +21,12 @@ class RealTimeCurvePlotter(QWidget):
         self.y_limits = y_limits
         # 创建数据管理器实例（用于数据库操作）
         self.data_manager = DataManager()
-
         # 创建Matplotlib图形对象（设置黑色背景）
         self.figure = Figure(facecolor='black')
         # 创建Qt画布组件，用于显示图形
         self.canvas = FigureCanvas(self.figure)
         # 在图形上添加子图（1行1列第1个图）
         self.axes = self.figure.add_subplot(111)
-
         # 初始化图形样式
         self._init_plot_style()
         # 设置界面布局
@@ -54,9 +51,8 @@ class RealTimeCurvePlotter(QWidget):
 
         # 设置Y轴显示范围
         self.axes.set_ylim(self.y_limits)
-        # 设置X轴时间格式为 小时:分钟
-        self.axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-
+        # 设置X轴时间格式为 小时:分钟:秒
+        self.axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
         # 去除图形边距（让曲线充满整个区域）
         self.figure.subplots_adjust(left=0, right=1, top=1, bottom=0)
         # left = 0：左边距为
@@ -87,73 +83,92 @@ class RealTimeCurvePlotter(QWidget):
         self.timer.start(1000)
 
     def update_plot(self):
-        # 获取当前系统时间
+        # 获取当前系统时间（精确到毫秒）
         now = datetime.datetime.now()
-        # 计算X轴起始时间（当前时间向前10分钟）
+        # 计算X轴起始时间：当前时间往前推10分钟（用于显示时间窗口）
         x_start = now - datetime.timedelta(minutes=10)
-        # X轴结束时间为当前时间
+        # X轴结束时间设置为当前时间（形成右边界）
         x_end = now
-
-        # 从数据库获取实时数据（通过数据管理器）
+        # 通过数据管理器获取实时数据（self.table_name指定数据表）
         data = self.data_manager.get_realtime_data(self.table_name)
-        # 如果没有数据则直接返回
+        # 数据有效性检查：如果没有获取到数据则退出本次更新
         if not data:
             return
-
-        # 清空当前子图内容（准备绘制新数据）
+        # 初始化历史数据存储结构（仅在首次运行时创建）
+        if not hasattr(self, 'time_data'):
+            self.time_data = []  # 存储时间戳的队列
+            self.curve3_data = []  # 存储curve3数值的队列
+            self.curve4_data = []  # 存储curve4数值的队列
+        # 追加最新数据到队列末尾
+        self.time_data.append(now)  # 当前时间戳入队
+        # 从数据字典获取curve3参数值，若不存在则默认为0
+        self.curve3_data.append(data.get(self.params_config['curve3'], 0))
+        # 从数据字典获取curve4参数值，若不存在则默认为0
+        self.curve4_data.append(data.get(self.params_config['curve4'], 0))
+        # 维护数据队列长度（保持10分钟窗口）
+        # while循环会删除超过10分钟（600秒）的旧数据
+        while self.time_data and (now - self.time_data[0]).seconds > 600:
+            self.time_data.pop(0)  # 移除最旧的时间戳
+            self.curve3_data.pop(0)  # 移除对应的curve3数据
+            self.curve4_data.pop(0)  # 移除对应的curve4数据
+        # 清空当前坐标系（准备绘制新帧）
         self.axes.cla()
 
-        # 绘制主曲线（青蓝色实线）
-        self.axes.plot(
-            [now],  # X轴数据（当前时间）
-            [data.get(self.params_config['curve3'], 0)],  # Y轴数据（从数据中获取主参数值）
-            color='#00FFFF',  # 青蓝色
-            marker='o',  # 数据点标记为圆形
+        # 绘制时序曲线（需至少2个数据点才能形成线段）
+        if len(self.time_data) > 1:
+            # 绘制curve3曲线（青蓝色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve3_data,  # Y轴数据序列（curve3数值列表）
+                color='#00FFFF',  # 十六进制颜色码（青蓝色）
+                linestyle='-',  # 线型：实线
+                label='Curve3'  # 图例标签文本
+            )
+            # 绘制curve4曲线（绿色实线）
+            self.axes.plot(
+                self.time_data,
+                self.curve4_data,
+                color='#00FF00',  # 修正后的正确绿色值
+                linestyle='-',
+                label='Curve4'
+            )
+        # 绘制静态报警线（以下为不同参数的报警线）
+        # 红色报警线1（使用curve1参数值）
+        self.axes.axhline(
+            y=data.get(self.params_config['curve1'], 0),  # 从数据获取参数值
+            color='#FF0000',  # 红色
             linestyle='-'  # 实线样式
         )
-        # # 绘制曲线4（绿色实线）
-        # self.axes.plot(
-        #     [now],  # X轴数据（当前时间）
-        #     [data.get(self.params_config['curve4'], 0)],  # Y轴数据（从数据中获取主参数值）
-        #     color='##00FF00',  # 绿色
-        #     marker='o',  # 数据点标记为圆形
-        #     linestyle='-'  # 实线样式
-        # )
-
-        # 绘制报警线（红色实线）
+        # 红色报警线6（使用curve6参数值）
         self.axes.axhline(
-            y=data.get(self.params_config['curve4'], 0),  # 报警上限值
-            color='#00FF00',    # 绿色
-            linestyle='-'  # 实线样式
+            y=data.get(self.params_config['curve6'], 0),
+            color='#FF0000',
+            linestyle='-'
         )
-
-        # 绘制报警线（红色实线）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve1'], 0),  # 报警上限值
-            color='#FF0000',    # 红色
-            linestyle='-'  # 实线样式
-        )
-        self.axes.axhline(
-            y=data.get(self.params_config['curve6'], 0),   # 报警下限值
-            color='#FF0000',    # 红色
-            linestyle='-'   # 实线样式
-        )
+        # 黄色报警线2（使用curve2参数值）
         self.axes.axhline(
             y=data.get(self.params_config['curve2'], 0),
-            color='#FFFF00',    # 黄色
-            linestyle='-'   # 实线样式
+            color='#FFFF00',  # 黄色
+            linestyle='-'
         )
+        # 黄色报警线5（使用curve5参数值）
         self.axes.axhline(
             y=data.get(self.params_config['curve5'], 0),
-            color='#FFFF00',    # 红色
-            linestyle='-'   # 实线样式
+            color='#FFFF00',
+            linestyle='-'
         )
 
-        # 设置X轴时间范围（最近10分钟）
+        # 添加图例（显示曲线标签）
+        self.axes.legend(
+            loc='upper right',  # 图例位置：右上角
+            facecolor='black',  # 背景色：黑色
+            labelcolor='white'  # 文字颜色：白色
+        )
+
+        # 设置X轴显示范围（固定10分钟窗口）
         self.axes.set_xlim([x_start, x_end])
-        # print('起始时间：', x_start, '现在时间：', x_end)
-        # 设置Y轴显示范围
+        # 设置Y轴显示范围（根据初始化时设置的y_limits）
         self.axes.set_ylim(self.y_limits)
 
-        # 重绘画布以显示更新
+        # 强制刷新画布（更新图形界面显示）
         self.canvas.draw()
