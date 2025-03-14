@@ -166,7 +166,7 @@ class DataManager:
             'user': user,  # 登录数据库的用户名凭证
             'password': password,  # 登录数据库的密码凭证
             'database': database,  # 要操作的数据库名称
-            'pool_size': 1,  # 连接池中保持的活跃连接数（防止多线程竞争）
+            'pool_size': 10,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
         self.connection_pool = None  # MySQL连接池对象初始化（替代原有单一连接）
