@@ -132,6 +132,13 @@ class RealTimeCurvePlotter(QWidget):
                 linestyle='-',
                 label='Curve4'
             )
+            # 添加图例（显示曲线标签），将图例添加到条件判断内（只有存在曲线时才会创建图例）
+            self.axes.legend(
+                loc='upper right',  # 图例位置：右上角
+                facecolor='black',  # 背景色：黑色
+                labelcolor='white'  # 文字颜色：白色
+            )
+
         # 绘制静态报警线（以下为不同参数的报警线）
         # 红色报警线1（使用curve1参数值）
         self.axes.axhline(
@@ -156,13 +163,6 @@ class RealTimeCurvePlotter(QWidget):
             y=data.get(self.params_config['curve5'], 0),
             color='#FFFF00',
             linestyle='-'
-        )
-
-        # 添加图例（显示曲线标签）
-        self.axes.legend(
-            loc='upper right',  # 图例位置：右上角
-            facecolor='black',  # 背景色：黑色
-            labelcolor='white'  # 文字颜色：白色
         )
 
         # 设置X轴显示范围（固定10分钟窗口）
