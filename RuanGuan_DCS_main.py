@@ -9,7 +9,7 @@ from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_alarm import Ui_Dialog_alarm
 from Data_Manager import DataManager, inserter
-from Ruanguan_Curve import RealTimeCurvePlotter
+from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter
 
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
@@ -153,7 +153,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeCurvePlotter(
+        self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             table_name="factory1_1_realtime_data_jcj",
             params_config={
@@ -436,6 +436,8 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
         self.label_106.setText(time_start_str)  # 更新日期标签
         self.label_107.setText(time_end_str)  # 更新时间标签
+        self.label_112.setText(time_start_str)  # 更新日期标签
+        self.label_113.setText(time_end_str)  # 更新时间标签
 
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
