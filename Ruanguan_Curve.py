@@ -96,25 +96,57 @@ class RealTimeCurvePlotter(QWidget):
         # 初始化历史数据存储结构（仅在首次运行时创建）
         if not hasattr(self, 'time_data'):
             self.time_data = []  # 存储时间戳的队列
+            self.curve1_data = []  # 存储curve1数值的队列
+            self.curve2_data = []  # 存储curve2数值的队列
             self.curve3_data = []  # 存储curve3数值的队列
             self.curve4_data = []  # 存储curve4数值的队列
+            self.curve5_data = []  # 存储curve5数值的队列
+            self.curve6_data = []  # 存储curve6数值的队列
+
         # 追加最新数据到队列末尾
         self.time_data.append(now)  # 当前时间戳入队
+        # 从数据字典获取curve1参数值，若不存在则默认为0
+        self.curve1_data.append(data.get(self.params_config['curve1'], 0))
+        # 从数据字典获取curve2参数值，若不存在则默认为0
+        self.curve2_data.append(data.get(self.params_config['curve2'], 0))
         # 从数据字典获取curve3参数值，若不存在则默认为0
         self.curve3_data.append(data.get(self.params_config['curve3'], 0))
         # 从数据字典获取curve4参数值，若不存在则默认为0
         self.curve4_data.append(data.get(self.params_config['curve4'], 0))
+        # 从数据字典获取curve5参数值，若不存在则默认为0
+        self.curve5_data.append(data.get(self.params_config['curve5'], 0))
+        # 从数据字典获取curve6参数值，若不存在则默认为0
+        self.curve6_data.append(data.get(self.params_config['curve6'], 0))
         # 维护数据队列长度（保持10分钟窗口）
         # while循环会删除超过10分钟（600秒）的旧数据
         while self.time_data and (now - self.time_data[0]).seconds > 600:
             self.time_data.pop(0)  # 移除最旧的时间戳
+            self.curve1_data.pop(0)  # 移除对应的curve1数据
+            self.curve2_data.pop(0)  # 移除对应的curve2数据
             self.curve3_data.pop(0)  # 移除对应的curve3数据
             self.curve4_data.pop(0)  # 移除对应的curve4数据
+            self.curve5_data.pop(0)  # 移除对应的curve5数据
+            self.curve6_data.pop(0)  # 移除对应的curve6数据
         # 清空当前坐标系（准备绘制新帧）
         self.axes.cla()
 
         # 绘制时序曲线（需至少2个数据点才能形成线段）
         if len(self.time_data) > 1:
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve1_data,  # Y轴数据序列（curve1数值列表）
+                color='#FF0000',  # 十六进制颜色码（红色）
+                linestyle='-',  # 线型：实线
+                label='Curve1'  # 图例标签文本
+            )
+            # 绘制curve2曲线（黄色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve2_data,  # Y轴数据序列（curve2数值列表）
+                color='#FFFF00',  # 十六进制颜色码（黄色）
+                linestyle='-',  # 线型：实线
+                label='Curve2'  # 图例标签文本
+            )
             # 绘制curve3曲线（青蓝色实线）
             self.axes.plot(
                 self.time_data,  # X轴数据序列（时间戳列表）
@@ -125,11 +157,27 @@ class RealTimeCurvePlotter(QWidget):
             )
             # 绘制curve4曲线（绿色实线）
             self.axes.plot(
-                self.time_data,
-                self.curve4_data,
-                color='#00FF00',  # 修正后的正确绿色值
-                linestyle='-',
-                label='Curve4'
+                self.time_data, # X轴数据序列（时间戳列表）
+                self.curve4_data,   # Y轴数据序列（curve3数值列表）
+                color='#00FF00',  # 十六进制颜色码（绿色）
+                linestyle='-',  # 线型：实线
+                label='Curve4'  # 图例标签文本
+            )
+            # 绘制curve5曲线（黄色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve5_data,  # Y轴数据序列（curve5数值列表）
+                color='#FFFF00',  # 十六进制颜色码（黄色）
+                linestyle='-',  # 线型：实线
+                label='Curve6'  # 图例标签文本
+            )
+            # 绘制curve6曲线（红色色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve6_data,  # Y轴数据序列（curve6数值列表）
+                color='#FF0000',  # 十六进制颜色码（红色）
+                linestyle='-',  # 线型：实线
+                label='Curve6'  # 图例标签文本
             )
             # # 添加图例（显示曲线标签），将图例添加到条件判断内（只有存在曲线时才会创建图例）
             # self.axes.legend(
@@ -138,37 +186,6 @@ class RealTimeCurvePlotter(QWidget):
             #     labelcolor='white'  # 文字颜色：白色
             # )
 
-        # 绘制静态报警线（以下为不同参数的报警线）
-        # 红色报警线1（使用curve1参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve1'], 0),  # 从数据获取参数值
-            color='#FF0000',  # 红色
-            linestyle='-'  # 实线样式
-        )
-        # 红色报警线6（使用curve6参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve6'], 0),
-            color='#FF0000',
-            linestyle='-'
-        )
-        # 黄色报警线2（使用curve2参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve2'], 0),
-            color='#FFFF00',  # 黄色
-            linestyle='-'
-        )
-        # 黄色报警线5（使用curve5参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve5'], 0),
-            color='#FFFF00',
-            linestyle='-'
-        )
-        # 白色基准线（恒为零）
-        self.axes.axhline(
-            y=0,
-            color='#FFFFFF',  # 白色
-            linestyle='--'
-        )
         # 设置X轴显示范围（固定10分钟窗口）
         self.axes.set_xlim([x_start, x_end])
         # 设置Y轴显示范围（根据初始化时设置的y_limits）
@@ -453,25 +470,57 @@ class RealTimeMainWindowCurve1(QWidget):
         # 初始化历史数据存储结构（仅在首次运行时创建）
         if not hasattr(self, 'time_data'):
             self.time_data = []  # 存储时间戳的队列
+            self.curve1_data = []  # 存储curve1数值的队列
+            self.curve2_data = []  # 存储curve2数值的队列
             self.curve3_data = []  # 存储curve3数值的队列
             self.curve4_data = []  # 存储curve4数值的队列
+            self.curve5_data = []  # 存储curve5数值的队列
+            self.curve6_data = []  # 存储curve6数值的队列
+
         # 追加最新数据到队列末尾
         self.time_data.append(now)  # 当前时间戳入队
+        # 从数据字典获取curve1参数值，若不存在则默认为0
+        self.curve1_data.append(data.get(self.params_config['curve1'], 0))
+        # 从数据字典获取curve2参数值，若不存在则默认为0
+        self.curve2_data.append(data.get(self.params_config['curve2'], 0))
         # 从数据字典获取curve3参数值，若不存在则默认为0
         self.curve3_data.append(data.get(self.params_config['curve3'], 0))
         # 从数据字典获取curve4参数值，若不存在则默认为0
         self.curve4_data.append(data.get(self.params_config['curve4'], 0))
+        # 从数据字典获取curve5参数值，若不存在则默认为0
+        self.curve5_data.append(data.get(self.params_config['curve5'], 0))
+        # 从数据字典获取curve6参数值，若不存在则默认为0
+        self.curve6_data.append(data.get(self.params_config['curve6'], 0))
         # 维护数据队列长度（保持10分钟窗口）
         # while循环会删除超过10分钟（600秒）的旧数据
         while self.time_data and (now - self.time_data[0]).seconds > 600:
             self.time_data.pop(0)  # 移除最旧的时间戳
+            self.curve1_data.pop(0)  # 移除对应的curve1数据
+            self.curve2_data.pop(0)  # 移除对应的curve2数据
             self.curve3_data.pop(0)  # 移除对应的curve3数据
             self.curve4_data.pop(0)  # 移除对应的curve4数据
+            self.curve5_data.pop(0)  # 移除对应的curve5数据
+            self.curve6_data.pop(0)  # 移除对应的curve6数据
         # 清空当前坐标系（准备绘制新帧）
         self.axes.cla()
 
         # 绘制时序曲线（需至少2个数据点才能形成线段）
         if len(self.time_data) > 1:
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve1_data,  # Y轴数据序列（curve1数值列表）
+                color='#FF0000',  # 十六进制颜色码（红色）
+                linestyle='-',  # 线型：实线
+                label='Curve1'  # 图例标签文本
+            )
+            # 绘制curve2曲线（黄色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve2_data,  # Y轴数据序列（curve2数值列表）
+                color='#FFFF00',  # 十六进制颜色码（黄色）
+                linestyle='-',  # 线型：实线
+                label='Curve2'  # 图例标签文本
+            )
             # 绘制curve3曲线（青蓝色实线）
             self.axes.plot(
                 self.time_data,  # X轴数据序列（时间戳列表）
@@ -482,11 +531,27 @@ class RealTimeMainWindowCurve1(QWidget):
             )
             # 绘制curve4曲线（绿色实线）
             self.axes.plot(
-                self.time_data,
-                self.curve4_data,
-                color='#00FF00',  # 修正后的正确绿色值
-                linestyle='-',
-                label='Curve4'
+                self.time_data, # X轴数据序列（时间戳列表）
+                self.curve4_data,   # Y轴数据序列（curve3数值列表）
+                color='#00FF00',  # 十六进制颜色码（绿色）
+                linestyle='-',  # 线型：实线
+                label='Curve4'  # 图例标签文本
+            )
+            # 绘制curve5曲线（黄色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve5_data,  # Y轴数据序列（curve5数值列表）
+                color='#FFFF00',  # 十六进制颜色码（黄色）
+                linestyle='-',  # 线型：实线
+                label='Curve6'  # 图例标签文本
+            )
+            # 绘制curve6曲线（红色色实线）
+            self.axes.plot(
+                self.time_data,  # X轴数据序列（时间戳列表）
+                self.curve6_data,  # Y轴数据序列（curve6数值列表）
+                color='#FF0000',  # 十六进制颜色码（红色）
+                linestyle='-',  # 线型：实线
+                label='Curve6'  # 图例标签文本
             )
             # # 添加图例（显示曲线标签），将图例添加到条件判断内（只有存在曲线时才会创建图例）
             # self.axes.legend(
@@ -495,37 +560,6 @@ class RealTimeMainWindowCurve1(QWidget):
             #     labelcolor='white'  # 文字颜色：白色
             # )
 
-        # 绘制静态报警线（以下为不同参数的报警线）
-        # 红色报警线1（使用curve1参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve1'], 0),  # 从数据获取参数值
-            color='#FF0000',  # 红色
-            linestyle='-'  # 实线样式
-        )
-        # 红色报警线6（使用curve6参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve6'], 0),
-            color='#FF0000',
-            linestyle='-'
-        )
-        # 黄色报警线2（使用curve2参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve2'], 0),
-            color='#FFFF00',  # 黄色
-            linestyle='-'
-        )
-        # 黄色报警线5（使用curve5参数值）
-        self.axes.axhline(
-            y=data.get(self.params_config['curve5'], 0),
-            color='#FFFF00',
-            linestyle='-'
-        )
-        # 白色基准线（恒为零）
-        self.axes.axhline(
-            y=0,
-            color='#FFFFFF',  # 白色
-            linestyle='--'
-        )
         # 设置X轴显示范围（固定10分钟窗口）
         self.axes.set_xlim([x_start, x_end])
         # 设置Y轴显示范围（根据初始化时设置的y_limits）

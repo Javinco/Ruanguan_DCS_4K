@@ -68,7 +68,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (5, 2, ["parameter10"]),
                 (7, 2, ["parameter11"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址103读2寄存器，地址107读4寄存器，地址113读2寄存器），（所有参数一次性写入factory1_1_realtime_data_fjj表）
@@ -79,7 +79,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (107, 4, ["parameter13", "parameter15"]),
                 (113, 2, ["parameter14"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_realtime_data_zdj表）
@@ -93,7 +93,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (235, 2, ["parameter20"]),
                 (239, 2, ["parameter21"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_curve表）
@@ -104,7 +104,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (103, 2, ["parameter4"]),
                 (211, 4, ["parameter5", "parameter6"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_jcj表）
@@ -114,7 +114,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
                 (3, 2, ["parameter6"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_fjj表）
         self._start_insert_thread(
@@ -124,7 +124,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (105, 2, ["parameter2"]),
                 (123, 2, ["parameter3"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_zdj表）
         self._start_insert_thread(
@@ -135,7 +135,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (209, 2, ["parameter3"]),
                 (233, 2, ["parameter4"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -596,7 +596,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 (237, 4, ["parameter3", "parameter4"]),
                 (1, 2, ["parameter5"])
             ],
-            "192.168.155.26"  # 新增IP参数
+            "192.168.155.22"  # 新增IP参数
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeMainWindowCurve1(
