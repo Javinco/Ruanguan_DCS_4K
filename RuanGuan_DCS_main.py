@@ -102,7 +102,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             [
                 (203, 6, ["parameter3", "parameter1", "parameter2"]),
                 (103, 2, ["parameter4"]),
-                (211, 4, ["parameter5", "parameter6"])
+                (209, 6, ["parameter7", "parameter5", "parameter6"])
             ],
             "192.168.155.22"  # 新增IP参数
         )
