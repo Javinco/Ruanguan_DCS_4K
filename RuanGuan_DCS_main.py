@@ -9,7 +9,7 @@ from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_alarm import Ui_Dialog_alarm
 from Data_Manager import DataManager, inserter
-from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter
+from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
 
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
@@ -598,6 +598,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ],
             "192.168.155.26"  # 新增IP参数
         )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter = RealTimeMainWindowCurve1(
+            parent_widget=self.curve1,  # 对应UI中的曲线容器
+            table_name="factory1_1_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        # 在初始化曲线后添加事件穿透设置
+        self.curve_plotter.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, table_name, groups_config, ip):
