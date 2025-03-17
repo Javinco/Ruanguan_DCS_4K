@@ -695,16 +695,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
         """获取本地时间的静态方法"""
-        from datetime import datetime
+        from datetime import datetime, timedelta
         now = datetime.now()  # 获取当前时间对象
+        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
         # 返回格式化后的日期和时间字符串
-        return now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S")
+        return now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"),start_time.strftime("%H:%M:%S")
 
     def update_time(self):
         """更新时间显示的方法"""
-        date_str, time_str = self.get_localtime()  # 解包日期时间
+        date_str, time_str , start_time= self.get_localtime()  # 解包日期时间
         self.title_DATA.setText(date_str)  # 更新日期标签
         self.title_time.setText(time_str)  # 更新时间标签
+        self.curve1_lable9_14.setText(start_time)  # 更新日期标签
+        self.curve1_lable9_15.setText(time_str)  # 更新时间标签
+
 
     def show_pop_parameter(self, event):
         """显示参数弹窗的槽函数"""
