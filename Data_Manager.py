@@ -1,4 +1,6 @@
 # 导入MySQL官方连接驱动
+import threading
+
 import mysql.connector
 # 从驱动中导入错误处理模块
 from mysql.connector import Error
@@ -11,7 +13,15 @@ class DataInserter:
     """实时数据插入器（独立维护插入逻辑）
     功能：专门处理实时数据的批量插入操作
     设计考虑：采用mysql-connector连接池实现，与DataManager保持技术栈统一"""
+    _instance = None  # 单例实例
+    _lock = threading.Lock()  # 添加线程锁
 
+    def __new__(cls, *args, **kwargs):
+        with cls._lock:  # 线程安全单例
+            if cls._instance is None:
+                cls._instance = super().__new__(cls)
+                cls._instance.__initialized = False
+            return cls._instance
     def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
         """类初始化构造器
         Args参数:
@@ -20,6 +30,9 @@ class DataInserter:
             password: 数据库访问密码（需按实际环境修改）
             database: 目标数据库名称（默认dcs_data数据控制系统）"""
         # 连接池配置字典（包含所有数据库连接参数）
+        if self.__initialized:
+            return
+        self.__initialized = True
         self.conn_config = {
             'host': host,  # 数据库服务器IP地址或域名
             'user': user,  # 数据库认证用户名
@@ -29,7 +42,6 @@ class DataInserter:
             'pool_size': 10,  # 连接池最大连接数（根据并发量调整）
             'autocommit': True  # 自动提交模式（确保实时数据立即持久化）
         }
-        self.connection_pool = None  # 连接池对象初始化占位（等待_init_pool初始化）
         self._init_pool()  # 立即执行连接池初始化（类实例化时自动完成）
 
     def _init_pool(self):
@@ -180,7 +192,15 @@ class DataManager:
         'factory1_1_set_data_curve',
         'factory1_1_production_data'  # 新增生产数据表
     ]
+    _instance = None  # 单例实例
+    _lock = threading.Lock()  # 添加线程锁
 
+    def __new__(cls, *args, **kwargs):
+        with cls._lock:  # 线程安全单例
+            if cls._instance is None:
+                cls._instance = super().__new__(cls)
+                cls._instance.__initialized = False
+            return cls._instance
     # 初始化方法（构造器）
     def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
         """数据库管理器
@@ -190,6 +210,9 @@ class DataManager:
             password: 数据库密码（需根据实际修改）
             database: 要连接的数据库名称（默认dcs_data）
         """
+        if self.__initialized:
+            return
+        self.__initialized = True
         # 创建配置字典存储连接参数
         self.config = {
             'host': host,  # 数据库服务器的主机名或IP地址
@@ -199,7 +222,6 @@ class DataManager:
             'pool_size': 10,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
-        self.connection_pool = None  # MySQL连接池对象初始化（替代原有单一连接）
         self._init_pool()  # 调用私有方法初始化连接池
 
     def get_data_versions(self):
@@ -298,5 +320,6 @@ class DataManager:
 # # 测试数据查询
 # manager = DataManager()
 # print(manager.get_realtime_data('jcj', 1))
-# 添加模块级实例（在测试块外）
+# 模块级单例实例
 inserter = DataInserter()
+data_manager = DataManager()
