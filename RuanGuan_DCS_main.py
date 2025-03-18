@@ -364,8 +364,9 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
     # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
     def show_dialog_pop_historical_parameter(self):
         self.hide()  # 隐藏当前窗口
-        self.dialog_historical = HistoricalParameterDialog()  # 创建历史数据曲线对话框并传递父对象
-        self.dialog_historical.show()  # 显示弹窗
+        # if not self.dialog_historical:  # 判断是否已存在实例
+        #     self.dialog_historical = HistoricalParameterDialog()
+        self.dialog_historical.show()
 
     def center_dialog(self):
         """将弹窗居中显示的方法"""
@@ -464,8 +465,10 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
     # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
     def show_dialog_pop_parameter(self):
         self.hide()  # 隐藏当前窗口
-        self.dialog_realtime = ParameterDialog()  # 创建实时数据曲线对话框并传递父对象
-        self.dialog_realtime.show()  # 显示弹窗
+        # if not self.dialog_realtime:  # 判断是否已存在实例
+        #     self.dialog_realtime = ParameterDialog()
+        self.dialog_realtime.show()
+
 
     def center_dialog(self):
         """将弹窗居中显示的方法"""
@@ -558,6 +561,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 初始化参数弹窗（使用自定义弹窗类）
         self.pop_dialog = ParameterDialog()
+        # 初始化历史弹窗（使用自定义弹窗类）
+        self.dialog_historical = HistoricalParameterDialog()
+        # 建立实例关联
+        self.pop_dialog.dialog_historical = self.dialog_historical
+        self.dialog_historical.dialog_realtime = self.pop_dialog
         # 初始化报警弹窗（使用自定义弹窗类）
         self.pop_alarm_dialog = AlarmDialog()
 
