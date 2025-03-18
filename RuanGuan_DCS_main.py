@@ -8,7 +8,7 @@ from Ui_MainWindow import Ui_MainWindow
 from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import DataManager, inserter
+from Data_Manager import data_manager, inserter
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
 
 
@@ -36,7 +36,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.center_dialog()  # 初始居中显示
 
         # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         # 创建数据更新定时器（继承自QObject）
         self.data_timer = QTimer(self)
         # 连接定时器信号到更新方法（每秒触发一次）
@@ -54,7 +54,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.threads = {}
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in DataManager.CLASS_TABLES}
+        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 立即触发首次数据加载
         QTimer.singleShot(0, self.update_realtime_data)
 
@@ -575,7 +575,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_time()  # 立即更新时间显示
 
         # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         # 创建数据更新定时器（继承自QObject）
         self.data_timer = QTimer(self)
         # 连接定时器信号到更新方法（每秒触发一次）
@@ -585,7 +585,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 创建线程管理器字典
         self.threads = {}
         # 前端根据CLASS_TABLES自动生成包含所有表名的版本字典
-        self.data_versions = {table: 0 for table in DataManager.CLASS_TABLES}
+        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 立即触发首次数据加载
         QTimer.singleShot(0, self.update_realtime_data)
         # 异步调用，定义七个不连续的寄存器组（地址231读4寄存器，地址237读4寄存器，地址1读2寄存器···），（所有参数一次性写入factory1_1_production_data表）
