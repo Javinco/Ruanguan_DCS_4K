@@ -260,10 +260,10 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_42.setText(str(data.get('parameter9', '')))
         self.label_46.setText(str(data.get('parameter10', '')))
         self.label_50.setText(str(data.get('parameter11', '')))
-        self.lineEdit_24.setText(str(data.get('parameter3', '')))
-        self.lineEdit_54.setText(str(data.get('parameter4', '')))
-        self.lineEdit_57.setText(str(data.get('parameter5', '')))
-        self.lineEdit_56.setText(str(data.get('parameter6', '')))
+        self.label_116.setText(str(data.get('parameter3', '')))
+        self.label_117.setText(str(data.get('parameter4', '')))
+        self.label_118.setText(str(data.get('parameter5', '')))
+        self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
         self.label_105.setText(str(data.get('parameter10', '')))
         print('挤出机实时数据：',
@@ -349,8 +349,8 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
         self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.lineEdit_49.setText(str(data.get('parameter3', '')))
-        self.lineEdit_50.setText(str(data.get('parameter4', '')))
+        self.label_114.setText(str(data.get('parameter3', '')))
+        self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
         self.lineEdit_52.setText(str(data.get('parameter6', '')))
         print('曲线设定实时数据：',

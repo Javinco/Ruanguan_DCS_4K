@@ -3914,32 +3914,6 @@ color: rgb(0, 0, 0);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_49">
-    <property name="geometry">
-     <rect>
-      <x>305</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding: 0;
-background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>0.00</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_193">
     <property name="geometry">
      <rect>
@@ -3966,32 +3940,6 @@ color: rgb(0, 0, 0);</string>
     </property>
     <property name="text">
      <string>张力百分比</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_50">
-    <property name="geometry">
-     <rect>
-      <x>425</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding: 0;
-background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>0.00</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -4142,32 +4090,6 @@ color: rgb(0, 0, 0);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_54">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding: 0;
-background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>000.00</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_196">
     <property name="geometry">
      <rect>
@@ -4194,32 +4116,6 @@ color: rgb(0, 0, 0);</string>
     </property>
     <property name="text">
      <string>温区2</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_56">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding: 0;
-background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>000.00</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -4328,58 +4224,6 @@ color: rgb(0, 0, 0);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(0, 0, 0);</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_24">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding: 0;
-background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>000.00</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_57">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>20</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding: 0;
-background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>000.00</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_200">
@@ -4601,6 +4445,204 @@ border-top: 0.5px solid  rgb(0, 0, 0);</string>
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_114">
+    <property name="geometry">
+     <rect>
+      <x>305</x>
+      <y>440</y>
+      <width>110</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid  rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-top: 0.5px solid  rgb(0, 0, 0);</string>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>0.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_115">
+    <property name="geometry">
+     <rect>
+      <x>425</x>
+      <y>440</y>
+      <width>110</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid  rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-top: 0.5px solid  rgb(0, 0, 0);</string>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>0.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_116">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>840</y>
+      <width>110</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid  rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-top: 0.5px solid  rgb(0, 0, 0);</string>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>000.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_117">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>840</y>
+      <width>110</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid  rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-top: 0.5px solid  rgb(0, 0, 0);</string>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>000.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_118">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>840</y>
+      <width>110</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid  rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-top: 0.5px solid  rgb(0, 0, 0);</string>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>000.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_119">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>840</y>
+      <width>110</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid  rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-top: 0.5px solid  rgb(0, 0, 0);</string>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>000.00</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>widget_title</zorder>
    <zorder>frame_parameter</zorder>
    <zorder>widget_pop_parameter_curve1</zorder>
@@ -4609,23 +4651,17 @@ border-top: 0.5px solid  rgb(0, 0, 0);</string>
    <zorder>label_191</zorder>
    <zorder>lineEdit_48</zorder>
    <zorder>label_192</zorder>
-   <zorder>lineEdit_49</zorder>
    <zorder>label_193</zorder>
-   <zorder>lineEdit_50</zorder>
    <zorder>label_194</zorder>
    <zorder>lineEdit_51</zorder>
    <zorder>label_195</zorder>
    <zorder>lineEdit_52</zorder>
    <zorder>label_95</zorder>
-   <zorder>lineEdit_54</zorder>
    <zorder>label_196</zorder>
-   <zorder>lineEdit_56</zorder>
    <zorder>label_197</zorder>
    <zorder>label_198</zorder>
    <zorder>label_199</zorder>
    <zorder>widget_pop_parameter_curve2</zorder>
-   <zorder>lineEdit_24</zorder>
-   <zorder>lineEdit_57</zorder>
    <zorder>label_200</zorder>
    <zorder>label_104</zorder>
    <zorder>label_105</zorder>
@@ -4637,6 +4673,12 @@ border-top: 0.5px solid  rgb(0, 0, 0);</string>
    <zorder>label_111</zorder>
    <zorder>label_112</zorder>
    <zorder>label_113</zorder>
+   <zorder>label_114</zorder>
+   <zorder>label_115</zorder>
+   <zorder>label_116</zorder>
+   <zorder>label_117</zorder>
+   <zorder>label_118</zorder>
+   <zorder>label_119</zorder>
   </widget>
  </widget>
  <resources>

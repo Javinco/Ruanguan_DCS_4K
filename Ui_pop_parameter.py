@@ -1696,16 +1696,6 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_192.setLineWidth(2)
         self.label_192.setAlignment(QtCore.Qt.AlignCenter)
         self.label_192.setObjectName("label_192")
-        self.lineEdit_49 = QtWidgets.QLineEdit(self.widget_main)
-        self.lineEdit_49.setGeometry(QtCore.QRect(305, 440, 110, 35))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.lineEdit_49.setFont(font)
-        self.lineEdit_49.setStyleSheet("padding: 0;\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_49.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_49.setObjectName("lineEdit_49")
         self.label_193 = QtWidgets.QLabel(self.widget_main)
         self.label_193.setGeometry(QtCore.QRect(425, 395, 110, 35))
         font = QtGui.QFont()
@@ -1719,16 +1709,6 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_193.setLineWidth(2)
         self.label_193.setAlignment(QtCore.Qt.AlignCenter)
         self.label_193.setObjectName("label_193")
-        self.lineEdit_50 = QtWidgets.QLineEdit(self.widget_main)
-        self.lineEdit_50.setGeometry(QtCore.QRect(425, 440, 110, 35))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.lineEdit_50.setFont(font)
-        self.lineEdit_50.setStyleSheet("padding: 0;\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_50.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_50.setObjectName("lineEdit_50")
         self.label_194 = QtWidgets.QLabel(self.widget_main)
         self.label_194.setGeometry(QtCore.QRect(545, 395, 110, 35))
         font = QtGui.QFont()
@@ -1788,16 +1768,6 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_95.setLineWidth(2)
         self.label_95.setAlignment(QtCore.Qt.AlignCenter)
         self.label_95.setObjectName("label_95")
-        self.lineEdit_54 = QtWidgets.QLineEdit(self.widget_main)
-        self.lineEdit_54.setGeometry(QtCore.QRect(190, 840, 110, 35))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.lineEdit_54.setFont(font)
-        self.lineEdit_54.setStyleSheet("padding: 0;\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_54.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_54.setObjectName("lineEdit_54")
         self.label_196 = QtWidgets.QLabel(self.widget_main)
         self.label_196.setGeometry(QtCore.QRect(190, 795, 110, 35))
         font = QtGui.QFont()
@@ -1811,16 +1781,6 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_196.setLineWidth(2)
         self.label_196.setAlignment(QtCore.Qt.AlignCenter)
         self.label_196.setObjectName("label_196")
-        self.lineEdit_56 = QtWidgets.QLineEdit(self.widget_main)
-        self.lineEdit_56.setGeometry(QtCore.QRect(430, 840, 110, 35))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.lineEdit_56.setFont(font)
-        self.lineEdit_56.setStyleSheet("padding: 0;\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_56.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_56.setObjectName("lineEdit_56")
         self.label_197 = QtWidgets.QLabel(self.widget_main)
         self.label_197.setGeometry(QtCore.QRect(430, 795, 110, 35))
         font = QtGui.QFont()
@@ -1863,26 +1823,6 @@ class Ui_Dialog_Pop_Parameter(object):
         self.widget_pop_parameter_curve2.setGeometry(QtCore.QRect(65, 500, 720, 280))
         self.widget_pop_parameter_curve2.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.widget_pop_parameter_curve2.setObjectName("widget_pop_parameter_curve2")
-        self.lineEdit_24 = QtWidgets.QLineEdit(self.widget_main)
-        self.lineEdit_24.setGeometry(QtCore.QRect(70, 840, 110, 35))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.lineEdit_24.setFont(font)
-        self.lineEdit_24.setStyleSheet("padding: 0;\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_24.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_24.setObjectName("lineEdit_24")
-        self.lineEdit_57 = QtWidgets.QLineEdit(self.widget_main)
-        self.lineEdit_57.setGeometry(QtCore.QRect(310, 840, 110, 35))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.lineEdit_57.setFont(font)
-        self.lineEdit_57.setStyleSheet("padding: 0;\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
-        self.lineEdit_57.setAlignment(QtCore.Qt.AlignCenter)
-        self.lineEdit_57.setObjectName("lineEdit_57")
         self.label_200 = QtWidgets.QLabel(self.widget_main)
         self.label_200.setGeometry(QtCore.QRect(670, 795, 110, 35))
         font = QtGui.QFont()
@@ -1960,6 +1900,96 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_113 = QtWidgets.QLabel(self.widget_main)
         self.label_113.setGeometry(QtCore.QRect(750, 780, 54, 12))
         self.label_113.setObjectName("label_113")
+        self.label_114 = QtWidgets.QLabel(self.widget_main)
+        self.label_114.setGeometry(QtCore.QRect(305, 440, 110, 35))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label_114.setFont(font)
+        self.label_114.setStyleSheet("padding: 0;\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+"border-left: 1px solid rgb(0, 0, 0);\n"
+"border-bottom: 1px solid  rgb(0, 0, 0);\n"
+"border-right: 1px solid rgb(0, 0, 0);\n"
+"border-top: 0.5px solid  rgb(0, 0, 0);")
+        self.label_114.setLineWidth(2)
+        self.label_114.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_114.setObjectName("label_114")
+        self.label_115 = QtWidgets.QLabel(self.widget_main)
+        self.label_115.setGeometry(QtCore.QRect(425, 440, 110, 35))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label_115.setFont(font)
+        self.label_115.setStyleSheet("padding: 0;\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+"border-left: 1px solid rgb(0, 0, 0);\n"
+"border-bottom: 1px solid  rgb(0, 0, 0);\n"
+"border-right: 1px solid rgb(0, 0, 0);\n"
+"border-top: 0.5px solid  rgb(0, 0, 0);")
+        self.label_115.setLineWidth(2)
+        self.label_115.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_115.setObjectName("label_115")
+        self.label_116 = QtWidgets.QLabel(self.widget_main)
+        self.label_116.setGeometry(QtCore.QRect(70, 840, 110, 35))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label_116.setFont(font)
+        self.label_116.setStyleSheet("padding: 0;\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+"border-left: 1px solid rgb(0, 0, 0);\n"
+"border-bottom: 1px solid  rgb(0, 0, 0);\n"
+"border-right: 1px solid rgb(0, 0, 0);\n"
+"border-top: 0.5px solid  rgb(0, 0, 0);")
+        self.label_116.setLineWidth(2)
+        self.label_116.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_116.setObjectName("label_116")
+        self.label_117 = QtWidgets.QLabel(self.widget_main)
+        self.label_117.setGeometry(QtCore.QRect(190, 840, 110, 35))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label_117.setFont(font)
+        self.label_117.setStyleSheet("padding: 0;\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+"border-left: 1px solid rgb(0, 0, 0);\n"
+"border-bottom: 1px solid  rgb(0, 0, 0);\n"
+"border-right: 1px solid rgb(0, 0, 0);\n"
+"border-top: 0.5px solid  rgb(0, 0, 0);")
+        self.label_117.setLineWidth(2)
+        self.label_117.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_117.setObjectName("label_117")
+        self.label_118 = QtWidgets.QLabel(self.widget_main)
+        self.label_118.setGeometry(QtCore.QRect(310, 840, 110, 35))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label_118.setFont(font)
+        self.label_118.setStyleSheet("padding: 0;\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+"border-left: 1px solid rgb(0, 0, 0);\n"
+"border-bottom: 1px solid  rgb(0, 0, 0);\n"
+"border-right: 1px solid rgb(0, 0, 0);\n"
+"border-top: 0.5px solid  rgb(0, 0, 0);")
+        self.label_118.setLineWidth(2)
+        self.label_118.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_118.setObjectName("label_118")
+        self.label_119 = QtWidgets.QLabel(self.widget_main)
+        self.label_119.setGeometry(QtCore.QRect(430, 840, 110, 35))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.label_119.setFont(font)
+        self.label_119.setStyleSheet("padding: 0;\n"
+"background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);\n"
+"border-left: 1px solid rgb(0, 0, 0);\n"
+"border-bottom: 1px solid  rgb(0, 0, 0);\n"
+"border-right: 1px solid rgb(0, 0, 0);\n"
+"border-top: 0.5px solid  rgb(0, 0, 0);")
+        self.label_119.setLineWidth(2)
+        self.label_119.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_119.setObjectName("label_119")
         self.widget_title.raise_()
         self.frame_parameter.raise_()
         self.widget_pop_parameter_curve1.raise_()
@@ -1968,23 +1998,17 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_191.raise_()
         self.lineEdit_48.raise_()
         self.label_192.raise_()
-        self.lineEdit_49.raise_()
         self.label_193.raise_()
-        self.lineEdit_50.raise_()
         self.label_194.raise_()
         self.lineEdit_51.raise_()
         self.label_195.raise_()
         self.lineEdit_52.raise_()
         self.label_95.raise_()
-        self.lineEdit_54.raise_()
         self.label_196.raise_()
-        self.lineEdit_56.raise_()
         self.label_197.raise_()
         self.label_198.raise_()
         self.label_199.raise_()
         self.widget_pop_parameter_curve2.raise_()
-        self.lineEdit_24.raise_()
-        self.lineEdit_57.raise_()
         self.label_200.raise_()
         self.label_104.raise_()
         self.label_105.raise_()
@@ -1996,6 +2020,12 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_111.raise_()
         self.label_112.raise_()
         self.label_113.raise_()
+        self.label_114.raise_()
+        self.label_115.raise_()
+        self.label_116.raise_()
+        self.label_117.raise_()
+        self.label_118.raise_()
+        self.label_119.raise_()
 
         self.retranslateUi(Dialog_Pop_Parameter)
         self.pushButton_3.clicked.connect(Dialog_Pop_Parameter.showMinimized) # type: ignore
@@ -2133,22 +2163,16 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_191.setText(_translate("Dialog_Pop_Parameter", "上限预警"))
         self.lineEdit_48.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_192.setText(_translate("Dialog_Pop_Parameter", "管径差值"))
-        self.lineEdit_49.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_193.setText(_translate("Dialog_Pop_Parameter", "张力百分比"))
-        self.lineEdit_50.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_194.setText(_translate("Dialog_Pop_Parameter", "下限预警"))
         self.lineEdit_51.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_195.setText(_translate("Dialog_Pop_Parameter", "下限报警"))
         self.lineEdit_52.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_95.setText(_translate("Dialog_Pop_Parameter", "温区1"))
-        self.lineEdit_54.setText(_translate("Dialog_Pop_Parameter", "000.00"))
         self.label_196.setText(_translate("Dialog_Pop_Parameter", "温区2"))
-        self.lineEdit_56.setText(_translate("Dialog_Pop_Parameter", "000.00"))
         self.label_197.setText(_translate("Dialog_Pop_Parameter", "温区4"))
         self.label_198.setText(_translate("Dialog_Pop_Parameter", "挤出机实速"))
         self.label_199.setText(_translate("Dialog_Pop_Parameter", "温区3"))
-        self.lineEdit_24.setText(_translate("Dialog_Pop_Parameter", "000.00"))
-        self.lineEdit_57.setText(_translate("Dialog_Pop_Parameter", "000.00"))
         self.label_200.setText(_translate("Dialog_Pop_Parameter", "变频器电流"))
         self.label_104.setText(_translate("Dialog_Pop_Parameter", "0.00"))
         self.label_105.setText(_translate("Dialog_Pop_Parameter", "0.00"))
@@ -2160,4 +2184,10 @@ class Ui_Dialog_Pop_Parameter(object):
         self.label_111.setText(_translate("Dialog_Pop_Parameter", "200"))
         self.label_112.setText(_translate("Dialog_Pop_Parameter", "TextLabel"))
         self.label_113.setText(_translate("Dialog_Pop_Parameter", "TextLabel"))
+        self.label_114.setText(_translate("Dialog_Pop_Parameter", "0.00"))
+        self.label_115.setText(_translate("Dialog_Pop_Parameter", "0.00"))
+        self.label_116.setText(_translate("Dialog_Pop_Parameter", "000.00"))
+        self.label_117.setText(_translate("Dialog_Pop_Parameter", "000.00"))
+        self.label_118.setText(_translate("Dialog_Pop_Parameter", "000.00"))
+        self.label_119.setText(_translate("Dialog_Pop_Parameter", "000.00"))
 import image_rc
