@@ -1,7 +1,5 @@
-# 导入MySQL官方连接驱动
-import threading
-
-import mysql.connector
+import threading# Python线程模块（实现多线程安全）
+import mysql.connector# 导入MySQL官方连接驱动
 # 从驱动中导入错误处理模块
 from mysql.connector import Error
 # 导入时间处理模块
@@ -9,19 +7,39 @@ from datetime import datetime
 import socket
 import struct
 
+# 定义数据插入器类（单例模式实现）
 class DataInserter:
     """实时数据插入器（独立维护插入逻辑）
     功能：专门处理实时数据的批量插入操作
     设计考虑：采用mysql-connector连接池实现，与DataManager保持技术栈统一"""
-    _instance = None  # 单例实例
-    _lock = threading.Lock()  # 添加线程锁
-
+    # 单例模式相关变量
+    _instance = None  # 存储单例实例的类变量（私有属性）
+    _lock = threading.Lock()  # 添加线程锁（保证线程安全的单例创建）
+    # 第一次实例化                        # 后续实例化请求
+    # ↓                               ↓
+    # ┌─────────────┐                 ┌─────────────┐
+    # │ 获取线程锁    │                 │ 获取线程锁    │
+    # └─────┬───────┘                 └─────┬───────┘
+    # ↓                               ↓
+    # ┌─────────────┐                 ┌─────────────┐
+    # │ 创建新实例    │                 │ 返回现有实例  │
+    # └─────┬───────┘                 └─────┬───────┘
+    # ↓                               ↓
+    # ┌─────────────┐                 ┌─────────────┐
+    # │ 执行__init__ │                 │ 跳过__init__ │
+    # └─────────────┘                 └─────────────┘
+    # 这种双重检查机制是Python单例模式的经典实现，既保证了线程安全，又避免了不必要的资源消耗。
+    # 单例模式实现（__new__方法重写）
     def __new__(cls, *args, **kwargs):
-        with cls._lock:  # 线程安全单例
+        """实例创建方法（线程安全单例模式实现）"""
+        with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
+            # 检查是否已有实例存在
             if cls._instance is None:
+                # 调用父类__new__方法创建新实例
                 cls._instance = super().__new__(cls)
+                # 初始化标记（防止重复初始化）
                 cls._instance.__initialized = False
-            return cls._instance
+            return cls._instance    # 返回单例实例
     def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
         """类初始化构造器
         Args参数:
@@ -30,9 +48,6 @@ class DataInserter:
             password: 数据库访问密码（需按实际环境修改）
             database: 目标数据库名称（默认dcs_data数据控制系统）"""
         # 连接池配置字典（包含所有数据库连接参数）
-        if self.__initialized:
-            return
-        self.__initialized = True
         self.conn_config = {
             'host': host,  # 数据库服务器IP地址或域名
             'user': user,  # 数据库认证用户名
@@ -42,6 +57,17 @@ class DataInserter:
             'pool_size': 10,  # 连接池最大连接数（根据并发量调整）
             'autocommit': True  # 自动提交模式（确保实时数据立即持久化）
         }
+        # （在Python中，每次实例化对象时，__init__会被调用，
+        # 即使__new__返回的是已有的实例。
+        # 因此，即使__new__返回了已经存在的实例，__init__仍然会被再次执行，这可能导致重复初始化，破坏单例的正确性。
+        # 为了避免这种情况，代码中添加了__initialized标志。
+        # 当实例第一次被初始化时，该标志被设置为True，之后每次__init__被调用时，检查该标志，如果已经初始化过，则直接返回，不再执行后续的初始化代码。
+        # 这样可以确保单例实例只被初始化一次，避免资源重复分配或其他副作用。）
+        # 单例初始化控制（防止重复初始化）
+        if self.__initialized:  # 检查是否已经初始化
+            return  # 如果已初始化则直接返回
+        self.__initialized = True   # 设置初始化标记
+
         self._init_pool()  # 立即执行连接池初始化（类实例化时自动完成）
 
     def _init_pool(self):
@@ -196,11 +222,15 @@ class DataManager:
     _lock = threading.Lock()  # 添加线程锁
 
     def __new__(cls, *args, **kwargs):
-        with cls._lock:  # 线程安全单例
+        """实例创建方法（线程安全单例模式实现）"""
+        with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
+            # 检查是否已有实例存在
             if cls._instance is None:
+                # 调用父类__new__方法创建新实例
                 cls._instance = super().__new__(cls)
+                # 初始化标记（防止重复初始化）
                 cls._instance.__initialized = False
-            return cls._instance
+            return cls._instance    # 返回单例实例
     # 初始化方法（构造器）
     def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
         """数据库管理器
@@ -210,9 +240,6 @@ class DataManager:
             password: 数据库密码（需根据实际修改）
             database: 要连接的数据库名称（默认dcs_data）
         """
-        if self.__initialized:
-            return
-        self.__initialized = True
         # 创建配置字典存储连接参数
         self.config = {
             'host': host,  # 数据库服务器的主机名或IP地址
@@ -222,6 +249,10 @@ class DataManager:
             'pool_size': 10,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
+        # 单例初始化控制（防止重复初始化）
+        if self.__initialized:  # 检查是否已经初始化
+            return  # 如果已初始化则直接返回
+        self.__initialized = True   # 设置初始化标记
         self._init_pool()  # 调用私有方法初始化连接池
 
     def get_data_versions(self):
