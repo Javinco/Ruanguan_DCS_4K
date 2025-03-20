@@ -1,5 +1,6 @@
 # 导入系统模块
 import sys
+from datetime import datetime, timedelta
 # 从PyQt5导入需要的组件
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog
 from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal, QThread
@@ -8,8 +9,9 @@ from Ui_MainWindow import Ui_MainWindow
 from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import data_manager, inserter
+from Data_Manager import data_manager, inserter,historical_data_manager
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
+from Ruanguan_Historical import HistoricalCurvePlotter
 
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
@@ -461,6 +463,207 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
+        # 添加历史数据管理器
+        self.hist_data_manager = historical_data_manager
+        self.dateTimeEdit.setDateTime(datetime.now())
+        # 连接查询按钮
+        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 初始化历史曲线
+        self._init_historical_curves()
+
+    def _init_historical_curves(self):
+        """初始化历史曲线组件"""
+        # 管径历史曲线 (创建历史曲线绘制组件)
+        self.hist_curve1 = HistoricalCurvePlotter(
+            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            "factory1_1_set_data_curve",  # 对应的数据库表名
+            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
+                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
+                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
+                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
+                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
+                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+             },  # 曲线参数映射配置
+            (-1, 1)  # Y轴显示范围
+        )
+
+        # 挤出机历史曲线 (第二组历史曲线)
+        self.hist_curve2 = HistoricalCurvePlotter(
+            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
+            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
+             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
+             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
+             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
+             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
+             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+             },  # 参数映射关系
+            (0, 200)  # Y轴最大范围200
+        )
+
+    def handle_historical_query(self):
+        """处理历史查询按钮点击事件的核心方法"""
+        # 获取界面选择的时间（转换为Python datetime对象）
+        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
+        # 计算结束时间（格式化成SQL可识别的字符串）
+        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
+        # 计算起始时间（当前查询时间前推10分钟）
+        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+
+        # # 计算结束时间（格式化成SQL可识别的字符串）
+        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
+        # # 计算起始时间（当前查询时间前推10分钟）
+        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+
+
+        # 更新两条历史曲线（触发重绘）
+        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
+        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
+
+        # 更新参数显示（精确到秒的查询）
+        self._update_parameters(
+        query_time.strftime("%Y-%m-%d %H:%M:%S"),
+        start_time,
+        end_time)
+
+    def _update_parameters(self, exact_time, start_time, end_time):
+        """更新指定时间点的参数显示
+        Args:
+            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
+        """
+        # 定义需要查询的数据表列表
+        tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
+                  "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
+
+        # 遍历所有目标数据表
+        for table in tables:
+            # 执行精确时间点查询（开始时间=结束时间=目标时间）
+            data = self.hist_data_manager.get_nearest_data(
+                table,
+                exact_time,
+                start_time,
+                end_time
+            )
+            # 如果有返回数据（即使只有一条）
+            if data:
+                # 更新界面标签（取第一条/唯一一条数据）
+                self._update_ui_labels(table, data)
+
+    def _update_ui_labels(self, table_name, data):
+        """根据数据表名更新对应的UI标签
+        Args:
+            table_name: 数据表名称（用于分支判断）
+            data: 单条历史数据记录（字典格式）
+        """
+        # 挤出机实时数据表处理分支
+        if table_name == "factory1_1_realtime_data_jcj":
+            # 更新参数1显示（label_10标签）
+            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            # 更新参数2显示（label_14标签）
+            self.label_14.setText(str(data.get('parameter2', '')))
+            self.label_18.setText(str(data.get('parameter3', '')))
+            self.label_22.setText(str(data.get('parameter4', '')))
+            self.label_26.setText(str(data.get('parameter5', '')))
+            self.label_30.setText(str(data.get('parameter6', '')))
+            self.label_34.setText(str(data.get('parameter7', '')))
+            self.label_38.setText(str(data.get('parameter8', '')))
+            self.label_42.setText(str(data.get('parameter9', '')))
+            self.label_46.setText(str(data.get('parameter10', '')))
+            self.label_50.setText(str(data.get('parameter11', '')))
+            self.label_123.setText(str(data.get('parameter3', '')))
+            self.label_127.setText(str(data.get('parameter4', '')))
+            self.label_125.setText(str(data.get('parameter5', '')))
+            self.label_126.setText(str(data.get('parameter6', '')))
+            self.label_128.setText(str(data.get('parameter9', '')))
+            self.label_124.setText(str(data.get('parameter10', '')))
+            print('挤出机历史数据：',
+                  data.get('parameter1', 'N/A'),
+                  data.get('parameter2', 'N/A'),
+                  data.get('parameter3', 'N/A'),
+                  data.get('parameter4', 'N/A'),
+                  data.get('parameter5', 'N/A'),
+                  data.get('parameter6', 'N/A'),
+                  data.get('parameter7', 'N/A'),
+                  data.get('parameter8', 'N/A'),
+                  data.get('parameter9', 'N/A'),
+                  data.get('parameter10', 'N/A'),
+                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
+            # ... 其他参数更新逻辑（保持相同模式）
+
+        # 放卷机实时数据表处理分支
+        elif table_name == "factory1_1_realtime_data_fjj":
+            # 更新参数12显示（label_53标签）
+            self.label_53.setText(str(data.get('parameter12', '')))
+            self.label_57.setText(str(data.get('parameter13', '')))
+            self.label_61.setText(str(data.get('parameter14', '')))
+            self.label_65.setText(str(data.get('parameter15', '')))
+            print('放卷机实时数据：',
+                  data.get('parameter12', 'N/A'),
+                  data.get('parameter13', 'N/A'),
+                  data.get('parameter14', 'N/A'),
+                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
+            # ... 其他参数更新逻辑（保持相同模式）
+        # 自动机历史数据表处理分支
+        elif table_name == "factory1_1_realtime_data_zdj":
+            self.label_73.setText(str(data.get('parameter16', '')))
+            self.label_77.setText(str(data.get('parameter17', '')))
+            self.label_81.setText(str(data.get('parameter18', '')))
+            self.label_85.setText(str(data.get('parameter19', '')))
+            self.label_89.setText(str(data.get('parameter20', '')))
+            self.label_93.setText(str(data.get('parameter21', '')))
+            print('自动机实时数据：',
+                  data.get('parameter16', 'N/A'),
+                  data.get('parameter17', 'N/A'),
+                  data.get('parameter18', 'N/A'),
+                  data.get('parameter19', 'N/A'),
+                  data.get('parameter20', 'N/A'),
+                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+        elif table_name == "factory1_1_set_data_jcj":
+            self.label_104.setText(str(data.get('parameter1', '')))
+            self.label_105.setText(str(data.get('parameter2', '')))
+            self.label_106.setText(str(data.get('parameter3', '')))
+            self.label_107.setText(str(data.get('parameter4', '')))
+            self.label_108.setText(str(data.get('parameter5', '')))
+            self.label_115.setText(str(data.get('parameter6', '')))
+            print('挤出机设定数据：',
+                  data.get('parameter1', 'N/A'),
+                  data.get('parameter2', 'N/A'),
+                  data.get('parameter3', 'N/A'),
+                  data.get('parameter4', 'N/A'),
+                  data.get('parameter5', 'N/A'),
+                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+        elif table_name == "factory1_1_set_data_fjj":
+            self.label_109.setText(str(data.get('parameter1', '')))
+            self.label_110.setText(str(data.get('parameter2', '')))
+            self.label_111.setText(str(data.get('parameter3', '')))
+            print('放卷机设定数据：',
+                  data.get('parameter1', 'N/A'),
+                  data.get('parameter2', 'N/A'),
+                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+        elif table_name == "factory1_1_set_data_zdj":
+            self.label_112.setText(str(data.get('parameter1', '')))
+            self.label_113.setText(str(data.get('parameter2', '')))
+            self.label_114.setText(str(data.get('parameter3', '')))
+            self.label_116.setText(str(data.get('parameter4', '')))
+            print('自动机设定数据：',
+                  data.get('parameter1', 'N/A'),
+                  data.get('parameter2', 'N/A'),
+                  data.get('parameter3', 'N/A'),
+                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+        elif table_name == "factory1_1_set_data_curve":
+            self.label_117.setText(str(data.get('parameter1', '')))
+            self.label_118.setText(str(data.get('parameter2', '')))
+            self.label_114.setText(str(data.get('parameter3', '')))
+            self.label_115.setText(str(data.get('parameter4', '')))
+            self.label_121.setText(str(data.get('parameter5', '')))
+            self.label_122.setText(str(data.get('parameter6', '')))
+            print('曲线设定实时数据：',
+                  data.get('parameter1', 'N/A'),
+                  data.get('parameter2', 'N/A'),
+                  data.get('parameter3', 'N/A'),
+                  data.get('parameter4', 'N/A'),
+                  data.get('parameter5', 'N/A'),
+                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
 
     # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
     def show_dialog_pop_parameter(self):
