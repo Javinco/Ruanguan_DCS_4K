@@ -3,7 +3,7 @@ import mysql.connector# 导入MySQL官方连接驱动
 # 从驱动中导入错误处理模块
 from mysql.connector import Error
 # 导入时间处理模块
-from datetime import datetime
+from datetime import datetime, timedelta
 import socket
 import struct
 
@@ -340,6 +340,143 @@ class DataManager:
             print(f"数据库操作失败: {e}")  # print函数：输出错误信息到控制台
             return None  # 返回空值：表示查询操作失败
 
+class HistoricalDataManager:
+    """历史数据管理器（采用相同连接池配置）
+    功能：独立管理历史数据的数据库连接与查询操作
+    设计特点：与DataManager解耦，但保持表结构一致"""
+
+    # 复用实时数据表结构定义（保持数据结构一致性）
+    CLASS_TABLES = DataManager.CLASS_TABLES  # 从DataManager继承表名常量
+
+    def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
+        """构造器初始化（独立配置连接池）
+        Args参数：
+            host: 数据库服务器地址（默认本地）
+            user: 数据库用户名（root管理员）
+            password: 数据库访问密码
+            database: 目标数据库名称"""
+        # 连接池配置字典（独立配置项）
+        self.config = {
+            'host': host,  # MySQL服务器IP/域名
+            'user': user,  # 数据库认证用户名
+            'password': password,  # 数据库访问密码（需加密存储）
+            'database': database,  # 指定操作数据库
+            'pool_size': 10,  # 连接池容量（根据历史查询并发量设置）
+            'autocommit': True  # 自动提交模式（查询操作无需事务）
+        }
+        self.connection_pool = None  # 连接池对象占位符
+        self._init_pool()  # 立即初始化连接池
+
+    def _init_pool(self):
+        """私有方法：初始化MySQL连接池
+        异常处理：连接失败时终止程序"""
+        try:
+            # 创建独立命名的连接池（避免与实时数据池冲突）
+            self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+                pool_name="hist_pool",  # 连接池唯一标识
+                pool_reset_session=True,  # 重置会话状态后回收连接
+                **self.config  # 解包连接配置参数
+            )
+        except Error as e:  # 捕获数据库驱动异常
+            print(f"历史数据连接池初始化失败: {e}")  # 输出详细错误信息
+            exit(1)  # 严重错误直接退出程序
+
+    def get_historical_data(self, table_name, start_time, end_time):
+        """历史数据查询核心方法
+        Args参数：
+            table_name: 目标数据表名（需存在于CLASS_TABLES）
+            start_time: 查询起始时间（格式：'YYYY-MM-DD HH:MM:SS'）
+            end_time: 查询结束时间（格式同上）
+        Returns返回：
+            list[dict]: 查询结果集（字典列表），无数据返回空列表"""
+
+        # 连接池有效性验证（防御性编程）
+        if not self.connection_pool:
+            raise ConnectionError("连接池未正确初始化")
+
+        # 从连接池获取数据库连接
+        conn = self.connection_pool.get_connection()
+        try:
+            # 创建字典游标（结果以字段名为键）
+            cursor = conn.cursor(dictionary=True)
+
+            # 验证目标表存在性（防止SQL注入）
+            cursor.execute(f"SHOW TABLES LIKE '{table_name}'")
+            if not cursor.fetchone():  # 无匹配表时返回空
+                print(f"[历史数据] 数据表 {table_name} 不存在")
+                return []
+
+            # 构造参数化SQL查询（BETWEEN时间范围查询）
+            query = f"""SELECT * FROM {table_name} 
+                      WHERE timestamp BETWEEN %s AND %s 
+                      ORDER BY timestamp ASC"""  # 按时间正序排列
+            cursor.execute(query, (start_time, end_time))
+
+            # 获取全部结果（无数据时返回空列表）
+            return cursor.fetchall() or []  # or []确保返回列表类型
+
+        except Error as e:  # 捕获数据库操作异常
+            print(f"[历史数据] 查询失败: {e}")
+            return []  # 异常时返回空列表保证程序健壮性
+        finally:  # 资源清理块（确保连接回收）
+            if conn.is_connected():  # 检查连接状态
+                conn.close()  # 归还连接到连接池
+
+    # 在Data_Manager.py的HistoricalDataManager类中修改
+    def get_nearest_data(self, table_name, target_time, start_time=None, end_time=None):
+        """
+        增强版最近数据查询（支持时间范围）
+        :param table_name: 目标数据表名（需存在于CLASS_TABLES白名单）
+        :param target_time: 目标查询时间（datetime对象）
+        :param start_time: 可选时间范围起始（datetime对象）
+        :param end_time: 可选时间范围结束（datetime对象）
+        :return: 字典格式的单条数据记录 | None表示查询失败
+        """
+        # 从连接池获取数据库连接（使用连接池管理避免资源泄漏）
+        conn = self.connection_pool.get_connection()
+        try:
+            # 创建字典游标（查询结果以字段名为键）
+            with conn.cursor(dictionary=True) as cursor:
+                # 表名白名单验证（防御SQL注入攻击）
+                if table_name not in self.CLASS_TABLES:
+                    return None
+
+                # 动态构建WHERE条件（支持时间范围筛选）
+                where_clause = "WHERE 1=1"  # 基础真值条件（便于后续AND拼接）
+                params = []  # SQL参数列表（保证参数化查询安全）
+
+                # 添加时间范围筛选条件（当参数有效时）
+                if start_time and end_time:
+                    where_clause += " AND timestamp BETWEEN %s AND %s"
+                    params.extend([start_time, end_time])  # 扩展参数列表
+
+                # 构建参数化SQL查询语句
+                query = f"""
+                    SELECT * 
+                    FROM {table_name}
+                    {where_clause}
+                    ORDER BY 
+                        # 按时间差绝对值排序（数值越小越接近目标时间）
+                        ABS(TIMESTAMPDIFF(SECOND, %s, timestamp)),
+                        # 次排序条件（时间戳倒序，取最新记录）
+                        timestamp DESC
+                    LIMIT 1  # 仅返回最优解
+                """
+                params.append(target_time)  # 添加目标时间参数
+
+                # 执行参数化查询（防止SQL注入）
+                cursor.execute(query, params)
+                # 获取单条结果（无数据返回None）
+                return cursor.fetchone()
+        except Error as e:
+            # 打印错误日志（保留排查线索）
+            print(f"最近数据查询失败: {e}")
+            return None
+        finally:
+            # 确保连接归还连接池（避免连接泄漏）
+            if conn.is_connected():
+                conn.close()
+
 
 # # 测试函数
 # if __name__ == "__main__":
@@ -354,3 +491,4 @@ class DataManager:
 # 模块级单例实例
 inserter = DataInserter()
 data_manager = DataManager()
+historical_data_manager = HistoricalDataManager()
