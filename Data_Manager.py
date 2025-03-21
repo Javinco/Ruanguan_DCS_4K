@@ -177,7 +177,7 @@ class DataInserter:
 
                     # 浮点数解析（大端字节序）
                     group_params = [
-                        round(struct.unpack('>f', response[9 + i * 4: 13 + i * 4])[0], 2)
+                        round(struct.unpack('>f', response[9 + i * 4: 13 + i * 4])[0], 4)
                         for i in range(reg_count // 2)  # 每4字节解析为一个浮点数
                     ]
                     all_params.extend(group_params)  # 参数值追加到总列表
