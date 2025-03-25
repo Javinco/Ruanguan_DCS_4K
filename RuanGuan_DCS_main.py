@@ -70,7 +70,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (5, 2, ["parameter10"]),
                 (7, 2, ["parameter11"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址103读2寄存器，地址107读4寄存器，地址113读2寄存器），（所有参数一次性写入factory1_1_realtime_data_fjj表）
@@ -81,7 +81,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (107, 4, ["parameter13", "parameter15"]),
                 (113, 2, ["parameter14"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_realtime_data_zdj表）
@@ -95,7 +95,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (235, 2, ["parameter20"]),
                 (239, 2, ["parameter21"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_curve表）
@@ -106,7 +106,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (103, 2, ["parameter4"]),
                 (209, 6, ["parameter7", "parameter5", "parameter6"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
 
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_jcj表）
@@ -116,7 +116,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
                 (3, 2, ["parameter6"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_fjj表）
         self._start_insert_thread(
@@ -126,7 +126,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (105, 2, ["parameter2"]),
                 (123, 2, ["parameter3"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
         # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_zdj表）
         self._start_insert_thread(
@@ -137,7 +137,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 (209, 2, ["parameter3"]),
                 (233, 2, ["parameter4"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -738,8 +738,44 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
+        # 创建线程管理器字典
+        self.threads = {}
         # 设置窗口属性
         self.right_down_dialog()  # 初始右下角显示
+
+
+        self._start_insert_thread(
+            "factory1_1_alarm_data",
+            [
+                (16, 1, ["parameter1"])
+            ],
+            "192.168.156.22"  # 新增IP参数
+        )
+
+    # ------------------------- 线程启动方法 -------------------------
+    def _start_insert_thread(self, table_name, groups_config, ip):
+        """启动异步插入线程的方法（工厂方法）"""
+        # 创建线程对象（QThread实例）
+        thread = QThread()
+        # 创建工作线程实例，传递表名、组配置和IP地址
+        worker = InsertWorker(table_name, groups_config, ip)
+
+        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
+        worker.moveToThread(thread)
+
+        # 信号连接（线程启动时触发工作对象的run方法）
+        thread.started.connect(worker.run_int)  # type: ignore[attr-defined]
+        # 工作完成时退出线程（finished信号来自worker）
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        # 工作完成后销毁worker对象
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        # 线程退出后销毁线程对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 存储线程引用（防止被Python垃圾回收）
+        self.threads[table_name] = (thread, worker)
+        # 启动线程（开始执行事件循环）
+        thread.start()
 
     def right_down_dialog(self):
         """将弹窗居中显示的方法"""
@@ -807,7 +843,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 (237, 4, ["parameter3", "parameter4"]),
                 (1, 2, ["parameter5"])
             ],
-            "192.168.155.22"  # 新增IP参数
+            "192.168.156.22"  # 新增IP参数
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeMainWindowCurve1(
@@ -953,6 +989,22 @@ class InsertWorker(QObject):
             while self._is_running: #添加循环结构
                 # 执行实际的插入操作（这是原阻塞操作）
                 inserter.insert_combined_mcgs_data(
+                    table_name=self.table_name,
+                    groups=self.groups_config,
+                    ip=self.ip
+                )
+                sleep(1)  # 每次插入间隔休眠1秒
+        finally:
+            # 无论成功失败都发送完成信号（保证线程正确退出）
+            self.finished.emit()  # type: ignore[attr-defined]
+
+    def run_int(self):
+        """线程实际执行的方法（不要直接调用，通过信号触发）"""
+        from time import sleep
+        try:
+            while self._is_running: #添加循环结构
+                # 执行实际的插入操作（这是原阻塞操作）
+                inserter.insert_combined_mcgs_int_data(
                     table_name=self.table_name,
                     groups=self.groups_config,
                     ip=self.ip
