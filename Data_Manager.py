@@ -1,4 +1,6 @@
 import threading# Python线程模块（实现多线程安全）
+from random import randint
+
 import mysql.connector# 导入MySQL官方连接驱动
 # 从驱动中导入错误处理模块
 from mysql.connector import Error
@@ -91,7 +93,8 @@ class DataInserter:
                                   groups: list,
                                   ip='192.168.1.10',
                                   port=502,
-                                  unit_id=1):
+                                  unit_id=1,
+                                  sock=None):# 新增sock参数
         """组合式MCGS设备数据采集方法
         Args参数:
             table_name: 目标数据表名称
@@ -99,6 +102,7 @@ class DataInserter:
             ip: 设备IP地址（默认Modbus TCP常用地址）
             port: 设备端口号（默认Modbus 502端口）
             unit_id: 设备单元标识号（默认1号单元）
+            sock: 持久化TCP连接（新增参数）
         流程：1.建立TCP连接 2.轮询读取寄存器 3.批量写入数据库
         异常：采集失败时自动回滚事务"""
         try:
@@ -107,81 +111,73 @@ class DataInserter:
             all_fields = []  # 数据库字段名缓存列表
             transaction_id = 0x0001  # Modbus事务ID初始值（协议要求单调递增）
 
-            # 建立TCP长连接（上下文管理器自动处理连接关闭）
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                # 网络层参数配置
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # 启用TCP保活
-                sock.settimeout(5)  # 设置socket超时（单位：秒）
+            # 连接有效性验证（新增）
+            if not sock:
+                raise ValueError("必须提供有效的socket连接")
 
-                # 设备连接尝试
+            # 寄存器组遍历采集（enumerate生成组索引）
+            for group_idx, group in enumerate(groups, 1):  # 索引从1开始计数
+                start_addr, reg_count, fields = group  # 解包寄存器组配置
+
+                # 输入参数有效性验证
+                if reg_count % 2 != 0:  # Modbus浮点数需要2个寄存器
+                    raise ValueError(f"第{group_idx}组（地址{start_addr}）寄存器数必须为偶数")
+                if len(fields) != reg_count // 2:  # 字段数应与寄存器对数量匹配
+                    raise ValueError(f"第{group_idx}组字段数{len(fields)}与寄存器数{reg_count}不匹配")
+
+                # Modbus协议帧构造（大端字节序）
+                modbus_request = struct.pack(
+                    '>HHHBBHH',  # 格式字符串说明：
+                    transaction_id,  # 事务ID（2字节无符号短整型）
+                    0x0000,  # 协议标识符（ModbusTCP固定值）
+                    0x0006,  # 剩余字节数（后续数据包长度）
+                    unit_id,  # 设备单元号（1字节无符号字符）
+                    0x03,  # 功能码03（读保持寄存器）
+                    start_addr,  # 寄存器起始地址（2字节无符号短整型）
+                    reg_count  # 请求读取的寄存器数量（2字节无符号短整型）
+                )
+                transaction_id = (transaction_id % 0xFFFF) + 1  # 事务ID循环递增（防止溢出）
+
+                # 数据收发处理（带异常捕获）
                 try:
-                    sock.connect((ip, port))  # 建立TCP三次握手
-                except socket.error as e:
-                    raise ConnectionError(f"连接失败: {str(e)}，请检查IP/端口配置")
+                    sock.sendall(modbus_request)  # 完整发送请求帧（避免分包）
+                    response = sock.recv(1024)  # 接收响应数据（缓冲区1KB）
+                except (socket.timeout, ConnectionResetError) as e:
+                    raise ConnectionError(f"第{group_idx}组通信错误: {str(e)}")
+                except Exception as e:
+                    raise RuntimeError(f"第{group_idx}组网络错误: {str(e)}")
 
-                # 寄存器组遍历采集（enumerate生成组索引）
-                for group_idx, group in enumerate(groups, 1):  # 索引从1开始计数
-                    start_addr, reg_count, fields = group  # 解包寄存器组配置
+                # 响应基础校验
+                if len(response) < 8:  # ModbusTCP头部固定8字节
+                    raise ValueError(f"第{group_idx}组响应头不完整（长度不足）")
 
-                    # 输入参数有效性验证
-                    if reg_count % 2 != 0:  # Modbus浮点数需要2个寄存器
-                        raise ValueError(f"第{group_idx}组（地址{start_addr}）寄存器数必须为偶数")
-                    if len(fields) != reg_count // 2:  # 字段数应与寄存器对数量匹配
-                        raise ValueError(f"第{group_idx}组字段数{len(fields)}与寄存器数{reg_count}不匹配")
+                # 响应头解析（大端字节序解包）
+                resp_tid, resp_pid, resp_len, resp_uid, resp_fc = struct.unpack(
+                    '>HHHBB', response[:8]  # 解析前8字节头部
+                )
 
-                    # Modbus协议帧构造（大端字节序）
-                    modbus_request = struct.pack(
-                        '>HHHBBHH',  # 格式字符串说明：
-                        transaction_id,  # 事务ID（2字节无符号短整型）
-                        0x0000,  # 协议标识符（ModbusTCP固定值）
-                        0x0006,  # 剩余字节数（后续数据包长度）
-                        unit_id,  # 设备单元号（1字节无符号字符）
-                        0x03,  # 功能码03（读保持寄存器）
-                        start_addr,  # 寄存器起始地址（2字节无符号短整型）
-                        reg_count  # 请求读取的寄存器数量（2字节无符号短整型）
-                    )
-                    transaction_id = (transaction_id % 0xFFFF) + 1  # 事务ID循环递增（防止溢出）
+                # 协议一致性验证
+                if resp_tid != transaction_id - 1:  # 响应事务ID应匹配请求ID
+                    raise ValueError(f"第{group_idx}组事务ID不匹配")
+                if resp_uid != unit_id:  # 单元ID必须一致
+                    raise ValueError(f"第{group_idx}组单元ID不匹配")
+                if resp_fc != 0x03:  # 检查功能码异常
+                    error_code = response[8] if resp_fc & 0x80 else None
+                    raise ValueError(f"第{group_idx}组Modbus异常" +
+                                     (f"，错误码: {error_code}" if error_code else ""))
 
-                    # 数据收发处理（带异常捕获）
-                    try:
-                        sock.sendall(modbus_request)  # 完整发送请求帧（避免分包）
-                        response = sock.recv(1024)  # 接收响应数据（缓冲区1KB）
-                    except socket.timeout:
-                        raise TimeoutError(f"第{group_idx}组响应超时")
-                    except socket.error as e:
-                        raise ConnectionError(f"第{group_idx}组网络错误: {str(e)}")
+                # 数据区校验
+                byte_count = response[8]  # 数据部分字节数（位于第9字节）
+                if byte_count != reg_count * 2:  # 每个寄存器2字节
+                    raise ValueError(f"第{group_idx}组返回字节数{byte_count}与预期{reg_count * 2}不符")
 
-                    # 响应基础校验
-                    if len(response) < 8:  # ModbusTCP头部固定8字节
-                        raise ValueError(f"第{group_idx}组响应头不完整（长度不足）")
-
-                    # 响应头解析（大端字节序解包）
-                    resp_tid, resp_pid, resp_len, resp_uid, resp_fc = struct.unpack(
-                        '>HHHBB', response[:8]  # 解析前8字节头部
-                    )
-
-                    # 协议一致性验证
-                    if resp_tid != transaction_id - 1:  # 响应事务ID应匹配请求ID
-                        raise ValueError(f"第{group_idx}组事务ID不匹配")
-                    if resp_uid != unit_id:  # 单元ID必须一致
-                        raise ValueError(f"第{group_idx}组单元ID不匹配")
-                    if resp_fc != 0x03:  # 检查功能码异常
-                        error_code = response[8] if resp_fc & 0x80 else None
-                        raise ValueError(f"第{group_idx}组Modbus异常" +
-                                         (f"，错误码: {error_code}" if error_code else ""))
-
-                    # 数据区校验
-                    byte_count = response[8]  # 数据部分字节数（位于第9字节）
-                    if byte_count != reg_count * 2:  # 每个寄存器2字节
-                        raise ValueError(f"第{group_idx}组返回字节数{byte_count}与预期{reg_count * 2}不符")
-
-                    # 浮点数解析（大端字节序）
-                    group_params = [
-                        round(struct.unpack('>f', response[9 + i * 4: 13 + i * 4])[0], 4)
-                        for i in range(reg_count // 2)  # 每4字节解析为一个浮点数
-                    ]
-                    all_params.extend(group_params)  # 参数值追加到总列表
-                    all_fields.extend(fields)  # 字段名追加到总列表
+                # 浮点数解析（大端字节序）
+                group_params = [
+                    round(struct.unpack('>f', response[9 + i * 4: 13 + i * 4])[0], 4)
+                    for i in range(reg_count // 2)  # 每4字节解析为一个浮点数
+                ]
+                all_params.extend(group_params)  # 参数值追加到总列表
+                all_fields.extend(fields)  # 字段名追加到总列表
 
             # 数据库写入（使用连接池获取连接）
             with self.connection_pool.get_connection() as conn:  # 从池中获取连接
@@ -199,18 +195,19 @@ class DataInserter:
 
                     conn.commit()  # 显式提交事务（确保数据持久化）
                     print(f"组合插入：成功写入{len(all_fields)}个参数到{table_name}")
-
+            return True
         except Exception as e:  # 全局异常捕获
             print(f"组合采集失败: {str(e)}")
             if 'conn' in locals():  # 回滚条件检查（仅当连接已建立）
                 conn.rollback()  # 事务回滚（保证数据一致性）
-
+            return False
     def insert_combined_mcgs_int_data(self,
                                   table_name: str,
                                   groups: list,
                                   ip='192.168.1.10',
                                   port=502,
-                                  unit_id=1):
+                                  unit_id=1,
+                                  sock=None):  # 新增sock参数
         """组合式MCGS设备数据采集方法
         Args参数:
             table_name: 目标数据表名称
@@ -218,6 +215,7 @@ class DataInserter:
             ip: 设备IP地址（默认Modbus TCP常用地址）
             port: 设备端口号（默认Modbus 502端口）
             unit_id: 设备单元标识号（默认1号单元）
+            sock: 持久化TCP连接（新增参数）
         流程：1.建立TCP连接 2.轮询读取寄存器 3.批量写入数据库
         异常：采集失败时自动回滚事务"""
         try:
@@ -226,61 +224,51 @@ class DataInserter:
             all_fields = []  # 数据库字段名缓存列表
             transaction_id = 0x0001  # Modbus事务ID初始值（协议要求单调递增）
 
-            # 建立TCP长连接（上下文管理器自动处理连接关闭）
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                # 网络层参数配置
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # 启用TCP保活
-                sock.settimeout(5)  # 设置socket超时（单位：秒）
+            # 连接有效性验证（新增）
+            if not sock:
+                raise ValueError("必须提供有效的socket连接")
 
-                # 设备连接尝试
+            # 寄存器组遍历采集（enumerate生成组索引）
+            for group_idx, group in enumerate(groups, 1):  # 索引从1开始计数
+                start_addr, reg_count, fields = group  # 解包寄存器组配置
+
+                if len(fields) != reg_count:  # 字段数应与寄存器对数量匹配
+                    raise ValueError(f"第{group_idx}组字段数{len(fields)}与寄存器数{reg_count}不匹配")
+
+                # Modbus协议帧构造（大端字节序）
+                modbus_request = struct.pack(
+                    '>HHHBBHH',  # 格式字符串说明：
+                    transaction_id,  # 事务ID（2字节无符号短整型）
+                    0x0000,  # 协议标识符（ModbusTCP固定值）
+                    0x0006,  # 剩余字节数（后续数据包长度）
+                    unit_id,  # 设备单元号（1字节无符号字符）
+                    0x03,  # 功能码03（读保持寄存器）
+                    start_addr,  # 寄存器起始地址（2字节无符号短整型）
+                    reg_count  # 请求读取的寄存器数量（2字节无符号短整型）
+                )
+                transaction_id = (transaction_id % 0xFFFF) + 1  # 事务ID循环递增（防止溢出）
+
+                # 数据收发处理（带异常捕获）
                 try:
-                    sock.connect((ip, port))  # 建立TCP三次握手
-                except socket.error as e:
-                    raise ConnectionError(f"连接失败: {str(e)}，请检查IP/端口配置")
+                    sock.sendall(modbus_request)  # 完整发送请求帧（避免分包）
+                    response = sock.recv(1024)  # 接收响应数据（缓冲区1KB）
+                except (socket.timeout, ConnectionResetError) as e:
+                    raise ConnectionError(f"第{group_idx}组通信错误: {str(e)}")
+                except Exception as e:
+                    raise RuntimeError(f"第{group_idx}组网络错误: {str(e)}")
 
-                # 寄存器组遍历采集（enumerate生成组索引）
-                for group_idx, group in enumerate(groups, 1):  # 索引从1开始计数
-                    start_addr, reg_count, fields = group  # 解包寄存器组配置
+                # 基础响应验证
+                if len(response) < 9 + reg_count * 2:
+                    raise ValueError("响应数据长度不足")
 
-                    # # 输入参数有效性验证
-                    # if reg_count % 2 != 0:  # Modbus浮点数需要2个寄存器
-                    #     raise ValueError(f"第{group_idx}组（地址{start_addr}）寄存器数必须为偶数")
-                    if len(fields) != reg_count:  # 字段数应与寄存器对数量匹配
-                        raise ValueError(f"第{group_idx}组字段数{len(fields)}与寄存器数{reg_count}不匹配")
+                # 解析寄存器值（直接读取每个寄存器的16位无符号整数）
+                group_params = [
+                    struct.unpack('>H', response[9 + i * 2: 11 + i * 2])[0]
+                    for i in range(reg_count)
+                ]
 
-                    # Modbus协议帧构造（大端字节序）
-                    modbus_request = struct.pack(
-                        '>HHHBBHH',  # 格式字符串说明：
-                        transaction_id,  # 事务ID（2字节无符号短整型）
-                        0x0000,  # 协议标识符（ModbusTCP固定值）
-                        0x0006,  # 剩余字节数（后续数据包长度）
-                        unit_id,  # 设备单元号（1字节无符号字符）
-                        0x03,  # 功能码03（读保持寄存器）
-                        start_addr,  # 寄存器起始地址（2字节无符号短整型）
-                        reg_count  # 请求读取的寄存器数量（2字节无符号短整型）
-                    )
-                    transaction_id = (transaction_id % 0xFFFF) + 1  # 事务ID循环递增（防止溢出）
-
-                    # 数据收发处理（带异常捕获）
-                    try:
-                        sock.sendall(modbus_request)  # 完整发送请求帧（避免分包）
-                        response = sock.recv(1024)  # 接收响应数据（缓冲区1KB）
-                    except socket.timeout:
-                        raise TimeoutError(f"第{group_idx}组响应超时")
-                    except socket.error as e:
-                        raise ConnectionError(f"第{group_idx}组网络错误: {str(e)}")
-                    # 基础响应验证
-                    if len(response) < 9 + reg_count * 2:
-                        raise ValueError("响应数据长度不足")
-
-                    # 解析寄存器值（直接读取每个寄存器的16位无符号整数）
-                    group_params = [
-                        struct.unpack('>H', response[9 + i * 2: 11 + i * 2])[0]
-                        for i in range(reg_count)
-                    ]
-
-                    all_params.extend(group_params)
-                    all_fields.extend(fields)
+                all_params.extend(group_params)
+                all_fields.extend(fields)
 
             # 数据库写入（使用连接池获取连接）
             with self.connection_pool.get_connection() as conn:  # 从池中获取连接
@@ -298,11 +286,12 @@ class DataInserter:
 
                     conn.commit()  # 显式提交事务（确保数据持久化）
                     print(f"组合插入：成功写入{len(all_fields)}个参数到{table_name}")
-
+            return True
         except Exception as e:  # 全局异常捕获
             print(f"组合采集失败: {str(e)}")
             if 'conn' in locals():  # 回滚条件检查（仅当连接已建立）
                 conn.rollback()  # 事务回滚（保证数据一致性）
+            return False
 
 class DataManager:
     # 定义全局表名常量（新增）
