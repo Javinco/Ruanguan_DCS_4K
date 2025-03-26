@@ -1,6 +1,8 @@
 # 导入系统模块
 import sys
 from datetime import datetime, timedelta
+import socket
+
 # 从PyQt5导入需要的组件
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog
 from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal, QThread
@@ -60,84 +62,51 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 立即触发首次数据加载
         QTimer.singleShot(0, self.update_realtime_data)
 
-        # 异步调用，定义七个不连续的寄存器组（地址11读4寄存器，地址21读8寄存器，地址15读2寄存器···），（所有参数一次性写入factory1_1_realtime_data_jcj表）
+        # 合并所有采集任务到单个线程
         self._start_insert_thread(
-            "factory1_1_realtime_data_jcj",
-            [
-                (11, 4, ["parameter1", "parameter2"]),
-                (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                (1, 2, ["parameter9"]),
-                (5, 2, ["parameter10"]),
-                (7, 2, ["parameter11"])
+            groups=[
+                ("factory1_1_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory1_1_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory1_1_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory1_1_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory1_1_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory1_1_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory1_1_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ])
             ],
-            "192.168.156.22"  # 新增IP参数
-        )
-
-        # 异步调用，定义三个不连续的寄存器组（地址103读2寄存器，地址107读4寄存器，地址113读2寄存器），（所有参数一次性写入factory1_1_realtime_data_fjj表）
-        self._start_insert_thread(
-            "factory1_1_realtime_data_fjj",
-            [
-                (103, 2, ["parameter12"]),
-                (107, 4, ["parameter13", "parameter15"]),
-                (113, 2, ["parameter14"])
-            ],
-            "192.168.156.22"  # 新增IP参数
-        )
-
-        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_realtime_data_zdj表）
-        self._start_insert_thread(
-            "factory1_1_realtime_data_zdj",
-            [
-                (201, 2, ["parameter16"]),
-                (221, 2, ["parameter17"]),
-                (203, 2, ["parameter18"]),
-                (231, 2, ["parameter19"]),
-                (235, 2, ["parameter20"]),
-                (239, 2, ["parameter21"])
-            ],
-            "192.168.156.22"  # 新增IP参数
-        )
-
-        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_curve表）
-        self._start_insert_thread(
-            "factory1_1_set_data_curve",
-            [
-                (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                (103, 2, ["parameter4"]),
-                (209, 6, ["parameter7", "parameter5", "parameter6"])
-            ],
-            "192.168.156.22"  # 新增IP参数
-        )
-
-        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_jcj表）
-        self._start_insert_thread(
-            "factory1_1_set_data_jcj",
-            [
-                (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                (3, 2, ["parameter6"])
-            ],
-            "192.168.156.22"  # 新增IP参数
-        )
-        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_fjj表）
-        self._start_insert_thread(
-            "factory1_1_set_data_fjj",
-            [
-                (101, 2, ["parameter1"]),
-                (105, 2, ["parameter2"]),
-                (123, 2, ["parameter3"])
-            ],
-            "192.168.156.22"  # 新增IP参数
-        )
-        # 异步调用，定义三个不连续的寄存器组（地址221读2寄存器，地址217读2寄存器，地址203读2寄存器），（所有参数一次性写入factory1_1_set_data_zdj表）
-        self._start_insert_thread(
-            "factory1_1_set_data_zdj",
-            [
-                (201, 2, ["parameter1"]),
-                (217, 2, ["parameter2"]),
-                (209, 2, ["parameter3"]),
-                (233, 2, ["parameter4"])
-            ],
-            "192.168.156.22"  # 新增IP参数
+            ip="192.168.156.14"
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -171,12 +140,20 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
 
     # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, table_name, groups_config, ip):
+
+    def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
+        # 创建唯一标识符（示例使用第一个表名）
+        table_names = [g[0] for g in groups]
+        key = "_".join(table_names)
+
+        # 检查是否已存在相同线程
+        if key in self.threads:
+            return
         # 创建线程对象（QThread实例）
         thread = QThread()
         # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(table_name, groups_config, ip)
+        worker = InsertWorker(groups, ip)
 
         # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
         worker.moveToThread(thread)
@@ -191,7 +168,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 存储线程引用（防止被Python垃圾回收）
-        self.threads[table_name] = (thread, worker)
+        self.threads[key] = (thread, worker) # 使用字符串作为键
         # 启动线程（开始执行事件循环）
         thread.start()
 
@@ -742,23 +719,29 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.threads = {}
         # 设置窗口属性
         self.right_down_dialog()  # 初始右下角显示
-
-
         self._start_insert_thread(
-            "factory1_1_alarm_data",
-            [
-                (16, 1, ["parameter1"])
+            groups=[
+                ("factory1_1_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
-            "192.168.156.22"  # 新增IP参数
+            ip="192.168.156.14"
         )
 
     # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, table_name, groups_config, ip):
+    def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
+        # 创建唯一标识符（示例使用第一个表名）
+        table_names = [g[0] for g in groups]
+        key = "_".join(table_names)
+
+        # 检查是否已存在相同线程
+        if key in self.threads:
+            return
         # 创建线程对象（QThread实例）
         thread = QThread()
         # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(table_name, groups_config, ip)
+        worker = InsertWorker(groups, ip)
 
         # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
         worker.moveToThread(thread)
@@ -773,7 +756,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 存储线程引用（防止被Python垃圾回收）
-        self.threads[table_name] = (thread, worker)
+        self.threads[key] = (thread, worker) # 使用字符串作为键
         # 启动线程（开始执行事件循环）
         thread.start()
 
@@ -835,17 +818,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 立即触发首次数据加载
         QTimer.singleShot(0, self.update_realtime_data)
-        # 异步调用，定义七个不连续的寄存器组（地址231读4寄存器，地址237读4寄存器，地址1读2寄存器···），（所有参数一次性写入factory1_1_production_data表）
+        # 添加管径实时曲线（示例配置）
+        # 合并所有采集任务到单个线程
         self._start_insert_thread(
-            "factory1_1_production_data",
-            [
+            groups=[
+                ("factory1_1_production_data", [
                 (231, 4, ["parameter1", "parameter2"]),
                 (237, 4, ["parameter3", "parameter4"]),
                 (1, 2, ["parameter5"])
+            ])
             ],
-            "192.168.156.22"  # 新增IP参数
+            ip="192.168.156.14"
         )
-        # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeMainWindowCurve1(
             parent_widget=self.curve1,  # 对应UI中的曲线容器
             table_name="factory1_1_set_data_curve",
@@ -863,12 +847,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
     # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, table_name, groups_config, ip):
+    def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
+        # 创建唯一标识符（示例使用第一个表名）
+        table_names = [g[0] for g in groups]
+        key = "_".join(table_names)
+
+        # 检查是否已存在相同线程
+        if key in self.threads:
+            return
         # 创建线程对象（QThread实例）
         thread = QThread()
         # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(table_name, groups_config, ip)
+        worker = InsertWorker(groups, ip)
 
         # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
         worker.moveToThread(thread)
@@ -883,7 +874,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 存储线程引用（防止被Python垃圾回收）
-        self.threads[table_name] = (thread, worker)
+        self.threads[key] = (thread, worker) # 使用字符串作为键
         # 启动线程（开始执行事件循环）
         thread.start()
 
@@ -974,49 +965,108 @@ class InsertWorker(QObject):
     # 定义完成信号（无参数）
     finished = pyqtSignal()
 
-    def __init__(self, table_name, groups_config, ip):
+    def __init__(self, groups, ip, port=502):
         """构造函数（参数来自_start_insert_thread）"""
         super().__init__()  # 必须调用父类构造函数
-        self.table_name = table_name  # 要操作的数据表名
-        self.groups_config = groups_config  # 组配置参数
+        # self.table_name = table_name  # 要操作的数据表名
+        self.groups = groups  # 组配置参数
         self.ip = ip  # 网络设备IP地址
-        self._is_running = True  # 新增运行状态标志
+        self.port = port
+        self.sock = None  # 持久化socket连接
+        self.keep_running = True
+
+    # 新增连接初始化方法
+    def init_connection(self):
+        if not self.sock:
+            try:
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+                self.sock.settimeout(5)
+                self.sock.connect((self.ip, self.port))
+                print(f"成功建立到 {self.ip}:{self.port} 的持久连接\n")
+                return True
+            except Exception as e:
+                print(f"连接建立失败: {str(e)}")
+                self.sock = None
+                return False
+        return True
 
     def run(self):
-        """线程实际执行的方法（不要直接调用，通过信号触发）"""
         from time import sleep
         try:
-            while self._is_running: #添加循环结构
-                # 执行实际的插入操作（这是原阻塞操作）
-                inserter.insert_combined_mcgs_data(
-                    table_name=self.table_name,
-                    groups=self.groups_config,
-                    ip=self.ip
-                )
-                sleep(1)  # 每次插入间隔休眠1秒
+            while self.keep_running:
+                if self.init_connection():
+                    try:
+                        for group_config in self.groups:  # 每个group_config是(table_name, groups)
+                            table_name, groups = group_config
+                            success = inserter.insert_combined_mcgs_data(
+                                table_name=table_name,
+                                groups=groups,
+                                ip=self.ip,
+                                port=self.port,
+                                sock=self.sock
+                            )
+                            if not success:
+                                self.reconnect()
+                    except (socket.timeout, ConnectionResetError) as e:
+                        print(f"连接异常: {str(e)}，尝试重连...")
+                        self.reconnect()
+                    except Exception as e:
+                        print(f"运行时异常: {str(e)}")
+                sleep(1)
         finally:
-            # 无论成功失败都发送完成信号（保证线程正确退出）
+            self.cleanup()
             self.finished.emit()  # type: ignore[attr-defined]
 
     def run_int(self):
-        """线程实际执行的方法（不要直接调用，通过信号触发）"""
         from time import sleep
         try:
-            while self._is_running: #添加循环结构
-                # 执行实际的插入操作（这是原阻塞操作）
-                inserter.insert_combined_mcgs_int_data(
-                    table_name=self.table_name,
-                    groups=self.groups_config,
-                    ip=self.ip
-                )
-                sleep(1)  # 每次插入间隔休眠1秒
+            while self.keep_running:
+                if self.init_connection():
+                    try:
+                        for group_config in self.groups:  # 每个group_config是(table_name, groups)
+                            table_name, groups = group_config
+                            success = inserter.insert_combined_mcgs_int_data(
+                                table_name=table_name,
+                                groups=groups,
+                                ip=self.ip,
+                                port=self.port,
+                                sock=self.sock
+                            )
+                            if not success:
+                                self.reconnect()
+                    except (socket.timeout, ConnectionResetError) as e:
+                        print(f"连接异常: {str(e)}，尝试重连...")
+                        self.reconnect()
+                    except Exception as e:
+                        print(f"运行时异常: {str(e)}")
+                sleep(1)
         finally:
-            # 无论成功失败都发送完成信号（保证线程正确退出）
+            self.cleanup()
             self.finished.emit()  # type: ignore[attr-defined]
 
+    def reconnect(self):
+        if self.sock:
+            try:
+                self.sock.close()
+            except:
+                pass
+            self.sock = None
+        print("尝试重新连接...")
+        self.init_connection()
+
+    def cleanup(self):
+        if self.sock:
+            try:
+                self.sock.close()
+            except:
+                pass
+            self.sock = None
+
     def stop(self):
-        """停止线程的方法"""
-        self._is_running = False  # 设置标志为False，停止循环
+        self.keep_running = False
+        self.cleanup()
+
 
 
 # ---------------------------------程序入口---------------------------------
