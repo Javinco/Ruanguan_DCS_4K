@@ -303,7 +303,8 @@ class DataManager:
         'factory1_1_set_data_fjj',
         'factory1_1_set_data_zdj',
         'factory1_1_set_data_curve',
-        'factory1_1_production_data'  # 新增生产数据表
+        'factory1_1_production_data',  # 新增生产数据表
+        'factory1_1_alarm_data'
     ]
     _instance = None  # 单例实例
     _lock = threading.Lock()  # 添加线程锁
