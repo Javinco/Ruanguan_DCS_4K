@@ -41,9 +41,9 @@ class RealTimeCurvePlotter(QWidget):
         self.axes.tick_params(axis='both', colors='white', width=4)
         # 设置四个坐标轴边框颜色为白色
         self.axes.spines['bottom'].set_color('white')
-        self.axes.spines['bottom'].set_linewidth(5.0)
+        self.axes.spines['bottom'].set_linewidth(1.0)
         self.axes.spines['left'].set_color('white')
-        self.axes.spines['left'].set_linewidth(5.0)
+        self.axes.spines['left'].set_linewidth(1.0)
         # 隐藏顶部和右侧边框
         self.axes.spines['top'].set_visible(False)
         self.axes.spines['right'].set_visible(False)
@@ -228,9 +228,9 @@ class RealTimeJcjCurvePlotter(QWidget):
         self.axes.tick_params(axis='both', colors='white', width=4)
         # 设置四个坐标轴边框颜色为白色
         self.axes.spines['bottom'].set_color('white')
-        self.axes.spines['bottom'].set_linewidth(5.0)
+        self.axes.spines['bottom'].set_linewidth(1.0)
         self.axes.spines['left'].set_color('white')
-        self.axes.spines['left'].set_linewidth(5.0)
+        self.axes.spines['left'].set_linewidth(1.0)
         # 隐藏顶部和右侧边框
         self.axes.spines['top'].set_visible(False)
         self.axes.spines['right'].set_visible(False)
@@ -413,9 +413,9 @@ class RealTimeMainWindowCurve1(QWidget):
         self.axes.set_facecolor('black')
         # 设置坐标轴边框颜色为白色
         self.axes.spines['bottom'].set_color('white')
-        self.axes.spines['bottom'].set_linewidth(2.0)
+        self.axes.spines['bottom'].set_linewidth(1.0)
         self.axes.spines['left'].set_color('white')
-        self.axes.spines['left'].set_linewidth(2.0)
+        self.axes.spines['left'].set_linewidth(1.0)
         # 隐藏顶部和右侧边框
         self.axes.spines['top'].set_visible(False)
         self.axes.spines['right'].set_visible(False)
