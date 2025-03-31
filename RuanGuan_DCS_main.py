@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import socket
 
 # 从PyQt5导入需要的组件
-from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QTableWidgetItem
 from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal, QThread
 # 导入自动生成的UI界面类
 from Ui_MainWindow import Ui_MainWindow
@@ -106,7 +106,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                     (233, 2, ["parameter4"])
                 ])
             ],
-            ip="192.168.156.14"
+            ip="192.168.155.26"
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -245,18 +245,18 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
         self.label_105.setText(str(data.get('parameter10', '')))
-        print('挤出机实时数据：',
-              data.get('parameter1', 'N/A'),
-              data.get('parameter2', 'N/A'),
-              data.get('parameter3', 'N/A'),
-              data.get('parameter4', 'N/A'),
-              data.get('parameter5', 'N/A'),
-              data.get('parameter6', 'N/A'),
-              data.get('parameter7', 'N/A'),
-              data.get('parameter8', 'N/A'),
-              data.get('parameter9', 'N/A'),
-              data.get('parameter10', 'N/A'),
-              data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
+        # print('挤出机实时数据：',
+        #       data.get('parameter1', 'N/A'),
+        #       data.get('parameter2', 'N/A'),
+        #       data.get('parameter3', 'N/A'),
+        #       data.get('parameter4', 'N/A'),
+        #       data.get('parameter5', 'N/A'),
+        #       data.get('parameter6', 'N/A'),
+        #       data.get('parameter7', 'N/A'),
+        #       data.get('parameter8', 'N/A'),
+        #       data.get('parameter9', 'N/A'),
+        #       data.get('parameter10', 'N/A'),
+        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
 
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -264,11 +264,11 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
         self.label_65.setText(str(data.get('parameter15', '')))
-        print('放卷机实时数据：',
-              data.get('parameter12', 'N/A'),
-              data.get('parameter13', 'N/A'),
-              data.get('parameter14', 'N/A'),
-              data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
+        # print('放卷机实时数据：',
+        #       data.get('parameter12', 'N/A'),
+        #       data.get('parameter13', 'N/A'),
+        #       data.get('parameter14', 'N/A'),
+        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
 
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -278,13 +278,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
         self.label_93.setText(str(data.get('parameter21', '')))
-        print('自动机实时数据：',
-              data.get('parameter16', 'N/A'),
-              data.get('parameter17', 'N/A'),
-              data.get('parameter18', 'N/A'),
-              data.get('parameter19', 'N/A'),
-              data.get('parameter20', 'N/A'),
-              data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+        # print('自动机实时数据：',
+        #       data.get('parameter16', 'N/A'),
+        #       data.get('parameter17', 'N/A'),
+        #       data.get('parameter18', 'N/A'),
+        #       data.get('parameter19', 'N/A'),
+        #       data.get('parameter20', 'N/A'),
+        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
 
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
@@ -294,23 +294,23 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
         self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        print('挤出机设定数据：',
-              data.get('parameter1', 'N/A'),
-              data.get('parameter2', 'N/A'),
-              data.get('parameter3', 'N/A'),
-              data.get('parameter4', 'N/A'),
-              data.get('parameter5', 'N/A'),
-              data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+        # print('挤出机设定数据：',
+        #       data.get('parameter1', 'N/A'),
+        #       data.get('parameter2', 'N/A'),
+        #       data.get('parameter3', 'N/A'),
+        #       data.get('parameter4', 'N/A'),
+        #       data.get('parameter5', 'N/A'),
+        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
 
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
         self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        print('放卷机设定数据：',
-              data.get('parameter1', 'N/A'),
-              data.get('parameter2', 'N/A'),
-              data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+        # print('放卷机设定数据：',
+        #       data.get('parameter1', 'N/A'),
+        #       data.get('parameter2', 'N/A'),
+        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
 
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
@@ -318,11 +318,11 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
         self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        print('自动机设定数据：',
-              data.get('parameter1', 'N/A'),
-              data.get('parameter2', 'N/A'),
-              data.get('parameter3', 'N/A'),
-              data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+        # print('自动机设定数据：',
+        #       data.get('parameter1', 'N/A'),
+        #       data.get('parameter2', 'N/A'),
+        #       data.get('parameter3', 'N/A'),
+        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
 
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
@@ -332,13 +332,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
         self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        print('曲线设定实时数据：',
-              data.get('parameter1', 'N/A'),
-              data.get('parameter2', 'N/A'),
-              data.get('parameter3', 'N/A'),
-              data.get('parameter4', 'N/A'),
-              data.get('parameter5', 'N/A'),
-              data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+        # print('曲线设定实时数据：',
+        #       data.get('parameter1', 'N/A'),
+        #       data.get('parameter2', 'N/A'),
+        #       data.get('parameter3', 'N/A'),
+        #       data.get('parameter4', 'N/A'),
+        #       data.get('parameter5', 'N/A'),
+        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
 
     # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
     def show_dialog_pop_historical_parameter(self):
@@ -719,15 +719,39 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.threads = {}
         # 设置窗口属性
         self.right_down_dialog()  # 初始右下角显示
+
+        # 创建数据管理器实例
+        self.data_manager = data_manager
+        # 创建数据更新定时器
+        self.data_timer = QTimer(self)
+        # 连接定时器信号到更新方法（每秒触发一次）
+        self.data_timer.timeout.connect(self.update_alarm_data) # type: ignore[attr-defined]
+        # 启动定时器（间隔1000毫秒=1秒）
+        self.data_timer.start(1000)
+        # 初始化报警表名列表
+        self.alarm_tables = [
+            'factory1_1_alarm_data'
+        ]
+
+        # 存储每个表最后一次的报警值，用于比较变化
+        self.last_alarm_values = {}
+
+        # 前端根据报警表名自动生成包含所有表名的本地缓存版本字典
+        self.data_versions = {table: 0 for table in self.alarm_tables}
+        # 确保初始化为9行
+        self.tableWidget_realtime_alarm.setRowCount(9)
+
+        # 立即触发首次数据加载
+        QTimer.singleShot(0, self.update_alarm_data)
+
         self._start_insert_thread(
             groups=[
                 ("factory1_1_alarm_data", [
                     (16, 1, ["parameter1"])
                 ])
             ],
-            ip="192.168.156.14"
+            ip="192.168.155.26"
         )
-
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
@@ -770,6 +794,104 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 移动窗口到计算位置
         self.move(x, y)
 
+    def update_alarm_data(self):
+        """智能更新报警数据的方法"""
+        # 获取所有数据表的当前版本号
+        current_versions = self.data_manager.get_data_versions()
+
+        # 遍历所有报警表名
+        for table_name in self.alarm_tables:
+            # 检查表是否存在于当前版本中
+            if table_name in current_versions:
+                # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
+                if current_versions[table_name] > self.data_versions.get(table_name, 0):
+                    # 调用方法更新具体表数据
+                    self._update_alarm_table_data(table_name)
+                    # 更新本地版本号为最新值（保持版本同步）
+                    self.data_versions[table_name] = current_versions[table_name]
+
+    def _update_alarm_table_data(self, table_name):
+        """更新指定报警表的数据到界面"""
+        # 从数据管理器获取指定表的实时数据
+        data = self.data_manager.get_realtime_data(table_name)
+
+        # 数据有效性检查
+        if not data or 'parameter1' not in data:
+            print("Invalid data or missing 'parameter1' field.")
+            return 
+
+        # 获取报警值
+        alarm_value = data.get('parameter1','')
+        print(alarm_value)
+
+        # 检查报警值是否有变化
+        if table_name in self.last_alarm_values and self.last_alarm_values[table_name] == alarm_value:
+            # 报警值没有变化，不需要更新界面
+            return
+
+        # 更新最后一次的报警值
+        self.last_alarm_values[table_name] = alarm_value
+
+        # 如果报警值为0或空，则不处理
+        if not alarm_value:
+            print("No alarm value or empty value（报警值为0或空）.")
+            return
+
+        # 获取当前时间
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # 解析表名获取工厂和设备信息
+        parts = table_name.split('_')
+        factory = parts[0]
+        device = parts[1] if len(parts) > 1 else "未知设备"
+
+        # 根据报警值获取报警内容
+        alarm_content = self._get_alarm_content(alarm_value)
+
+        # 构建报警显示文本
+        alarm_text = f"[{current_time}] {factory}-{device}: {alarm_content}"
+
+        # 获取当前所有行数据
+        rows = []
+        for row in range(self.tableWidget_realtime_alarm.rowCount()):
+            if item := self.tableWidget_realtime_alarm.item(row, 0):
+                rows.append(item.text())
+
+        # 如果已有9条报警，移除最早的一条
+        if len(rows) >= 9:
+            rows.pop(0)
+
+        # 添加新报警到列表末尾
+        rows.append(alarm_text)
+
+        # 清空表格
+        self.tableWidget_realtime_alarm.clearContents()
+
+        # 重新填充表格
+        for row, text in enumerate(rows):
+            self.tableWidget_realtime_alarm.setItem(row, 0, QTableWidgetItem(text))
+            self.tableWidget_realtime_alarm.item(row, 0).setBackground(Qt.red)
+
+        # 滚动到最后一行
+        self.tableWidget_realtime_alarm.scrollToBottom()
+
+        print(f"新报警: {factory} {device} - {alarm_content}")
+
+    @staticmethod
+    def _get_alarm_content(alarm_code):
+        """根据报警代码获取报警内容描述"""
+        # 报警代码与内容的映射字典
+        alarm_dict = {
+            1: "上电加热...",
+            2: "挤出启动...",
+            4: "运转作业...",
+            8: "常规预警！",
+            16: "异常报警！",
+            32: "请求支援！"
+        }
+
+        # 返回对应的报警内容，如果没有对应的内容则返回默认文本
+        return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
 
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -828,7 +950,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 (1, 2, ["parameter5"])
             ])
             ],
-            ip="192.168.156.14"
+            ip="192.168.155.26"
         )
         self.curve_plotter = RealTimeMainWindowCurve1(
             parent_widget=self.curve1,  # 对应UI中的曲线容器
@@ -911,12 +1033,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable6.setText(str(data.get('parameter3', '')))
         self.curve1_lable8.setText(str(data.get('parameter4', '')))
         self.curve1_lable10.setText(str(data.get('parameter5', '')))
-        print('首页面曲线1实时数据：',
-              data.get('parameter1', 'N/A'),
-              data.get('parameter2', 'N/A'),
-              data.get('parameter3', 'N/A'),
-              data.get('parameter4', 'N/A'),
-              data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        # print('首页面曲线1实时数据：',
+        #       data.get('parameter1', 'N/A'),
+        #       data.get('parameter2', 'N/A'),
+        #       data.get('parameter3', 'N/A'),
+        #       data.get('parameter4', 'N/A'),
+        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
 
     def close_all_windows(self):
         """关闭所有窗口的方法"""
