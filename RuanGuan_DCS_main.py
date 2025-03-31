@@ -919,6 +919,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_alarm.mousePressEvent = self.show_pop_alarm
         # 绑定关闭按钮：点击时关闭所有窗口
         self.Button_close.clicked.connect(self.close_all_windows)
+        # 绑定最小化按钮：点击时最小化所有窗口
+        self.Button_minimize.clicked.connect(self.minimize_all_windows)
 
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
@@ -1040,6 +1042,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #       data.get('parameter4', 'N/A'),
         #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
 
+    def minimize_all_windows(self):
+        """最小化所有窗口的方法"""
+        # 隐藏所有弹出窗口
+        if self.pop_dialog.isVisible():
+            self.pop_dialog.hide()
+
+        if self.dialog_historical.isVisible():
+            self.dialog_historical.hide()
+
+        if self.pop_alarm_dialog.isVisible():
+            self.pop_alarm_dialog.hide()
+
+        # 最小化主窗口
+        self.showMinimized()
     def close_all_windows(self):
         """关闭所有窗口的方法"""
         # 遍历所有线程并停止它们
