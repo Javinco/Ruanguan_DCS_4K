@@ -106,7 +106,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                     (233, 2, ["parameter4"])
                 ])
             ],
-            ip="192.168.155.26"
+            ip="192.168.156.22"
         )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -722,6 +722,8 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 创建数据管理器实例
         self.data_manager = data_manager
+        # 创建历史数据管理器实例
+        self.hist_data_manager = historical_data_manager
         # 创建数据更新定时器
         self.data_timer = QTimer(self)
         # 连接定时器信号到更新方法（每秒触发一次）
@@ -741,6 +743,15 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 确保初始化为9行
         self.tableWidget_realtime_alarm.setRowCount(9)
 
+        # 设置日期时间选择器的初始值
+        current_time = datetime.now()
+        start_time = current_time - timedelta(hours=24)  # 默认查询最近24小时
+        self.dateTimeEdit_start.setDateTime(start_time)
+        self.dateTimeEdit_stop.setDateTime(current_time)
+
+        # 连接查询按钮的点击信号到查询方法
+        self.pushButton_query.clicked.connect(self.query_historical_alarms)
+
         # 立即触发首次数据加载
         QTimer.singleShot(0, self.update_alarm_data)
 
@@ -750,7 +761,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
                     (16, 1, ["parameter1"])
                 ])
             ],
-            ip="192.168.155.26"
+            ip="192.168.156.22"
         )
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
@@ -837,8 +848,19 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             print("No alarm value or empty value（报警值为0或空）.")
             return
 
-        # 获取当前时间
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 从数据库获取时间戳，而不是使用当前时间
+        record_time = data.get('timestamp')
+        # 如果timestamp是datetime对象，则格式化为字符串
+        if isinstance(record_time, datetime):
+            record_time = record_time.strftime("%Y-%m-%d %H:%M:%S")
+        # 如果timestamp是字符串，可能包含"T"字符，需要替换
+        elif isinstance(record_time, str):
+            # 替换ISO格式中的"T"为空格
+            record_time = record_time.replace("T", " ")
+        # 如果没有timestamp或格式不正确，则使用当前时间作为备选
+        else:
+            record_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print("警告: 数据库中缺少timestamp字段或格式不正确，使用当前时间作为替代")
 
         # 解析表名获取工厂和设备信息
         parts = table_name.split('_')
@@ -849,7 +871,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         alarm_content = self._get_alarm_content(alarm_value)
 
         # 构建报警显示文本
-        alarm_text = f"[{current_time}] {factory}-{device}: {alarm_content}"
+        alarm_text = f"[{record_time}] {factory}-{device}: {alarm_content}"
 
         # 获取当前所有行数据
         rows = []
@@ -892,6 +914,92 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 返回对应的报警内容，如果没有对应的内容则返回默认文本
         return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
+
+    def query_historical_alarms(self):
+        """查询历史报警记录的方法"""
+        # 获取用户选择的起始和结束时间
+        start_time = self.dateTimeEdit_start.dateTime().toPyDateTime()
+        end_time = self.dateTimeEdit_stop.dateTime().toPyDateTime()
+
+        # 检查时间范围是否有效
+        if start_time > end_time:
+            print("错误：起始时间不能晚于结束时间")
+            # 可以在界面上显示错误提示
+            return
+
+        # 格式化时间为数据库查询格式
+        start_time_str = start_time.strftime("%Y-%m-%d %H:%M:%S")
+        end_time_str = end_time.strftime("%Y-%m-%d %H:%M:%S")
+
+        print(f"查询历史报警: {start_time_str} 至 {end_time_str}")
+
+        # 存储所有查询到的报警记录
+        all_alarms = []
+
+        # 遍历所有报警表
+        for table_name in self.alarm_tables:
+            # 查询指定时间段内的报警数据
+            alarm_data = self.hist_data_manager.get_historical_data(
+                table_name,
+                start_time_str,
+                end_time_str
+            )
+
+            # 如果查询到数据
+            if alarm_data:
+                for record in alarm_data:
+                    # 获取报警值
+                    alarm_value = record.get('parameter1')
+
+                    # 如果报警值为0或空，则跳过
+                    if not alarm_value:
+                        continue
+
+                    # 获取记录时间
+                    record_time = record.get('timestamp', start_time_str)
+                    if isinstance(record_time, datetime):
+                        record_time = record_time.strftime("%Y-%m-%d %H:%M:%S")
+
+                    # 解析表名获取工厂和设备信息
+                    parts = table_name.split('_')
+                    factory = parts[0]
+                    device = parts[1] if len(parts) > 1 else "未知设备"
+
+                    # 根据报警值获取报警内容
+                    alarm_content = self._get_alarm_content(alarm_value)
+
+                    # 构建报警显示文本
+                    alarm_text = f"[{record_time}] {factory}-{device}: {alarm_content}"
+
+                    # 添加到报警列表
+                    all_alarms.append((record_time, alarm_text))
+
+        # 按时间排序报警记录（从新到旧）
+        all_alarms.sort(key=lambda x: x[0], reverse=True)
+
+        # 清空历史报警表格
+        self.tableWidget_historical_alarm.clearContents()
+
+        # 设置表格行数（最多显示50行，或者实际记录数）
+        row_count = min(len(all_alarms), 50)
+        self.tableWidget_historical_alarm.setRowCount(row_count)
+
+        # 填充表格
+        for row, (_, alarm_text) in enumerate(all_alarms[:50]):  # 最多显示50条
+            self.tableWidget_historical_alarm.setItem(row, 0, QTableWidgetItem(alarm_text))
+            # 设置背景色为黄色（区别于实时报警的红色）
+            self.tableWidget_historical_alarm.item(row, 0).setBackground(Qt.yellow)
+
+        # 如果没有查询到报警记录
+        if not all_alarms:
+            # 设置一行显示无数据
+            self.tableWidget_historical_alarm.setRowCount(1)
+            self.tableWidget_historical_alarm.setItem(0, 0, QTableWidgetItem("查询时间段内无报警记录"))
+
+        # 滚动到第一行
+        self.tableWidget_historical_alarm.scrollToTop()
+
+        print(f"共查询到 {len(all_alarms)} 条历史报警记录")
 
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -952,7 +1060,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 (1, 2, ["parameter5"])
             ])
             ],
-            ip="192.168.155.26"
+            ip="192.168.156.22"
         )
         self.curve_plotter = RealTimeMainWindowCurve1(
             parent_widget=self.curve1,  # 对应UI中的曲线容器
