@@ -341,11 +341,24 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
 
     # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
+    # def show_dialog_pop_historical_parameter(self):
+    #     self.hide()  # 隐藏当前窗口
+    #     # if not self.dialog_historical:  # 判断是否已存在实例
+    #     #     self.dialog_historical = HistoricalParameterDialog()
+    #     self.dialog_historical.show()
     def show_dialog_pop_historical_parameter(self):
+        """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
-        # if not self.dialog_historical:  # 判断是否已存在实例
-        #     self.dialog_historical = HistoricalParameterDialog()
-        self.dialog_historical.show()
+        # 检查历史参数弹窗是否已存在
+        if self.dialog_historical:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.dialog_historical.isMinimized():
+                self.dialog_historical.showNormal()  # 从最小化状态恢复
+            elif not self.dialog_historical.isVisible():
+                self.dialog_historical.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
+            self.dialog_historical.raise_()  # 提升窗口层级
 
     def center_dialog(self):
         """将弹窗居中显示的方法"""
@@ -643,12 +656,24 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
                   data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
 
     # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
+    # def show_dialog_pop_parameter(self):
+    #     self.hide()  # 隐藏当前窗口
+    #     # if not self.dialog_realtime:  # 判断是否已存在实例
+    #     #     self.dialog_realtime = ParameterDialog()
+    #     self.dialog_realtime.show()
     def show_dialog_pop_parameter(self):
+        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
-        # if not self.dialog_realtime:  # 判断是否已存在实例
-        #     self.dialog_realtime = ParameterDialog()
-        self.dialog_realtime.show()
-
+        # 检查实时参数弹窗是否已存在
+        if self.dialog_realtime:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.dialog_realtime.isMinimized():
+                self.dialog_realtime.showNormal()  # 从最小化状态恢复
+            elif not self.dialog_realtime.isVisible():
+                self.dialog_realtime.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
+            self.dialog_realtime.raise_()  # 提升窗口层级
 
     def center_dialog(self):
         """将弹窗居中显示的方法"""
@@ -1194,14 +1219,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable9_15.setText(time_str)  # 更新时间标签
 
 
+    # def show_pop_parameter(self, event):
+    #     """显示参数弹窗的槽函数"""
+    #     self.pop_dialog.show()  # 显示弹窗
+    #     event.accept()  # 接受事件，阻止进一步传播
     def show_pop_parameter(self, event):
         """显示参数弹窗的槽函数"""
-        self.pop_dialog.show()  # 显示弹窗
+        # 检查弹窗是否已存在
+        if self.pop_dialog:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.pop_dialog.isMinimized():
+                self.pop_dialog.showNormal()  # 从最小化状态恢复
+            elif not self.pop_dialog.isVisible():
+                self.pop_dialog.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.pop_dialog.activateWindow()  # 激活窗口（置于前台）
+            self.pop_dialog.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
 
+    # def show_pop_alarm(self, event):
+    #     """显示报警弹窗的槽函数"""
+    #     self.pop_alarm_dialog.show()  # 显示弹窗
+    #     event.accept()  # 接受事件，阻止进一步传播
     def show_pop_alarm(self, event):
         """显示报警弹窗的槽函数"""
-        self.pop_alarm_dialog.show()  # 显示弹窗
+        # 检查弹窗是否已存在
+        if self.pop_alarm_dialog:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.pop_alarm_dialog.isMinimized():
+                self.pop_alarm_dialog.showNormal()  # 从最小化状态恢复
+            elif not self.pop_alarm_dialog.isVisible():
+                self.pop_alarm_dialog.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.pop_alarm_dialog.activateWindow()  # 激活窗口（置于前台）
+            self.pop_alarm_dialog.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
 
 
