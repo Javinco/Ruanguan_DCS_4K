@@ -304,7 +304,61 @@ class DataManager:
         'factory1_1_set_data_zdj',
         'factory1_1_set_data_curve',
         'factory1_1_production_data',  # 新增生产数据表
-        'factory1_1_alarm_data'
+        'factory1_1_alarm_data',
+        'factory1_2_realtime_data_jcj',
+        'factory1_2_realtime_data_fjj',
+        'factory1_2_realtime_data_zdj',
+        'factory1_2_set_data_jcj',
+        'factory1_2_set_data_fjj',
+        'factory1_2_set_data_zdj',
+        'factory1_2_set_data_curve',
+        'factory1_2_production_data',  # 新增生产数据表
+        'factory1_2_alarm_data',
+        'factory1_3_realtime_data_jcj',
+        'factory1_3_realtime_data_fjj',
+        'factory1_3_realtime_data_zdj',
+        'factory1_3_set_data_jcj',
+        'factory1_3_set_data_fjj',
+        'factory1_3_set_data_zdj',
+        'factory1_3_set_data_curve',
+        'factory1_3_production_data',  # 新增生产数据表
+        'factory1_3_alarm_data',
+        'factory1_4_realtime_data_jcj',
+        'factory1_4_realtime_data_fjj',
+        'factory1_4_realtime_data_zdj',
+        'factory1_4_set_data_jcj',
+        'factory1_4_set_data_fjj',
+        'factory1_4_set_data_zdj',
+        'factory1_4_set_data_curve',
+        'factory1_4_production_data',  # 新增生产数据表
+        'factory1_4_alarm_data',
+        'factory2_1_realtime_data_jcj',
+        'factory2_1_realtime_data_fjj',
+        'factory2_1_realtime_data_zdj',
+        'factory2_1_set_data_jcj',
+        'factory2_1_set_data_fjj',
+        'factory2_1_set_data_zdj',
+        'factory2_1_set_data_curve',
+        'factory2_1_production_data',  # 新增生产数据表
+        'factory2_1_alarm_data',
+        'factory2_2_realtime_data_jcj',
+        'factory2_2_realtime_data_fjj',
+        'factory2_2_realtime_data_zdj',
+        'factory2_2_set_data_jcj',
+        'factory2_2_set_data_fjj',
+        'factory2_2_set_data_zdj',
+        'factory2_2_set_data_curve',
+        'factory2_2_production_data',  # 新增生产数据表
+        'factory2_2_alarm_data',
+        'factory2_3_realtime_data_jcj',
+        'factory2_3_realtime_data_fjj',
+        'factory2_3_realtime_data_zdj',
+        'factory2_3_set_data_jcj',
+        'factory2_3_set_data_fjj',
+        'factory2_3_set_data_zdj',
+        'factory2_3_set_data_curve',
+        'factory2_3_production_data',  # 新增生产数据表
+        'factory2_3_alarm_data'
     ]
     _instance = None  # 单例实例
     _lock = threading.Lock()  # 添加线程锁
