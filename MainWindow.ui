@@ -210,7 +210,7 @@
       <widget class="QLabel" name="curve1_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -249,9 +249,9 @@
       <widget class="QFrame" name="frame_data1">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -602,7 +602,7 @@
       <widget class="QLabel" name="curve2_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -641,9 +641,9 @@
       <widget class="QFrame" name="frame_data2">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -965,6 +965,13 @@
         <string>XX:XX:XX</string>
        </property>
       </widget>
+      <zorder>curve2</zorder>
+      <zorder>frame_data2</zorder>
+      <zorder>curve1_lable9_18</zorder>
+      <zorder>curve1_lable9_19</zorder>
+      <zorder>curve1_lable9_20</zorder>
+      <zorder>curve1_lable9_21</zorder>
+      <zorder>curve2_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve3">
       <property name="geometry">
@@ -987,7 +994,7 @@
       <widget class="QLabel" name="curve1_title_4">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -1026,9 +1033,9 @@
       <widget class="QFrame" name="frame_data3">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -1350,6 +1357,13 @@
         <string>XX:XX:XX</string>
        </property>
       </widget>
+      <zorder>curve3</zorder>
+      <zorder>frame_data3</zorder>
+      <zorder>curve1_lable9_22</zorder>
+      <zorder>curve1_lable9_23</zorder>
+      <zorder>curve1_lable9_24</zorder>
+      <zorder>curve1_lable9_25</zorder>
+      <zorder>curve1_title_4</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve4">
       <property name="geometry">
@@ -1372,7 +1386,7 @@
       <widget class="QLabel" name="curve4_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -1411,9 +1425,9 @@
       <widget class="QFrame" name="frame_data4">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -1735,6 +1749,13 @@
         <string>XX:XX:XX</string>
        </property>
       </widget>
+      <zorder>curve4</zorder>
+      <zorder>frame_data4</zorder>
+      <zorder>curve1_lable9_26</zorder>
+      <zorder>curve1_lable9_27</zorder>
+      <zorder>curve1_lable9_28</zorder>
+      <zorder>curve1_lable9_29</zorder>
+      <zorder>curve4_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve5">
       <property name="geometry">
@@ -1757,7 +1778,7 @@
       <widget class="QLabel" name="curve5_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -1796,9 +1817,9 @@
       <widget class="QFrame" name="frame_data1_2">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -1846,7 +1867,7 @@
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QLabel" name="curve1_lable10_2">
+         <widget class="QLabel" name="curve5_lable10">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -1903,7 +1924,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="curve1_lable2_2">
+         <widget class="QLabel" name="curve5_lable2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>3</horstretch>
@@ -1924,7 +1945,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="curve1_lable6_2">
+         <widget class="QLabel" name="curve5_lable6">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -1939,7 +1960,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLabel" name="curve1_lable8_2">
+         <widget class="QLabel" name="curve5_lable8">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -1954,7 +1975,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="curve1_lable4_2">
+         <widget class="QLabel" name="curve5_lable4">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2120,6 +2141,13 @@
         <string>-1</string>
        </property>
       </widget>
+      <zorder>curve5</zorder>
+      <zorder>frame_data1_2</zorder>
+      <zorder>curve1_lable9_33</zorder>
+      <zorder>curve1_lable9_32</zorder>
+      <zorder>curve1_lable9_30</zorder>
+      <zorder>curve1_lable9_31</zorder>
+      <zorder>curve5_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve6">
       <property name="geometry">
@@ -2142,7 +2170,7 @@
       <widget class="QLabel" name="curve6_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -2181,9 +2209,9 @@
       <widget class="QFrame" name="frame_data1_3">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -2252,7 +2280,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="curve1_lable4_3">
+         <widget class="QLabel" name="curve6_lable4">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2288,7 +2316,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="curve1_lable6_3">
+         <widget class="QLabel" name="curve6_lable6">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2324,7 +2352,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLabel" name="curve1_lable8_3">
+         <widget class="QLabel" name="curve6_lable8">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2360,7 +2388,7 @@
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QLabel" name="curve1_lable10_3">
+         <widget class="QLabel" name="curve6_lable10">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2375,7 +2403,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="curve1_lable2_3">
+         <widget class="QLabel" name="curve6_lable2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>3</horstretch>
@@ -2505,6 +2533,13 @@
         <string>XX:XX:XX</string>
        </property>
       </widget>
+      <zorder>curve6</zorder>
+      <zorder>frame_data1_3</zorder>
+      <zorder>curve1_lable9_34</zorder>
+      <zorder>curve1_lable9_35</zorder>
+      <zorder>curve1_lable9_36</zorder>
+      <zorder>curve1_lable9_37</zorder>
+      <zorder>curve6_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve7">
       <property name="geometry">
@@ -2527,7 +2562,7 @@
       <widget class="QLabel" name="curve7_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -2566,9 +2601,9 @@
       <widget class="QFrame" name="frame_data1_4">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -2637,7 +2672,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="curve1_lable4_4">
+         <widget class="QLabel" name="curve7_lable4">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2673,7 +2708,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="curve1_lable6_4">
+         <widget class="QLabel" name="curve7_lable6">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2709,7 +2744,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLabel" name="curve1_lable8_4">
+         <widget class="QLabel" name="curve7_lable8">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2745,7 +2780,7 @@
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QLabel" name="curve1_lable10_4">
+         <widget class="QLabel" name="curve7_lable10">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
@@ -2760,7 +2795,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLabel" name="curve1_lable2_4">
+         <widget class="QLabel" name="curve7_lable2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>3</horstretch>
@@ -2890,6 +2925,13 @@
         <string>1</string>
        </property>
       </widget>
+      <zorder>curve7</zorder>
+      <zorder>frame_data1_4</zorder>
+      <zorder>curve1_lable9_38</zorder>
+      <zorder>curve1_lable9_39</zorder>
+      <zorder>curve1_lable9_41</zorder>
+      <zorder>curve1_lable9_40</zorder>
+      <zorder>curve7_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve8">
       <property name="geometry">
@@ -2912,7 +2954,7 @@
       <widget class="QLabel" name="curve8_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -2951,9 +2993,9 @@
       <widget class="QFrame" name="frame_data1_5">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -3167,6 +3209,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve8</zorder>
+      <zorder>frame_data1_5</zorder>
+      <zorder>curve8_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve9">
       <property name="geometry">
@@ -3189,7 +3234,7 @@
       <widget class="QLabel" name="curve9_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -3228,9 +3273,9 @@
       <widget class="QFrame" name="frame_data1_6">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -3444,6 +3489,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve9</zorder>
+      <zorder>frame_data1_6</zorder>
+      <zorder>curve9_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve10">
       <property name="geometry">
@@ -3466,7 +3514,7 @@
       <widget class="QLabel" name="curve10_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -3505,9 +3553,9 @@
       <widget class="QFrame" name="frame_data1_7">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -3721,6 +3769,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve10</zorder>
+      <zorder>frame_data1_7</zorder>
+      <zorder>curve10_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve11">
       <property name="geometry">
@@ -3743,7 +3794,7 @@
       <widget class="QLabel" name="curve11_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -3787,9 +3838,9 @@
       <widget class="QFrame" name="frame_data1_8">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -4003,6 +4054,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve11</zorder>
+      <zorder>frame_data1_8</zorder>
+      <zorder>curve11_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve12">
       <property name="geometry">
@@ -4025,7 +4079,7 @@
       <widget class="QLabel" name="curve12_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -4064,9 +4118,9 @@
       <widget class="QFrame" name="frame_data1_9">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -4280,6 +4334,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve12</zorder>
+      <zorder>frame_data1_9</zorder>
+      <zorder>curve12_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve13">
       <property name="geometry">
@@ -4302,7 +4359,7 @@
       <widget class="QLabel" name="curve13_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -4347,9 +4404,9 @@
       <widget class="QFrame" name="frame_data1_10">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -4563,6 +4620,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve13</zorder>
+      <zorder>frame_data1_10</zorder>
+      <zorder>curve13_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve14">
       <property name="geometry">
@@ -4585,7 +4645,7 @@
       <widget class="QLabel" name="curve14_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -4624,9 +4684,9 @@
       <widget class="QFrame" name="frame_data1_11">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -4840,6 +4900,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve14</zorder>
+      <zorder>frame_data1_11</zorder>
+      <zorder>curve14_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve15">
       <property name="geometry">
@@ -4862,7 +4925,7 @@
       <widget class="QLabel" name="curve15_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -4901,9 +4964,9 @@
       <widget class="QFrame" name="frame_data1_12">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -5117,6 +5180,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve15</zorder>
+      <zorder>frame_data1_12</zorder>
+      <zorder>curve15_title</zorder>
      </widget>
      <widget class="QFrame" name="frame_curve16">
       <property name="geometry">
@@ -5139,7 +5205,7 @@
       <widget class="QLabel" name="curve16_title">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>0</y>
          <width>95</width>
          <height>40</height>
@@ -5178,9 +5244,9 @@
       <widget class="QFrame" name="frame_data1_13">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>350</x>
          <y>40</y>
-         <width>95</width>
+         <width>115</width>
          <height>205</height>
         </rect>
        </property>
@@ -5394,6 +5460,9 @@
         </item>
        </layout>
       </widget>
+      <zorder>curve16</zorder>
+      <zorder>frame_data1_13</zorder>
+      <zorder>curve16_title</zorder>
      </widget>
      <widget class="QPushButton" name="pushButton_alarm">
       <property name="geometry">
