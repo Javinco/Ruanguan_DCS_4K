@@ -53,16 +53,10 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -256,32 +250,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))     # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -289,15 +264,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -305,37 +272,18 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -343,21 +291,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -468,16 +402,10 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -671,32 +599,13 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))     # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -704,15 +613,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))     # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -720,37 +621,18 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -758,21 +640,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -883,16 +751,10 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -1086,32 +948,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))   # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -1119,15 +962,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -1135,37 +970,18 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))     # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -1173,21 +989,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -1298,16 +1100,10 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -1501,32 +1297,13 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -1534,15 +1311,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -1550,37 +1319,18 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -1588,21 +1338,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -1713,16 +1449,10 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -1916,32 +1646,13 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -1949,15 +1660,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -1965,37 +1668,18 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -2003,21 +1687,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -2128,16 +1798,10 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -2331,32 +1995,13 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -2364,15 +2009,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -2380,37 +2017,18 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -2418,21 +2036,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -2543,16 +2147,10 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 创建数据管理器实例（使用默认连接参数）
         self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
-
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -2746,32 +2344,13 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_118.setText(str(data.get('parameter5', '')))
         self.label_119.setText(str(data.get('parameter6', '')))
         self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))
-        # print('挤出机实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'),
-        #       data.get('parameter7', 'N/A'),
-        #       data.get('parameter8', 'N/A'),
-        #       data.get('parameter9', 'N/A'),
-        #       data.get('parameter10', 'N/A'),
-        #       data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_53.setText(str(data.get('parameter12', '')))
         self.label_57.setText(str(data.get('parameter13', '')))
         self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))
-        # print('放卷机实时数据：',
-        #       data.get('parameter12', 'N/A'),
-        #       data.get('parameter13', 'N/A'),
-        #       data.get('parameter14', 'N/A'),
-        #       data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
         self.label_73.setText(str(data.get('parameter16', '')))
@@ -2779,15 +2358,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_81.setText(str(data.get('parameter18', '')))
         self.label_85.setText(str(data.get('parameter19', '')))
         self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))
-        # print('自动机实时数据：',
-        #       data.get('parameter16', 'N/A'),
-        #       data.get('parameter17', 'N/A'),
-        #       data.get('parameter18', 'N/A'),
-        #       data.get('parameter19', 'N/A'),
-        #       data.get('parameter20', 'N/A'),
-        #       data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
-
+        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_4.setText(str(data.get('parameter1', '')))
@@ -2795,37 +2366,18 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_6.setText(str(data.get('parameter3', '')))
         self.lineEdit_7.setText(str(data.get('parameter4', '')))
         self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))
-        # print('挤出机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_13.setText(str(data.get('parameter1', '')))
         self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))
-        # print('放卷机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_17.setText(str(data.get('parameter1', '')))
         self.lineEdit_18.setText(str(data.get('parameter2', '')))
         self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))
-        # print('自动机设定数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
-
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
         self.lineEdit_23.setText(str(data.get('parameter1', '')))
@@ -2833,21 +2385,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_114.setText(str(data.get('parameter3', '')))
         self.label_115.setText(str(data.get('parameter4', '')))
         self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))
-        # print('曲线设定实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'),
-        #       data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前实时数据窗口，显示历史参数弹窗的方法
-    # def show_dialog_pop_historical_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_historical:  # 判断是否已存在实例
-    #     #     self.dialog_historical = HistoricalParameterDialog()
-    #     self.dialog_historical.show()
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -3067,34 +2605,14 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_1_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_1_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -3102,67 +2620,30 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -3364,34 +2845,14 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_2_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_2_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -3399,67 +2860,30 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -3661,34 +3085,14 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_3_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_3_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -3696,67 +3100,30 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -3958,34 +3325,14 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_4_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_4_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -3993,67 +3340,30 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -4255,34 +3565,14 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_1_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_1_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -4290,67 +3580,30 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -4552,34 +3805,14 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_2_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_2_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -4587,67 +3820,30 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -4849,34 +4045,14 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_125.setText(str(data.get('parameter5', '')))
             self.label_126.setText(str(data.get('parameter6', '')))
             self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))
-            print('挤出机历史数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'),
-                  data.get('parameter7', 'N/A'),
-                  data.get('parameter8', 'N/A'),
-                  data.get('parameter9', 'N/A'),
-                  data.get('parameter10', 'N/A'),
-                  data.get('parameter11', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
-
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_3_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
             self.label_53.setText(str(data.get('parameter12', '')))
             self.label_57.setText(str(data.get('parameter13', '')))
             self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))
-            print('放卷机实时数据：',
-                  data.get('parameter12', 'N/A'),
-                  data.get('parameter13', 'N/A'),
-                  data.get('parameter14', 'N/A'),
-                  data.get('parameter15', 'N/A'))  # 使用get方法提供默认值
-            # ... 其他参数更新逻辑（保持相同模式）
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_3_realtime_data_zdj":
             self.label_73.setText(str(data.get('parameter16', '')))
@@ -4884,67 +4060,30 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_81.setText(str(data.get('parameter18', '')))
             self.label_85.setText(str(data.get('parameter19', '')))
             self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))
-            print('自动机实时数据：',
-                  data.get('parameter16', 'N/A'),
-                  data.get('parameter17', 'N/A'),
-                  data.get('parameter18', 'N/A'),
-                  data.get('parameter19', 'N/A'),
-                  data.get('parameter20', 'N/A'),
-                  data.get('parameter21', 'N/A'))  # 使用get方法提供默认值
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_jcj":
             self.label_104.setText(str(data.get('parameter1', '')))
             self.label_105.setText(str(data.get('parameter2', '')))
             self.label_106.setText(str(data.get('parameter3', '')))
             self.label_107.setText(str(data.get('parameter4', '')))
             self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))
-            print('挤出机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_fjj":
             self.label_109.setText(str(data.get('parameter1', '')))
             self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))
-            print('放卷机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'))  # 使用get方法提供默认值
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_zdj":
             self.label_112.setText(str(data.get('parameter1', '')))
             self.label_113.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))
-            print('自动机设定数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'))  # 使用get方法提供默认值
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_curve":
             self.label_117.setText(str(data.get('parameter1', '')))
             self.label_118.setText(str(data.get('parameter2', '')))
             self.label_114.setText(str(data.get('parameter3', '')))
             self.label_115.setText(str(data.get('parameter4', '')))
             self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))
-            print('曲线设定实时数据：',
-                  data.get('parameter1', 'N/A'),
-                  data.get('parameter2', 'N/A'),
-                  data.get('parameter3', 'N/A'),
-                  data.get('parameter4', 'N/A'),
-                  data.get('parameter5', 'N/A'),
-                  data.get('parameter6', 'N/A'))  # 使用get方法提供默认值
-
-    # 定义隐藏当前历史数据窗口，显示实时参数弹窗的方法
-    # def show_dialog_pop_parameter(self):
-    #     self.hide()  # 隐藏当前窗口
-    #     # if not self.dialog_realtime:  # 判断是否已存在实例
-    #     #     self.dialog_realtime = ParameterDialog()
-    #     self.dialog_realtime.show()
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         self.hide()  # 隐藏当前窗口
@@ -5428,20 +4567,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 绑定最小化按钮：点击时最小化所有窗口
         self.Button_minimize.clicked.connect(self.minimize_all_windows)
 
+        # 创建数据管理器实例（使用默认连接参数）
+        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
-        # 创建数据更新定时器（继承自QObject）
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_realtime_data)  # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
         # 创建线程管理器字典
         self.threads = {}
         # 前端根据CLASS_TABLES自动生成包含所有表名的版本字典
@@ -5709,92 +4843,49 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable4.setText(str(data.get('parameter2', '')))
         self.curve1_lable6.setText(str(data.get('parameter3', '')))
         self.curve1_lable8.setText(str(data.get('parameter4', '')))
-        self.curve1_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        self.curve1_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def _update_curve2_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve2_lable2.setText(str(data.get('parameter1', '')))
         self.curve2_lable4.setText(str(data.get('parameter2', '')))
         self.curve2_lable6.setText(str(data.get('parameter3', '')))
         self.curve2_lable8.setText(str(data.get('parameter4', '')))
-        self.curve2_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        self.curve2_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def _update_curve3_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve3_lable2.setText(str(data.get('parameter1', '')))
         self.curve3_lable4.setText(str(data.get('parameter2', '')))
         self.curve3_lable6.setText(str(data.get('parameter3', '')))
         self.curve3_lable8.setText(str(data.get('parameter4', '')))
-        self.curve3_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        self.curve3_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def _update_curve4_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve4_lable2.setText(str(data.get('parameter1', '')))
         self.curve4_lable4.setText(str(data.get('parameter2', '')))
         self.curve4_lable6.setText(str(data.get('parameter3', '')))
         self.curve4_lable8.setText(str(data.get('parameter4', '')))
-        self.curve4_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        self.curve4_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def _update_curve5_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve5_lable2.setText(str(data.get('parameter1', '')))
         self.curve5_lable4.setText(str(data.get('parameter2', '')))
         self.curve5_lable6.setText(str(data.get('parameter3', '')))
         self.curve5_lable8.setText(str(data.get('parameter4', '')))
-        self.curve5_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        self.curve5_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def _update_curve6_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve6_lable2.setText(str(data.get('parameter1', '')))
         self.curve6_lable4.setText(str(data.get('parameter2', '')))
         self.curve6_lable6.setText(str(data.get('parameter3', '')))
         self.curve6_lable8.setText(str(data.get('parameter4', '')))
-        self.curve6_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
+        self.curve6_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def _update_curve7_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve7_lable2.setText(str(data.get('parameter1', '')))
         self.curve7_lable4.setText(str(data.get('parameter2', '')))
         self.curve7_lable6.setText(str(data.get('parameter3', '')))
         self.curve7_lable8.setText(str(data.get('parameter4', '')))
-        self.curve7_lable10.setText(str(data.get('parameter5', '')))
-        # print('首页面曲线1实时数据：',
-        #       data.get('parameter1', 'N/A'),
-        #       data.get('parameter2', 'N/A'),
-        #       data.get('parameter3', 'N/A'),
-        #       data.get('parameter4', 'N/A'),
-        #       data.get('parameter5', 'N/A'))  # 使用get方法提供默认值
-
+        self.curve7_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
     def minimize_all_windows(self):
         """最小化所有窗口的方法"""
         # 隐藏所有弹出窗口
@@ -5850,10 +4941,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable9_37.setText(time_str)  # 更新6#曲线截止时间标签
         self.curve1_lable9_38.setText(time_str)  # 更新7#曲线截止时间标签
 
-    # def show_pop_parameter(self, event):
-    #     """显示参数弹窗的槽函数"""
-    #     self.pop_dialog.show()  # 显示弹窗
-    #     event.accept()  # 接受事件，阻止进一步传播
     def show_pop_parameter(self, event):
         """显示参数弹窗的槽函数"""
         # 检查弹窗是否已存在
@@ -5945,11 +5032,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory2_3.activateWindow()  # 激活窗口（置于前台）
             self.pop_dialog_factory2_3.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
-
-    # def show_pop_alarm(self, event):
-    #     """显示报警弹窗的槽函数"""
-    #     self.pop_alarm_dialog.show()  # 显示弹窗
-    #     event.accept()  # 接受事件，阻止进一步传播
     def show_pop_alarm(self, event):
         """显示报警弹窗的槽函数"""
         # 检查弹窗是否已存在
