@@ -56,7 +56,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -65,9 +64,19 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory1_1_realtime_data_jcj",
+            "factory1_1_realtime_data_fjj",
+            "factory1_1_realtime_data_zdj",
+            "factory1_1_set_data_jcj",
+            "factory1_1_set_data_fjj",
+            "factory1_1_set_data_zdj",
+            "factory1_1_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -178,59 +187,56 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater) # type: ignore[attr-defined] # 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory1_1_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory1_1_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory1_1_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory1_1_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory1_1_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory1_1_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory1_1_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory1_1_realtime_data_jcj": self._update_jcj_realtime,
+            "factory1_1_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_1_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_1_set_data_jcj": self._update_jcj_set,
+            "factory1_1_set_data_fjj": self._update_fjj_set,
+            "factory1_1_set_data_zdj": self._update_zdj_set,
+            "factory1_1_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -354,12 +360,22 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
+    # 重写关闭事件，确保线程正确停止
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -405,7 +421,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -414,9 +429,19 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory1_2_realtime_data_jcj",
+            "factory1_2_realtime_data_fjj",
+            "factory1_2_realtime_data_zdj",
+            "factory1_2_set_data_jcj",
+            "factory1_2_set_data_fjj",
+            "factory1_2_set_data_zdj",
+            "factory1_2_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -527,59 +552,56 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory1_2_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory1_2_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory1_2_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory1_2_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory1_2_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory1_2_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory1_2_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory1_2_realtime_data_jcj": self._update_jcj_realtime,
+            "factory1_2_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_2_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_2_set_data_jcj": self._update_jcj_set,
+            "factory1_2_set_data_fjj": self._update_fjj_set,
+            "factory1_2_set_data_zdj": self._update_zdj_set,
+            "factory1_2_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -704,11 +726,18 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -754,7 +783,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -763,9 +791,19 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory1_3_realtime_data_jcj",
+            "factory1_3_realtime_data_fjj",
+            "factory1_3_realtime_data_zdj",
+            "factory1_3_set_data_jcj",
+            "factory1_3_set_data_fjj",
+            "factory1_3_set_data_zdj",
+            "factory1_3_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -876,59 +914,56 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run) # type: ignore[attr-defined] # 线程启动时执行run方法
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]    # 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]   # 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)     # type: ignore[attr-defined]    # 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory1_3_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory1_3_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory1_3_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory1_3_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory1_3_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory1_3_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory1_3_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory1_3_realtime_data_jcj": self._update_jcj_realtime,
+            "factory1_3_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_3_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_3_set_data_jcj": self._update_jcj_set,
+            "factory1_3_set_data_fjj": self._update_fjj_set,
+            "factory1_3_set_data_zdj": self._update_zdj_set,
+            "factory1_3_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -1053,11 +1088,18 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -1103,7 +1145,6 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -1112,9 +1153,19 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory1_4_realtime_data_jcj",
+            "factory1_4_realtime_data_fjj",
+            "factory1_4_realtime_data_zdj",
+            "factory1_4_set_data_jcj",
+            "factory1_4_set_data_fjj",
+            "factory1_4_set_data_zdj",
+            "factory1_4_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -1225,59 +1276,56 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory1_4_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory1_4_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory1_4_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory1_4_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory1_4_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory1_4_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory1_4_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory1_4_realtime_data_jcj": self._update_jcj_realtime,
+            "factory1_4_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_4_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_4_set_data_jcj": self._update_jcj_set,
+            "factory1_4_set_data_fjj": self._update_fjj_set,
+            "factory1_4_set_data_zdj": self._update_zdj_set,
+            "factory1_4_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -1402,11 +1450,18 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -1452,7 +1507,6 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -1461,9 +1515,19 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory2_1_realtime_data_jcj",
+            "factory2_1_realtime_data_fjj",
+            "factory2_1_realtime_data_zdj",
+            "factory2_1_set_data_jcj",
+            "factory2_1_set_data_fjj",
+            "factory2_1_set_data_zdj",
+            "factory2_1_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -1574,59 +1638,56 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory2_1_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory2_1_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory2_1_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory2_1_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory2_1_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory2_1_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory2_1_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory2_1_realtime_data_jcj": self._update_jcj_realtime,
+            "factory2_1_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_1_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_1_set_data_jcj": self._update_jcj_set,
+            "factory2_1_set_data_fjj": self._update_fjj_set,
+            "factory2_1_set_data_zdj": self._update_zdj_set,
+            "factory2_1_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -1751,11 +1812,18 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -1801,7 +1869,6 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -1810,9 +1877,19 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory2_2_realtime_data_jcj",
+            "factory2_2_realtime_data_fjj",
+            "factory2_2_realtime_data_zdj",
+            "factory2_2_set_data_jcj",
+            "factory2_2_set_data_fjj",
+            "factory2_2_set_data_zdj",
+            "factory2_2_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -1923,59 +2000,56 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory2_2_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory2_2_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory2_2_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory2_2_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory2_2_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory2_2_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory2_2_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory2_2_realtime_data_jcj": self._update_jcj_realtime,
+            "factory2_2_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_2_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_2_set_data_jcj": self._update_jcj_set,
+            "factory2_2_set_data_fjj": self._update_fjj_set,
+            "factory2_2_set_data_zdj": self._update_zdj_set,
+            "factory2_2_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -2100,11 +2174,18 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -2150,7 +2231,6 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -2159,9 +2239,19 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory2_3_realtime_data_jcj",
+            "factory2_3_realtime_data_fjj",
+            "factory2_3_realtime_data_zdj",
+            "factory2_3_set_data_jcj",
+            "factory2_3_set_data_fjj",
+            "factory2_3_set_data_zdj",
+            "factory2_3_set_data_curve"
+        ]
 
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
         # 合并所有采集任务到单个线程
         self._start_insert_thread(
             groups=[
@@ -2272,59 +2362,56 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 启动线程（开始执行事件循环）
         thread.start()
 
-    def update_realtime_data(self):
-        """智能更新实时数据的方法（主入口）
-        功能说明：通过版本号对比机制，只更新发生变化的数据库表
-        实现原理：比较数据库当前版本号与本地缓存版本号，触发差异更新"""
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 从数据库获取所有表的当前版本号（字典结构：{表名: 最新版本号}）
-        current_versions = self.data_manager.get_data_versions()
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-        # 遍历所有表名（current_versions字典的键）
-        for table_name in current_versions:
-            # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-            if current_versions[table_name] > self.data_versions[table_name]:
-                # 调用私有方法更新具体表数据
-                self._update_table_data(table_name)
-                # 更新本地版本号为最新值（保持版本同步）
-                self.data_versions[table_name] = current_versions[table_name]
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据
-        参数说明：
-        - table_name: 字符串类型，需要更新的数据库表名称
-        执行流程：
-        1. 从数据库获取最新数据
-        2. 有效性验证
-        3. 根据表名选择更新策略
-        4. 执行具体更新操作"""
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)# type: ignore[attr-defined]
 
-        # 从数据管理器获取指定表的实时数据（返回字典或None）
-        data = self.data_manager.get_realtime_data(table_name)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
-        # 数据有效性检查：如果data为空（None）、空字典或假值
-        if not data:
-            return  # 提前退出，不执行后续操作
+        # 启动线程
+        thread.start()
 
-        # 创建策略映射字典（表名与更新方法的对应关系）
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            # 键：表名字符串 -> 值：对应的更新方法（函数对象）
-            "factory2_3_realtime_data_jcj": self._update_jcj_realtime,  # 挤出机实时数据
-            "factory2_3_realtime_data_fjj": self._update_fjj_realtime,  # 放卷机实时数据
-            "factory2_3_realtime_data_zdj": self._update_zdj_realtime,  # 自动机实时数据
-            "factory2_3_set_data_jcj": self._update_jcj_set,  # 挤出机设定数据
-            "factory2_3_set_data_fjj": self._update_fjj_set,  # 放卷机设定数据
-            "factory2_3_set_data_zdj": self._update_zdj_set,  # 自动机设定数据
-            "factory2_3_set_data_curve": self._update_curve_set  # 曲线设定数据
+            "factory2_3_realtime_data_jcj": self._update_jcj_realtime,
+            "factory2_3_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_3_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_3_set_data_jcj": self._update_jcj_set,
+            "factory2_3_set_data_fjj": self._update_fjj_set,
+            "factory2_3_set_data_zdj": self._update_zdj_set,
+            "factory2_3_set_data_curve": self._update_curve_set
         }
 
-        # 使用海象运算符 := 在条件判断中同时完成赋值操作
-        # 1. 从字典中获取对应表名的更新策略（函数对象）
-        # 2. 如果找到对应策略（非None），执行该策略
+        # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            # 调用对应的更新方法，并传入获取到的数据，这里update_strategies.get(table_name)的表名对应的函数对象
-            strategy(data)  # type: ignore[attr-defined] # 表名对应的函数对象，括号内参数为data字典，字典内为例如parameter1~parameter11等参数
-
+            strategy(data)# type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -2449,11 +2536,18 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗"""
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
         # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:  # 判断dialog_historical是否已初始化
-            self.dialog_historical.close()  # 调用历史弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -4172,12 +4266,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.data_manager = data_manager
         # 创建历史数据管理器实例
         self.hist_data_manager = historical_data_manager
-        # 创建数据更新定时器
-        self.data_timer = QTimer(self)
-        # 连接定时器信号到更新方法（每秒触发一次）
-        self.data_timer.timeout.connect(self.update_alarm_data) # type: ignore[attr-defined]
-        # 启动定时器（间隔1000毫秒=1秒）
-        self.data_timer.start(1000)
         # 初始化报警表名列表
         self.alarm_tables = [
             'factory1_1_alarm_data',
@@ -4205,133 +4293,50 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 连接查询按钮的点击信号到查询方法
         self.pushButton_query.clicked.connect(self.query_historical_alarms)
-
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_alarm_data)
-
-        self._start_insert_thread(
-            groups=[
-                ("factory1_1_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.10"
-        )
-        self._start_insert_thread(
-            groups=[
-                ("factory1_2_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.14"
-        )
-        self._start_insert_thread(
-            groups=[
-                ("factory1_3_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.22"
-        )
-        self._start_insert_thread(
-            groups=[
-                ("factory1_4_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.26"
-        )
-        self._start_insert_thread(
-            groups=[
-                ("factory2_1_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.156.18"
-        )
-        self._start_insert_thread(
-            groups=[
-                ("factory2_2_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.156.14"
-        )
-        self._start_insert_thread(
-            groups=[
-                ("factory2_3_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.156.22"
-        )
-    # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
+        # 启动报警数据更新线程 - 使用DataUpdateWorker
+        self._start_data_update_thread(self.alarm_tables)
+        # 启动数据采集线程
+        self._start_insert_threads()
+    # 添加新方法：启动所有数据采集线程
+    # 添加新方法：启动数据更新线程 - 复用DataUpdateWorker
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
         thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
 
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
+        # 将工作对象移动到新线程
         worker.moveToThread(thread)
 
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run_int)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+        # 信号连接
+        thread.started.connect(worker.run)  #type: ignore[arg-type]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  #type: ignore[arg-type]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  #type: ignore[arg-type]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  #type: ignore[arg-type]# 线程退出后销毁线程对象
 
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_alarm_update)#type: ignore[arg-type]
+
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
+
+        # 启动线程
         thread.start()
-
-    def right_down_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width())
-        y = (screen.height() - self.height())
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def update_alarm_data(self):
-        """智能更新报警数据的方法"""
-        # 获取所有数据表的当前版本号
-        current_versions = self.data_manager.get_data_versions()
-
-        # 遍历所有报警表名
-        for table_name in self.alarm_tables:
-            # 检查表是否存在于当前版本中
-            if table_name in current_versions:
-                # 版本号对比：数据库版本 > 本地缓存版本（说明有新数据）
-                if current_versions[table_name] > self.data_versions.get(table_name, 0):
-                    # 调用方法更新具体表数据
-                    self._update_alarm_table_data(table_name)
-                    # 更新本地版本号为最新值（保持版本同步）
-                    self.data_versions[table_name] = current_versions[table_name]
-
-    def _update_alarm_table_data(self, table_name):
-        """更新指定报警表的数据到界面"""
-        # 从数据管理器获取指定表的实时数据
-        data = self.data_manager.get_realtime_data(table_name)
-
+    # 添加新方法：处理报警数据更新
+    def _handle_alarm_update(self, table_name, data):
+        """处理从子线程接收到的报警数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
         # 数据有效性检查
         if not data or 'parameter1' not in data:
             print("Invalid data or missing 'parameter1' field.")
-            return 
+            return
 
         # 获取报警值
         alarm_value = data.get('parameter1','')
@@ -4383,7 +4388,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 如果已有9条报警，移除最早的一条
         if len(rows) >= 9:
-            rows.pop(0)
+            rows.pop(0) #type: ignore[arg-type]
 
         # 添加新报警到列表末尾
         rows.append(alarm_text)
@@ -4400,7 +4405,112 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.tableWidget_realtime_alarm.scrollToBottom()
 
         print(f"新报警: {factory} {device} - {alarm_content}")
+    def _start_insert_threads(self):
+        """启动所有数据采集线程"""
+        # 工厂1设备1报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_1_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.155.10"
+        )
+        # 工厂1设备2报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_2_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.155.14"
+        )
+        # 工厂1设备3报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_3_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.155.22"
+        )
+        # 工厂1设备4报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_4_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.155.26"
+        )
+        # 工厂2设备1报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory2_1_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.156.18"
+        )
+        # 工厂2设备2报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory2_2_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.156.14"
+        )
+        # 工厂2设备3报警数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory2_3_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
+            ],
+            ip="192.168.156.22"
+        )
+    # ------------------------- 线程启动方法 -------------------------
+    def _start_insert_thread(self, groups, ip):
+        """启动异步插入线程的方法（工厂方法）"""
+        # 创建唯一标识符（示例使用第一个表名）
+        table_names = [g[0] for g in groups]
+        key = "_".join(table_names)
 
+        # 检查是否已存在相同线程
+        if key in self.threads:
+            return
+        # 创建线程对象（QThread实例）
+        thread = QThread()
+        # 创建工作线程实例，传递表名、组配置和IP地址
+        worker = InsertWorker(groups, ip)
+
+        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
+        worker.moveToThread(thread)
+
+        # 信号连接（线程启动时触发工作对象的run方法）
+        thread.started.connect(worker.run_int)  # type: ignore[attr-defined]
+        # 工作完成时退出线程（finished信号来自worker）
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        # 工作完成后销毁worker对象
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        # 线程退出后销毁线程对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 存储线程引用（防止被Python垃圾回收）
+        self.threads[key] = (thread, worker) # 使用字符串作为键
+        # 启动线程（开始执行事件循环）
+        thread.start()
+
+    def right_down_dialog(self):
+        """将弹窗居中显示的方法"""
+        # 获取主屏幕尺寸
+        screen = QApplication.primaryScreen().geometry()
+        # 计算居中坐标（屏幕宽度-窗口宽度）/2
+        x = (screen.width() - self.width())
+        y = (screen.height() - self.height())
+        # 移动窗口到计算位置
+        self.move(x, y)
     @staticmethod
     def _get_alarm_content(alarm_code):
         """根据报警代码获取报警内容描述"""
@@ -4503,6 +4613,10 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         print(f"共查询到 {len(all_alarms)} 条历史报警记录")
 
+    # 添加关闭事件处理方法
+    # 修改AlarmDialog类的closeEvent方法
+
+
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -4572,7 +4686,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
+        # self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -4580,8 +4694,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.threads = {}
         # 前端根据CLASS_TABLES自动生成包含所有表名的版本字典
         self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
-        # 立即触发首次数据加载
-        QTimer.singleShot(0, self.update_realtime_data)
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory1_1_set_data_curve",
+            "factory1_2_set_data_curve",
+            "factory1_2_set_data_curve",
+            "factory1_4_set_data_curve",
+            "factory2_1_set_data_curve",
+            "factory2_2_set_data_curve",
+            "factory2_3_set_data_curve"
+        ]
+
+        # 启动数据更新线程
+        self._start_data_update_thread(self.tables_to_monitor)
+        # # 立即触发首次数据加载
+        # QTimer.singleShot(0, self.update_realtime_data)
         # 添加管径实时曲线（示例配置）
         # 合并所有采集任务到单个线程
         self._start_combined_insert_thread([
@@ -4642,106 +4769,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                            (1, 2, ["parameter5"])]
             }
         ])
-        #
-        # self.curve_plotter1 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve1,  # 对应UI中的曲线容器
-        #     table_name="factory1_1_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # self.curve_plotter2 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve2,  # 对应UI中的曲线容器
-        #     table_name="factory1_2_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # self.curve_plotter3 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve3,  # 对应UI中的曲线容器
-        #     table_name="factory1_3_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # self.curve_plotter4 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve4,  # 对应UI中的曲线容器
-        #     table_name="factory1_4_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # self.curve_plotter5 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve5,  # 对应UI中的曲线容器
-        #     table_name="factory2_1_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # self.curve_plotter6 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve6,  # 对应UI中的曲线容器
-        #     table_name="factory2_2_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # self.curve_plotter7 = RealTimeMainWindowCurve1(
-        #     parent_widget=self.curve7,  # 对应UI中的曲线容器
-        #     table_name="factory2_3_set_data_curve",
-        #     params_config={
-        #         'curve3': 'parameter3',
-        #         'curve1': 'parameter1',
-        #         'curve6': 'parameter6',
-        #         'curve4': 'parameter4',
-        #         'curve2': 'parameter2',
-        #         'curve5': 'parameter5'
-        #     },
-        #     y_limits=(-1, 1)
-        # )
-        # # 在初始化曲线后添加事件穿透设置
-        # self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        # self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        # self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        # self.curve_plotter4.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        # self.curve_plotter5.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        # self.curve_plotter6.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        # self.curve_plotter7.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         # 添加管径实时曲线（使用循环简化代码）
         # 定义曲线配置
         curve_configs = [
@@ -4805,6 +4832,57 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.threads["combined_worker"] = (thread, worker)
         # 启动线程
         thread.start()
+
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
+
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory1_1_set_data_curve": self._update_curve1_realtime,
+            "factory1_2_set_data_curve": self._update_curve2_realtime,
+            "factory1_3_set_data_curve": self._update_curve3_realtime,
+            "factory1_4_set_data_curve": self._update_curve4_realtime,
+            "factory2_1_set_data_curve": self._update_curve5_realtime,
+            "factory2_2_set_data_curve": self._update_curve6_realtime,
+            "factory2_3_set_data_curve": self._update_curve7_realtime
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            strategy(data)  # type: ignore[attr-defined]
     def update_realtime_data(self):
         """智能更新实时数据的方法"""
         # 获取所有数据表的当前版本号
@@ -4886,31 +4964,100 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve7_lable6.setText(str(data.get('parameter3', '')))
         self.curve7_lable8.setText(str(data.get('parameter4', '')))
         self.curve7_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+
     def minimize_all_windows(self):
         """最小化所有窗口的方法"""
         # 隐藏所有弹出窗口
-        if self.pop_dialog.isVisible():
+        # 使用正确的变量名引用弹窗实例
+        if hasattr(self, 'pop_dialog') and self.pop_dialog.isVisible():
             self.pop_dialog.hide()
+        if hasattr(self, 'pop_dialog_factory1_2') and self.pop_dialog_factory1_2.isVisible():
+            self.pop_dialog_factory1_2.hide()
+        if hasattr(self, 'pop_dialog_factory1_3') and self.pop_dialog_factory1_3.isVisible():
+            self.pop_dialog_factory1_3.hide()
+        if hasattr(self, 'pop_dialog_factory1_4') and self.pop_dialog_factory1_4.isVisible():
+            self.pop_dialog_factory1_4.hide()
+        if hasattr(self, 'pop_dialog_factory2_1') and self.pop_dialog_factory2_1.isVisible():
+            self.pop_dialog_factory2_1.hide()
+        if hasattr(self, 'pop_dialog_factory2_2') and self.pop_dialog_factory2_2.isVisible():
+            self.pop_dialog_factory2_2.hide()
+        if hasattr(self, 'pop_dialog_factory2_3') and self.pop_dialog_factory2_3.isVisible():
+            self.pop_dialog_factory2_3.hide()
 
-        if self.dialog_historical.isVisible():
+        # 隐藏历史参数弹窗
+        if hasattr(self, 'dialog_historical') and self.dialog_historical.isVisible():
             self.dialog_historical.hide()
+        if hasattr(self, 'dialog_historical_factory1_2') and self.dialog_historical_factory1_2.isVisible():
+            self.dialog_historical_factory1_2.hide()
+        if hasattr(self, 'dialog_historical_factory1_3') and self.dialog_historical_factory1_3.isVisible():
+            self.dialog_historical_factory1_3.hide()
+        if hasattr(self, 'dialog_historical_factory1_4') and self.dialog_historical_factory1_4.isVisible():
+            self.dialog_historical_factory1_4.hide()
+        if hasattr(self, 'dialog_historical_factory2_1') and self.dialog_historical_factory2_1.isVisible():
+            self.dialog_historical_factory2_1.hide()
+        if hasattr(self, 'dialog_historical_factory2_2') and self.dialog_historical_factory2_2.isVisible():
+            self.dialog_historical_factory2_2.hide()
+        if hasattr(self, 'dialog_historical_factory2_3') and self.dialog_historical_factory2_3.isVisible():
+            self.dialog_historical_factory2_3.hide()
 
-        if self.pop_alarm_dialog.isVisible():
+        # 隐藏报警弹窗
+        if hasattr(self, 'pop_alarm_dialog') and self.pop_alarm_dialog.isVisible():
             self.pop_alarm_dialog.hide()
 
         # 最小化主窗口
         self.showMinimized()
+
     def close_all_windows(self):
         """关闭所有窗口的方法"""
-        # 遍历所有线程并停止它们
-        for thread, worker in self.threads.values():
-            worker.stop()  # 停止工作线程
-            thread.quit()  # 退出线程
-            thread.wait()  # 等待线程退出
+        # 停止所有线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    try:
+                        worker.stop()  # 停止工作线程
+                    except Exception as e:
+                        print(f"停止线程时出错: {e}")
+                thread.quit()  # 退出线程
+                thread.wait(1000)  # 等待线程退出，最多等待1秒
 
-        self.pop_dialog.close()  # 关闭参数弹窗（会自动关闭其子弹窗）
-        self.pop_alarm_dialog.close()  # 关闭报警弹窗
-        self.close()  # 关闭主窗口
+        # 关闭所有参数弹窗
+        if hasattr(self, 'pop_dialog'):
+            self.pop_dialog.close()
+        if hasattr(self, 'pop_dialog_factory1_2'):
+            self.pop_dialog_factory1_2.close()
+        if hasattr(self, 'pop_dialog_factory1_3'):
+            self.pop_dialog_factory1_3.close()
+        if hasattr(self, 'pop_dialog_factory1_4'):
+            self.pop_dialog_factory1_4.close()
+        if hasattr(self, 'pop_dialog_factory2_1'):
+            self.pop_dialog_factory2_1.close()
+        if hasattr(self, 'pop_dialog_factory2_2'):
+            self.pop_dialog_factory2_2.close()
+        if hasattr(self, 'pop_dialog_factory2_3'):
+            self.pop_dialog_factory2_3.close()
+
+        # 关闭所有历史参数弹窗
+        if hasattr(self, 'dialog_historical'):
+            self.dialog_historical.close()
+        if hasattr(self, 'dialog_historical_factory1_2'):
+            self.dialog_historical_factory1_2.close()
+        if hasattr(self, 'dialog_historical_factory1_3'):
+            self.dialog_historical_factory1_3.close()
+        if hasattr(self, 'dialog_historical_factory1_4'):
+            self.dialog_historical_factory1_4.close()
+        if hasattr(self, 'dialog_historical_factory2_1'):
+            self.dialog_historical_factory2_1.close()
+        if hasattr(self, 'dialog_historical_factory2_2'):
+            self.dialog_historical_factory2_2.close()
+        if hasattr(self, 'dialog_historical_factory2_3'):
+            self.dialog_historical_factory2_3.close()
+
+        # 关闭报警弹窗
+        if hasattr(self, 'pop_alarm_dialog'):
+            self.pop_alarm_dialog.close()
+
+        # 关闭主窗口
+        self.close()
 
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
@@ -5046,7 +5193,104 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_alarm_dialog.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
 
+    # 重写关闭事件，确保线程正确停止
+    # 添加closeEvent方法，确保通过系统关闭按钮关闭时也能级联关闭所有窗口
+    def closeEvent(self, event):
+        """处理关闭事件：关闭所有已打开的窗口"""
+        # 停止所有线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    try:
+                        worker.stop()  # 停止工作线程
+                    except Exception as e:
+                        print(f"停止线程时出错: {e}")
+                thread.quit()  # 退出线程
+                thread.wait(1000)  # 等待线程退出，最多等待1秒
 
+        # 关闭所有参数弹窗
+        if hasattr(self, 'pop_dialog'):
+            self.pop_dialog.close()
+        if hasattr(self, 'pop_dialog_factory1_2'):
+            self.pop_dialog_factory1_2.close()
+        if hasattr(self, 'pop_dialog_factory1_3'):
+            self.pop_dialog_factory1_3.close()
+        if hasattr(self, 'pop_dialog_factory1_4'):
+            self.pop_dialog_factory1_4.close()
+        if hasattr(self, 'pop_dialog_factory2_1'):
+            self.pop_dialog_factory2_1.close()
+        if hasattr(self, 'pop_dialog_factory2_2'):
+            self.pop_dialog_factory2_2.close()
+        if hasattr(self, 'pop_dialog_factory2_3'):
+            self.pop_dialog_factory2_3.close()
+
+        # 关闭所有历史参数弹窗
+        if hasattr(self, 'dialog_historical'):
+            self.dialog_historical.close()
+        if hasattr(self, 'dialog_historical_factory1_2'):
+            self.dialog_historical_factory1_2.close()
+        if hasattr(self, 'dialog_historical_factory1_3'):
+            self.dialog_historical_factory1_3.close()
+        if hasattr(self, 'dialog_historical_factory1_4'):
+            self.dialog_historical_factory1_4.close()
+        if hasattr(self, 'dialog_historical_factory2_1'):
+            self.dialog_historical_factory2_1.close()
+        if hasattr(self, 'dialog_historical_factory2_2'):
+            self.dialog_historical_factory2_2.close()
+        if hasattr(self, 'dialog_historical_factory2_3'):
+            self.dialog_historical_factory2_3.close()
+
+        # 关闭报警弹窗
+        if hasattr(self, 'pop_alarm_dialog'):
+            self.pop_alarm_dialog.close()
+
+        # 调用父类的关闭事件处理
+        super().closeEvent(event)
+
+# ---------------------------------数据更新工作线程类---------------------------------
+class DataUpdateWorker(QObject):
+    """数据更新工作线程类，负责从数据库获取数据并发送信号"""
+    # 定义信号，用于将获取的数据传递给主线程
+    data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
+    finished = pyqtSignal()  # 完成信号
+
+    def __init__(self, data_manager, tables_to_monitor):
+        """初始化数据更新工作线程
+        参数:
+            data_manager: 数据管理器实例
+            tables_to_monitor: 需要监控的表名列表
+        """
+        super().__init__()
+        self.data_manager = data_manager
+        self.tables_to_monitor = tables_to_monitor
+        self.running = True
+        # 存储本地缓存的版本号
+        self.data_versions = {table: 0 for table in self.tables_to_monitor}
+
+    def run(self):
+        """线程运行方法，定期检查数据库更新"""
+        while self.running:
+            # 获取所有表的当前版本号
+            current_versions = self.data_manager.get_data_versions()
+
+            # 检查每个监控的表是否有更新
+            for table_name in self.tables_to_monitor:
+                if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
+                    # 获取表的最新数据
+                    data = self.data_manager.get_realtime_data(table_name)
+                    if data:  # 确保数据有效
+                        # 发送信号，将表名和数据传递给主线程
+                        self.data_updated.emit(table_name, data)    # type: ignore[attr-defined]
+                    # 更新本地版本号
+                    self.data_versions[table_name] = current_versions[table_name]
+
+            # 短暂休眠，避免过度占用CPU
+            QThread.msleep(100)  # 休眠100毫秒
+
+    def stop(self):
+        """停止线程运行"""
+        self.running = False
+        self.finished.emit()    # type: ignore[attr-defined]
 # ---------------------------------数据库异步，工作线程类---------------------------------
 class InsertWorker(QObject):
     """执行实际插入操作的工作类（必须在主线程外运行）"""
@@ -5154,8 +5398,6 @@ class InsertWorker(QObject):
     def stop(self):
         self.keep_running = False
         self.cleanup()
-
-
 # ---------------------------------合并数据采集工作线程类---------------------------------
 class CombinedInsertWorker(QObject):
     """执行多个设备数据采集的合并工作类"""
