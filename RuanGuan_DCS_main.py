@@ -2572,6 +2572,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -2659,20 +2660,39 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
                   "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
-
+                self._update_ui_labels(table_name, data)
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
         Args:
@@ -2812,6 +2832,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -2899,19 +2920,39 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
                   "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
+                self._update_ui_labels(table_name, data)
 
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
@@ -3052,6 +3093,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -3139,19 +3181,40 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
                   "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
+                self._update_ui_labels(table_name, data)
 
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
@@ -3292,6 +3355,7 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -3379,19 +3443,40 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         tables = ["factory1_4_realtime_data_jcj", "factory1_4_realtime_data_fjj", "factory1_4_realtime_data_zdj" , "factory1_4_set_data_curve",
                   "factory1_4_set_data_jcj", "factory1_4_set_data_fjj", "factory1_4_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
+                self._update_ui_labels(table_name, data)
 
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
@@ -3532,6 +3617,7 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -3619,19 +3705,40 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         tables = ["factory2_1_realtime_data_jcj", "factory2_1_realtime_data_fjj", "factory2_1_realtime_data_zdj" , "factory2_1_set_data_curve",
                   "factory2_1_set_data_jcj", "factory2_1_set_data_fjj", "factory2_1_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
+                self._update_ui_labels(table_name, data)
 
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
@@ -3772,6 +3879,7 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -3859,19 +3967,40 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         tables = ["factory2_2_realtime_data_jcj", "factory2_2_realtime_data_fjj", "factory2_2_realtime_data_zdj" , "factory2_2_set_data_curve",
                   "factory2_2_set_data_jcj", "factory2_2_set_data_fjj", "factory2_2_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
+                self._update_ui_labels(table_name, data)
 
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
@@ -4012,6 +4141,7 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         # 调用父类构造方法
         super().__init__()
         # 初始化UI界面
+        self.threads = {}
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
         self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
         self.setupUi(self)
@@ -4099,19 +4229,40 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         tables = ["factory2_3_realtime_data_jcj", "factory2_3_realtime_data_fjj", "factory2_3_realtime_data_zdj" , "factory2_3_set_data_curve",
                   "factory2_3_set_data_jcj", "factory2_3_set_data_fjj", "factory2_3_set_data_zdj"]
 
-        # 遍历所有目标数据表
-        for table in tables:
-            # 执行精确时间点查询（开始时间=结束时间=目标时间）
-            data = self.hist_data_manager.get_nearest_data(
-                table,
-                exact_time,
-                start_time,
-                end_time
-            )
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
             # 如果有返回数据（即使只有一条）
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table, data)
+                self._update_ui_labels(table_name, data)
 
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
@@ -4545,50 +4696,33 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         print(f"查询历史报警: {start_time_str} 至 {end_time_str}")
 
-        # 存储所有查询到的报警记录
-        all_alarms = []
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = AlarmHistoryQueryWorker(self.alarm_tables, start_time_str, end_time_str)
 
-        # 遍历所有报警表
-        for table_name in self.alarm_tables:
-            # 查询指定时间段内的报警数据
-            alarm_data = self.hist_data_manager.get_historical_data(
-                table_name,
-                start_time_str,
-                end_time_str
-            )
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
 
-            # 如果查询到数据
-            if alarm_data:
-                for record in alarm_data:
-                    # 获取报警值
-                    alarm_value = record.get('parameter1')
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater) # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater) # type: ignore[attr-defined]
 
-                    # 如果报警值为0或空，则跳过
-                    if not alarm_value:
-                        continue
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_alarm_history)   # type: ignore[attr-defined]
 
-                    # 获取记录时间
-                    record_time = record.get('timestamp', start_time_str)
-                    if isinstance(record_time, datetime):
-                        record_time = record_time.strftime("%Y-%m-%d %H:%M:%S")
+        # 存储线程引用
+        self.threads['alarm_history_query'] = (thread, worker)
 
-                    # 解析表名获取工厂和设备信息
-                    parts = table_name.split('_')
-                    factory = parts[0]
-                    device = parts[1] if len(parts) > 1 else "未知设备"
-
-                    # 根据报警值获取报警内容
-                    alarm_content = self._get_alarm_content(alarm_value)
-
-                    # 构建报警显示文本
-                    alarm_text = f"[{record_time}] {factory}-{device}: {alarm_content}"
-
-                    # 添加到报警列表
-                    all_alarms.append((record_time, alarm_text))
-
-        # 按时间排序报警记录（从新到旧）
-        all_alarms.sort(key=lambda x: x[0], reverse=True)
-
+        # 启动线程
+        thread.start()
+    def _handle_alarm_history(self, all_alarms):
+        """处理从子线程接收到的历史报警数据
+        Args:
+            all_alarms: 报警记录列表 [(时间, 报警文本), ...]
+        """
         # 清空历史报警表格
         self.tableWidget_historical_alarm.clearContents()
 
@@ -4612,10 +4746,13 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.tableWidget_historical_alarm.scrollToTop()
 
         print(f"共查询到 {len(all_alarms)} 条历史报警记录")
-
-    # 添加关闭事件处理方法
-    # 修改AlarmDialog类的closeEvent方法
-
+    # def closeEvent(self, event):
+    #     # 停止所有报警相关线程
+    #     if hasattr(self, 'threads'):
+    #         for key, (thread, worker) in self.threads.items():
+    #             if hasattr(worker, 'stop'):
+    #                 worker.stop()
+    #     super().closeEvent(event)
 
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -5432,7 +5569,6 @@ class InsertWorker(QObject):
                                 port=self.port,  # 设备端口
                                 sock=self.sock  # 已建立的socket连接
                             )
-                            sleep(1)  # 重连后等待1秒
 
                             if not success:  # 如果插入失败
                                 self.reconnect()  # 执行重连
@@ -5481,7 +5617,6 @@ class InsertWorker(QObject):
                                 port=self.port,  # 设备端口
                                 sock=self.sock  # 已建立的socket连接
                             )
-                            sleep(1)  # 重连后等待1秒
 
                             if not success:  # 如果插入失败
                                 self.reconnect()  # 执行重连
@@ -5527,6 +5662,151 @@ class InsertWorker(QObject):
     def stop(self):
         self.keep_running = False
         self.cleanup()
+
+# ---------------------------------参数弹窗历史数据查询工作线程类---------------------------------
+class HistoricalDataQueryWorker(QObject):
+    """执行历史数据查询的工作线程类"""
+    # 定义信号，用于将查询结果传递给主线程
+    data_ready = pyqtSignal(dict)
+    finished = pyqtSignal()
+    error = pyqtSignal(str)
+
+    def __init__(self, tables, exact_time, start_time, end_time):
+        """初始化历史数据查询工作线程
+        Args:
+            tables: 要查询的表名列表
+            exact_time: 精确时间点
+            start_time: 查询开始时间
+            end_time: 查询结束时间
+        """
+        super().__init__()
+        self.tables = tables
+        self.exact_time = exact_time
+        self.start_time = start_time
+        self.end_time = end_time
+        # 创建历史数据管理器实例
+        self.hist_data_manager = historical_data_manager
+
+    def run(self):
+        """执行历史数据查询任务"""
+        try:
+            # 存储所有查询结果的字典
+            result_data = {}
+
+            # 遍历所有目标数据表
+            for table in self.tables:
+                # 执行精确时间点查询
+                data = self.hist_data_manager.get_nearest_data(
+                    table,
+                    self.exact_time,
+                    self.start_time,
+                    self.end_time
+                )
+                # 存储查询结果
+                result_data[table] = data
+
+            # 发送查询结果信号
+            self.data_ready.emit(result_data) # type: ignore[attr-defined]
+        except Exception as e:
+            print(f"历史数据查询异常: {str(e)}")
+            self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
+        finally:
+            # 发送完成信号
+            self.finished.emit()    # type: ignore[attr-defined]
+
+# ---------------------------------报警历史查询工作线程类---------------------------------
+class AlarmHistoryQueryWorker(QObject):
+    """执行报警历史数据查询的工作线程类"""
+    # 定义信号，用于将查询结果传递给主线程
+    data_ready = pyqtSignal(list)
+    finished = pyqtSignal()
+    error = pyqtSignal(str)
+
+    def __init__(self, alarm_tables, start_time_str, end_time_str):
+        """初始化报警历史数据查询工作线程
+        Args:
+            alarm_tables: 要查询的报警表名列表
+            start_time_str: 查询开始时间字符串
+            end_time_str: 查询结束时间字符串
+        """
+        super().__init__()
+        self.alarm_tables = alarm_tables
+        self.start_time_str = start_time_str
+        self.end_time_str = end_time_str
+        # 创建历史数据管理器实例
+        self.hist_data_manager = historical_data_manager
+
+    def run(self):
+        """执行报警历史数据查询任务"""
+        try:
+            # 存储所有查询到的报警记录
+            all_alarms = []
+
+            # 遍历所有报警表
+            for table_name in self.alarm_tables:
+                # 查询指定时间段内的报警数据
+                alarm_data = self.hist_data_manager.get_historical_data(
+                    table_name,
+                    self.start_time_str,
+                    self.end_time_str
+                )
+
+                # 如果查询到数据
+                if alarm_data:
+                    for record in alarm_data:
+                        # 获取报警值
+                        alarm_value = record.get('parameter1')
+
+                        # 如果报警值为0或空，则跳过
+                        if not alarm_value:
+                            continue
+
+                        # 获取记录时间
+                        record_time = record.get('timestamp', self.start_time_str)
+                        if isinstance(record_time, datetime):
+                            record_time = record_time.strftime("%Y-%m-%d %H:%M:%S")
+
+                        # 解析表名获取工厂和设备信息
+                        parts = table_name.split('_')
+                        factory = parts[0]
+                        device = parts[1] if len(parts) > 1 else "未知设备"
+
+                        # 根据报警值获取报警内容
+                        alarm_content = self._get_alarm_content(alarm_value)
+
+                        # 构建报警显示文本
+                        alarm_text = f"[{record_time}] {factory}-{device}: {alarm_content}"
+
+                        # 添加到报警列表
+                        all_alarms.append((record_time, alarm_text))
+
+            # 按时间排序报警记录（从新到旧）
+            all_alarms.sort(key=lambda x: x[0], reverse=True)
+
+            # 发送查询结果信号
+            self.data_ready.emit(all_alarms)    # type: ignore[attr-defined]
+        except Exception as e:
+            print(f"报警历史数据查询异常: {str(e)}")
+            self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
+        finally:
+            # 发送完成信号
+            self.finished.emit()    # type: ignore[attr-defined]
+
+    @staticmethod
+    def _get_alarm_content(alarm_code):
+        """根据报警代码获取报警内容描述"""
+        # 报警代码与内容的映射字典
+        alarm_dict = {
+            1: "上电加热...",
+            2: "挤出启动...",
+            4: "运转作业...",
+            8: "常规预警！",
+            16: "异常报警！",
+            32: "请求支援！"
+        }
+
+        # 返回对应的报警内容，如果没有对应的内容则返回默认文本
+        return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
 # ---------------------------------程序入口---------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # 创建应用实例
