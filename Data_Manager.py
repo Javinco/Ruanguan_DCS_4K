@@ -14,34 +14,6 @@ class DataInserter:
     """实时数据插入器（独立维护插入逻辑）
     功能：专门处理实时数据的批量插入操作
     设计考虑：采用mysql-connector连接池实现，与DataManager保持技术栈统一"""
-    # 单例模式相关变量
-    _instance = None  # 存储单例实例的类变量（私有属性）
-    _lock = threading.Lock()  # 添加线程锁（保证线程安全的单例创建）
-    # 第一次实例化                        # 后续实例化请求
-    # ↓                               ↓
-    # ┌─────────────┐                 ┌─────────────┐
-    # │ 获取线程锁    │                 │ 获取线程锁    │
-    # └─────┬───────┘                 └─────┬───────┘
-    # ↓                               ↓
-    # ┌─────────────┐                 ┌─────────────┐
-    # │ 创建新实例    │                 │ 返回现有实例  │
-    # └─────┬───────┘                 └─────┬───────┘
-    # ↓                               ↓
-    # ┌─────────────┐                 ┌─────────────┐
-    # │ 执行__init__ │                 │ 跳过__init__ │
-    # └─────────────┘                 └─────────────┘
-    # 这种双重检查机制是Python单例模式的经典实现，既保证了线程安全，又避免了不必要的资源消耗。
-    # 单例模式实现（__new__方法重写）
-    def __new__(cls, *args, **kwargs):
-        """实例创建方法（线程安全单例模式实现）"""
-        with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
-            # 检查是否已有实例存在
-            if cls._instance is None:
-                # 调用父类__new__方法创建新实例
-                cls._instance = super().__new__(cls)
-                # 初始化标记（防止重复初始化）
-                cls._instance.__initialized = False
-            return cls._instance    # 返回单例实例
     def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
         """类初始化构造器
         Args参数:
@@ -56,7 +28,7 @@ class DataInserter:
             'password': password,  # 数据库认证密码（生产环境需加密存储）
             'database': database,  # 默认操作的数据库名称
             'charset': 'utf8mb4',  # 字符集配置（支持4字节UTF-8编码）
-            'pool_size': 15,  # 连接池最大连接数（根据并发量调整）
+            'pool_size': 2,  # 连接池最大连接数（根据并发量调整）
             'autocommit': True  # 自动提交模式（确保实时数据立即持久化）
         }
         # （在Python中，每次实例化对象时，__init__会被调用，
@@ -65,11 +37,6 @@ class DataInserter:
         # 为了避免这种情况，代码中添加了__initialized标志。
         # 当实例第一次被初始化时，该标志被设置为True，之后每次__init__被调用时，检查该标志，如果已经初始化过，则直接返回，不再执行后续的初始化代码。
         # 这样可以确保单例实例只被初始化一次，避免资源重复分配或其他副作用。）
-        # 单例初始化控制（防止重复初始化）
-        if self.__initialized:  # 检查是否已经初始化
-            return  # 如果已初始化则直接返回
-        self.__initialized = True   # 设置初始化标记
-
         self._init_pool()  # 立即执行连接池初始化（类实例化时自动完成）
 
     def _init_pool(self):
@@ -79,7 +46,7 @@ class DataInserter:
         try:
             # 使用mysql.connector官方连接池实现
             self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
-                pool_name="dcs_inserter_pool",  # 连接池唯一标识（避免多池冲突）
+                pool_name=f"dcs_inserter_pool_{id(self)}",  # 唯一标识
                 pool_reset_session=True,  # 重置会话状态后回收连接
                 **self.conn_config  # 解包传递连接配置参数
             )
@@ -388,7 +355,7 @@ class DataManager:
             'user': user,  # 登录数据库的用户名凭证
             'password': password,  # 登录数据库的密码凭证
             'database': database,  # 要操作的数据库名称
-            'pool_size': 20,  # 连接池中保持的活跃连接数（防止多线程竞争）
+            'pool_size': 10,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
         # 单例初始化控制（防止重复初始化）
@@ -436,7 +403,7 @@ class DataManager:
         try:
             # 使用mysql.connector的连接池功能创建连接池
             self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
-                pool_name="dcs_pool",  # 连接池的名称标识
+                pool_name=f"dcs_inserter_pool_{id(self)}",  # 连接池的名称标识
                 pool_reset_session=True,  # 重置会话状态后返回连接池
                 **self.config  # 解包连接配置参数
             )
@@ -503,7 +470,7 @@ class HistoricalDataManager:
             'user': user,  # 数据库认证用户名
             'password': password,  # 数据库访问密码（需加密存储）
             'database': database,  # 指定操作数据库
-            'pool_size': 10,  # 连接池容量（根据历史查询并发量设置）
+            'pool_size': 1,  # 连接池容量（根据历史查询并发量设置）
             'autocommit': True  # 自动提交模式（查询操作无需事务）
         }
         self.connection_pool = None  # 连接池对象占位符
@@ -515,7 +482,7 @@ class HistoricalDataManager:
         try:
             # 创建独立命名的连接池（避免与实时数据池冲突）
             self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
-                pool_name="hist_pool",  # 连接池唯一标识
+                pool_name=f"dcs_inserter_pool_{id(self)}",  # 连接池唯一标识
                 pool_reset_session=True,  # 重置会话状态后回收连接
                 **self.config  # 解包连接配置参数
             )
