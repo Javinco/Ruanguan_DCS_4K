@@ -4707,132 +4707,218 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # # 立即触发首次数据加载
-        # QTimer.singleShot(0, self.update_realtime_data)
-        # 添加管径实时曲线（示例配置）
-        # 合并所有采集任务到单个线程
-        self._start_combined_insert_thread([
-            # 工厂1设备1
-            {
-                "table_name": "factory1_1_production_data",
-                "ip": "192.168.155.10",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
+        # 添加首页面采集子线程
+        self._start_insert_threads()
+        # 添加管径实时曲线
+        self.curve_plotter1 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve1,  # 对应UI中的曲线容器
+            table_name="factory1_1_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
-            # 工厂1设备2
-            {
-                "table_name": "factory1_2_production_data",
-                "ip": "192.168.155.14",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
+            y_limits=(-1, 1)
+        )
+        self.curve_plotter2 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve2,  # 对应UI中的曲线容器
+            table_name="factory1_2_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
-            # 工厂1设备3
-            {
-                "table_name": "factory1_3_production_data",
-                "ip": "192.168.155.22",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
+            y_limits=(-1, 1)
+        )
+        self.curve_plotter3 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve3,  # 对应UI中的曲线容器
+            table_name="factory1_3_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
-            # 工厂1设备4
-            {
-                "table_name": "factory1_4_production_data",
-                "ip": "192.168.155.26",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
+            y_limits=(-1, 1)
+        )
+        self.curve_plotter4 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve4,  # 对应UI中的曲线容器
+            table_name="factory1_4_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
-            # 工厂2设备1
-            {
-                "table_name": "factory2_1_production_data",
-                "ip": "192.168.156.18",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
+            y_limits=(-1, 1)
+        )
+        self.curve_plotter5 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve5,  # 对应UI中的曲线容器
+            table_name="factory2_1_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
-            # 工厂2设备2
-            {
-                "table_name": "factory2_2_production_data",
-                "ip": "192.168.156.14",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
+            y_limits=(-1, 1)
+        )
+        self.curve_plotter6 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve6,  # 对应UI中的曲线容器
+            table_name="factory2_2_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
             },
-            # 工厂2设备3
-            {
-                "table_name": "factory2_3_production_data",
-                "ip": "192.168.156.22",
-                "groups": [(231, 4, ["parameter1", "parameter2"]),
-                           (237, 4, ["parameter3", "parameter4"]),
-                           (1, 2, ["parameter5"])]
-            }
-        ])
-        # 添加管径实时曲线（使用循环简化代码）
-        # 定义曲线配置
-        curve_configs = [
-            {"widget": self.curve1, "table": "factory1_1_set_data_curve"},
-            {"widget": self.curve2, "table": "factory1_2_set_data_curve"},
-            {"widget": self.curve3, "table": "factory1_3_set_data_curve"},
-            {"widget": self.curve4, "table": "factory1_4_set_data_curve"},
-            {"widget": self.curve5, "table": "factory2_1_set_data_curve"},
-            {"widget": self.curve6, "table": "factory2_2_set_data_curve"},
-            {"widget": self.curve7, "table": "factory2_3_set_data_curve"},
-        ]
-
-        # 统一的参数配置（所有曲线使用相同的参数映射）
-        params_config = {
-            'curve3': 'parameter3',
-            'curve1': 'parameter1',
-            'curve6': 'parameter6',
-            'curve4': 'parameter4',
-            'curve2': 'parameter2',
-            'curve5': 'parameter5'
-        }
-
-        # 使用循环创建所有曲线实例
-        self.curve_plotters = []
-        for i, config in enumerate(curve_configs):
-            plotter = RealTimeMainWindowCurve1(
-                parent_widget=config["widget"],
-                table_name=config["table"],
-                params_config=params_config,
-                y_limits=(-1, 1)
-            )
-            # 设置事件穿透
-            plotter.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-            # 保存到列表中以便后续访问
-            self.curve_plotters.append(plotter)
-            # 为了兼容原有代码，保留原来的单独变量引用
-            setattr(self, f"curve_plotter{i + 1}", plotter)
-
+            y_limits=(-1, 1)
+        )
+        self.curve_plotter7 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve7,  # 对应UI中的曲线容器
+            table_name="factory2_3_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        # 在初始化曲线后添加事件穿透设置
+        self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter4.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter5.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter6.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter7.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+    def _start_insert_threads(self):
+        """启动所有数据采集线程"""
+        # 工厂1设备1产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_1_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.155.10"
+        )
+        # 工厂1设备2产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_2_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.155.14"
+        )
+        # 工厂1设备3产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_3_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.155.22"
+        )
+        # 工厂1设备4产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_4_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.155.26"
+        )
+        # 工厂2设备1产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory2_1_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.156.18"
+        )
+        # 工厂2设备2产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory2_2_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.156.14"
+        )
+        # 工厂2设备3产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory2_3_production_data", [
+                (231, 4, ["parameter1", "parameter2"]),
+                (237, 4, ["parameter3", "parameter4"]),
+                (1, 2, ["parameter5"])
+            ])
+            ],
+            ip="192.168.156.22"
+        )
     # ------------------------- 线程启动方法 -------------------------
-    def _start_combined_insert_thread(self, configs):
-        """启动合并的异步插入线程
+    def _start_insert_thread(self, groups, ip):
+        """启动异步插入线程的方法（工厂方法）"""
+        # 创建唯一标识符（示例使用第一个表名）
+        table_names = [g[0] for g in groups]
+        key = "_".join(table_names)
 
-        Args:
-            configs: 包含多个设备配置的列表，每个配置包含表名、IP和寄存器组
-        """
-        # 创建线程对象
+        # 检查是否已存在相同线程
+        if key in self.threads:
+            return
+        # 创建线程对象（QThread实例）
         thread = QThread()
-        # 创建工作线程实例
-        worker = CombinedInsertWorker(configs)
+        # 创建工作线程实例，传递表名、组配置和IP地址
+        worker = InsertWorker(groups, ip)
 
-        # 将工作对象移动到新线程
+        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
         worker.moveToThread(thread)
 
-        # 信号连接
+        # 信号连接（线程启动时触发工作对象的run方法）
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)     # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)     # type: ignore[attr-defined]
+        # 工作完成时退出线程（finished信号来自worker）
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        # 工作完成后销毁worker对象
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        # 线程退出后销毁线程对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 存储线程引用（防止被Python垃圾回收）
-        self.threads["combined_worker"] = (thread, worker)
-        # 启动线程
+        self.threads[key] = (thread, worker) # 使用字符串作为键
+        # 启动线程（开始执行事件循环）
         thread.start()
-
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -5346,6 +5432,7 @@ class InsertWorker(QObject):
                                 port=self.port,  # 设备端口
                                 sock=self.sock  # 已建立的socket连接
                             )
+                            sleep(1)  # 重连后等待1秒
 
                             if not success:  # 如果插入失败
                                 self.reconnect()  # 执行重连
@@ -5394,6 +5481,7 @@ class InsertWorker(QObject):
                                 port=self.port,  # 设备端口
                                 sock=self.sock  # 已建立的socket连接
                             )
+                            sleep(1)  # 重连后等待1秒
 
                             if not success:  # 如果插入失败
                                 self.reconnect()  # 执行重连
@@ -5439,107 +5527,6 @@ class InsertWorker(QObject):
     def stop(self):
         self.keep_running = False
         self.cleanup()
-# ---------------------------------合并数据采集工作线程类---------------------------------
-class CombinedInsertWorker(QObject):
-    """执行多个设备数据采集的合并工作类"""
-    # 定义完成信号
-    finished = pyqtSignal()
-
-    def __init__(self, configs):
-        """构造函数
-
-        Args:
-            configs: 包含多个设备配置的列表，每个配置包含表名、IP和寄存器组
-        """
-        super().__init__()
-        self.configs = configs
-        self.connections = {}  # 存储每个IP的socket连接
-        self.keep_running = True
-
-    def init_connection(self, ip, port=502):
-        """初始化到指定IP的连接"""
-        if ip not in self.connections or self.connections[ip] is None:
-            try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-                sock.settimeout(5)
-                sock.connect((ip, port))
-                self.connections[ip] = sock
-                print(f"成功建立到 {ip}:{port} 的持久连接")
-                return True
-            except Exception as e:
-                print(f"连接 {ip} 失败: {str(e)}")
-                self.connections[ip] = None
-                return False
-        return True
-    def run(self):
-        """执行数据采集任务"""
-        from time import sleep  # 导入sleep函数，用于线程休眠
-
-        try:  # 开始try块，捕获可能发生的异常
-            while self.keep_running:  # 主循环，只要keep_running为True就继续运行
-                for config in self.configs:  # 遍历所有设备配置
-                    ip = config["ip"]  # 从配置中获取设备IP地址
-                    table_name = config["table_name"]  # 从配置中获取数据表名
-                    groups = config["groups"]  # 从配置中获取寄存器组配置
-
-                    try:  # 内部try块，处理单个设备的连接和数据采集
-                        if not self.init_connection(ip):  # 尝试初始化连接
-                            continue  # 如果连接失败，跳过当前设备继续下一个
-
-                        try:  # 最内层try块，处理实际数据采集
-                            success = inserter.insert_combined_mcgs_data(
-                                table_name=table_name,  # 传入表名
-                                groups=groups,  # 传入寄存器组配置
-                                ip=ip,  # 传入设备IP
-                                port=502,  # 固定端口号502
-                                sock=self.connections[ip]  # 使用已建立的socket连接
-                            )
-                            if not success:  # 如果数据采集失败
-                                self.reconnect(ip)  # 尝试重新连接
-                        except (socket.timeout, ConnectionResetError) as e:
-                            # 捕获socket超时或连接重置异常
-                            print(f"{ip} 连接异常: {str(e)}，尝试重连...")
-                            self.reconnect(ip)  # 执行重连操作
-                            sleep(1)  # 重连后等待1秒
-                            break  # 跳出当前设备循环，重新开始
-                        except Exception as e:  # 捕获其他运行时异常
-                            print(f"{ip} 运行时异常: {str(e)}")
-                            sleep(1)  # 异常后等待1秒
-                    except Exception as e:  # 捕获设备处理过程中的异常
-                        print(f"{ip} 主循环异常: {str(e)}")
-                        sleep(1)  # 异常后等待1秒
-        finally:  # 无论是否发生异常都会执行的代码块
-            self.cleanup()  # 清理所有连接资源
-            self.finished.emit()  # type: ignore[attr-defined]# 发射完成信号，通知主线程
-    def reconnect(self, ip):
-        """重新连接指定IP"""
-        if ip in self.connections and self.connections[ip]:
-            try:
-                self.connections[ip].close()
-            except:
-                pass
-            self.connections[ip] = None
-
-        print(f"尝试重新连接 {ip}...")
-        self.init_connection(ip)
-
-    def cleanup(self):
-        """清理所有连接"""
-        for ip, sock in self.connections.items():
-            if sock:
-                try:
-                    sock.close()
-                except:
-                    pass
-        self.connections.clear()
-
-    def stop(self):
-        """停止工作线程"""
-        self.keep_running = False
-        self.cleanup()
-
-
 # ---------------------------------程序入口---------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # 创建应用实例

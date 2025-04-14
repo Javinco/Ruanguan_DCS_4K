@@ -56,7 +56,7 @@ class DataInserter:
             'password': password,  # 数据库认证密码（生产环境需加密存储）
             'database': database,  # 默认操作的数据库名称
             'charset': 'utf8mb4',  # 字符集配置（支持4字节UTF-8编码）
-            'pool_size': 10,  # 连接池最大连接数（根据并发量调整）
+            'pool_size': 15,  # 连接池最大连接数（根据并发量调整）
             'autocommit': True  # 自动提交模式（确保实时数据立即持久化）
         }
         # （在Python中，每次实例化对象时，__init__会被调用，
@@ -388,7 +388,7 @@ class DataManager:
             'user': user,  # 登录数据库的用户名凭证
             'password': password,  # 登录数据库的密码凭证
             'database': database,  # 要操作的数据库名称
-            'pool_size': 10,  # 连接池中保持的活跃连接数（防止多线程竞争）
+            'pool_size': 20,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
         # 单例初始化控制（防止重复初始化）
