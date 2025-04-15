@@ -23,7 +23,7 @@ from Ui_pop_historical_parameter_factory2_1 import Ui_Dialog_Pop_Historical_Para
 from Ui_pop_historical_parameter_factory2_2 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device2
 from Ui_pop_historical_parameter_factory2_3 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device3
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import data_manager, inserter,historical_data_manager
+from Data_Manager import DataManager, DataInserter,HistoricalDataManager
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
 from Ruanguan_Historical import HistoricalCurvePlotter
 
@@ -50,9 +50,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
@@ -61,9 +58,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory1_1_realtime_data_jcj",
@@ -196,7 +190,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -415,20 +409,13 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
-
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory1_2_realtime_data_jcj",
@@ -561,7 +548,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -777,20 +764,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
-
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory1_3_realtime_data_jcj",
@@ -923,7 +903,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1139,20 +1119,13 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
-
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory1_4_realtime_data_jcj",
@@ -1285,7 +1258,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1501,20 +1474,13 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
-
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory2_1_realtime_data_jcj",
@@ -1647,7 +1613,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1863,20 +1829,13 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
-
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory2_2_realtime_data_jcj",
@@ -2009,7 +1968,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -2225,20 +2184,13 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
-
         # 创建线程管理器字典
         self.threads = {}
-
-        # 前端根据全局变量CLASS_TABLES自动生成包含所有表名的本地缓存版本字典存入data_versions，
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory2_3_realtime_data_jcj",
@@ -2371,7 +2323,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -2588,8 +2540,6 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -2848,8 +2798,6 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -3109,8 +3057,6 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -3371,8 +3317,6 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -3633,8 +3577,6 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -3895,8 +3837,6 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -4157,8 +4097,6 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 添加历史数据管理器
-        self.hist_data_manager = historical_data_manager
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -4412,11 +4350,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.threads = {}
         # 设置窗口属性
         self.right_down_dialog()  # 初始右下角显示
-
-        # 创建数据管理器实例
-        self.data_manager = data_manager
-        # 创建历史数据管理器实例
-        self.hist_data_manager = historical_data_manager
         # 初始化报警表名列表
         self.alarm_tables = [
             'factory1_1_alarm_data',
@@ -4458,7 +4391,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -4817,9 +4750,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Button_close.clicked.connect(self.close_all_windows)
         # 绑定最小化按钮：点击时最小化所有窗口
         self.Button_minimize.clicked.connect(self.minimize_all_windows)
-
-        # 创建数据管理器实例（使用默认连接参数）
-        self.data_manager = data_manager
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
@@ -4829,8 +4759,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 创建线程管理器字典
         self.threads = {}
-        # 前端根据CLASS_TABLES自动生成包含所有表名的版本字典
-        self.data_versions = {table: 0 for table in data_manager.CLASS_TABLES}
         # 需要监控的表名列表
         self.tables_to_monitor = [
             "factory1_1_set_data_curve",
@@ -5065,7 +4993,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(self.data_manager, tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -5106,37 +5034,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
             strategy(data)  # type: ignore[attr-defined]
-    def update_realtime_data(self):
-        """智能更新实时数据的方法"""
-        # 获取所有数据表的当前版本号
-        current_versions = self.data_manager.get_data_versions()
-
-        # 只更新有变化的表
-        for table_name in current_versions:
-            if current_versions[table_name] > self.data_versions[table_name]:
-                self._update_table_data(table_name)
-                self.data_versions[table_name] = current_versions[table_name]
-
-    def _update_table_data(self, table_name):
-        """私有方法：更新指定表的数据"""
-        data = self.data_manager.get_realtime_data(table_name)
-        if not data:
-            return
-
-        # 根据表名分发更新逻辑
-        update_strategies = {
-            "factory1_1_production_data": self._update_curve1_realtime,
-            "factory1_2_production_data": self._update_curve2_realtime,
-            "factory1_3_production_data": self._update_curve3_realtime,
-            "factory1_4_production_data": self._update_curve4_realtime,
-            "factory2_1_production_data": self._update_curve5_realtime,
-            "factory2_2_production_data": self._update_curve6_realtime,
-            "factory2_3_production_data": self._update_curve7_realtime
-        }
-
-        if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
-
     # 分解原有的大更新方法为多个私有方法
     def _update_curve1_realtime(self, data):
         """更新挤出机实时数据"""
@@ -5477,14 +5374,14 @@ class DataUpdateWorker(QObject):
     data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
     finished = pyqtSignal()  # 完成信号
 
-    def __init__(self, data_manager, tables_to_monitor):
+    def __init__(self, tables_to_monitor):
         """初始化数据更新工作线程
         参数:
             data_manager: 数据管理器实例
             tables_to_monitor: 需要监控的表名列表
         """
         super().__init__()
-        self.data_manager = data_manager
+        self.data_manager = DataManager()
         self.tables_to_monitor = tables_to_monitor
         self.running = True
         # 存储本地缓存的版本号
@@ -5529,6 +5426,9 @@ class InsertWorker(QObject):
         self.port = port
         self.sock = None  # 持久化socket连接
         self.keep_running = True
+        self.inserter = DataInserter()
+        self.int_inserter = DataInserter()
+
 
     # 新增连接初始化方法
     def init_connection(self):
@@ -5562,7 +5462,7 @@ class InsertWorker(QObject):
 
                         try:  # 最内层异常捕获(单个寄存器组操作)
                             # 调用数据插入器插入整数数据
-                            success = inserter.insert_combined_mcgs_data(
+                            success = self.inserter.insert_combined_mcgs_data(
                                 table_name=table_name,  # 目标表名
                                 groups=groups,  # 寄存器组配置
                                 ip=self.ip,  # 设备IP地址
@@ -5610,7 +5510,7 @@ class InsertWorker(QObject):
 
                         try:  # 最内层异常捕获(单个寄存器组操作)
                             # 调用数据插入器插入整数数据
-                            success = inserter.insert_combined_mcgs_int_data(
+                            success = self.int_inserter.insert_combined_mcgs_int_data(
                                 table_name=table_name,  # 目标表名
                                 groups=groups,  # 寄存器组配置
                                 ip=self.ip,  # 设备IP地址
@@ -5685,7 +5585,7 @@ class HistoricalDataQueryWorker(QObject):
         self.start_time = start_time
         self.end_time = end_time
         # 创建历史数据管理器实例
-        self.hist_data_manager = historical_data_manager
+        self.hist_data_manager = HistoricalDataManager()
 
     def run(self):
         """执行历史数据查询任务"""
@@ -5734,7 +5634,7 @@ class AlarmHistoryQueryWorker(QObject):
         self.start_time_str = start_time_str
         self.end_time_str = end_time_str
         # 创建历史数据管理器实例
-        self.hist_data_manager = historical_data_manager
+        self.hist_data_manager = HistoricalDataManager()
 
     def run(self):
         """执行报警历史数据查询任务"""
