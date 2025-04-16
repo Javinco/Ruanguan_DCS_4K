@@ -4573,7 +4573,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         worker.moveToThread(thread)
 
         # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run_int)  # type: ignore[attr-defined]
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
         # 工作完成时退出线程（finished信号来自worker）
         worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
         # 工作完成后销毁worker对象
@@ -5445,102 +5445,88 @@ class InsertWorker(QObject):
                 self.sock = None
                 return False
         return True
-    def run(self):  # 定义线程运行方法(处理整数数据)
-        from time import sleep  # 导入sleep函数用于线程休眠
-
-        try:  # 开始异常捕获(最外层)
-            while self.keep_running:  # 主循环，当keep_running为True时持续运行
-                try:  # 中层异常捕获(连接和数据采集)
+    def run(self):# 定义线程运行方法(处理整数数据)
+        # 导入sleep函数用于线程休眠
+        from time import sleep
+        # 开始异常捕获(最外层)
+        try:
+            while self.keep_running:    # 主循环，当keep_running为True时持续运行
+                try:    # 中层异常捕获(连接和数据采集)
                     if not self.init_connection():  # 尝试初始化连接
                         sleep(1)  # 连接失败则休眠1秒
                         continue  # 跳过本次循环，重新尝试
 
-                    # 遍历所有组配置(每个设备可能有多个寄存器组)
-                    for group_config in self.groups:
-                        # 解包组配置(表名和寄存器组)
-                        table_name, groups = group_config
+                    # 新调用方式（一次处理所有表）
+                    success = self.inserter.insert_multiple_tables_data(
+                        table_groups=self.groups,   # 寄存器组配置
+                        sock=self.sock  # 已建立的socket连接
+                    )
+                    sleep(0.5)
 
-                        try:  # 最内层异常捕获(单个寄存器组操作)
-                            # 调用数据插入器插入整数数据
-                            success = self.inserter.insert_combined_mcgs_data(
-                                table_name=table_name,  # 目标表名
-                                groups=groups,  # 寄存器组配置
-                                ip=self.ip,  # 设备IP地址
-                                port=self.port,  # 设备端口
-                                sock=self.sock  # 已建立的socket连接
-                            )
+                    if not success:  # 如果插入失败
+                        self.reconnect()  # 执行重连
+                        sleep(0.5)
 
-                            if not success:  # 如果插入失败
-                                self.reconnect()  # 执行重连
-
-                        # 捕获网络相关异常(超时/连接重置)
-                        except (socket.timeout, ConnectionResetError) as e:
-                            print(f"连接异常: {str(e)}，尝试重连...")
-                            self.reconnect()  # 执行重连
-                            sleep(1)  # 重连后等待1秒
-                            break  # 跳出当前组循环，重新开始
-
-                        # 捕获其他运行时异常
-                        except Exception as e:
-                            print(f"运行时异常: {str(e)}")
-                            sleep(1)  # 异常后等待1秒
-
-                # 捕获主循环中的其他异常
+                except (socket.timeout, ConnectionResetError) as e:
+                    print(f"连接异常: {str(e)}")
+                    self.reconnect()
+                    sleep(1)
+                    # break  # 跳出当前组循环，重新开始
                 except Exception as e:
-                    print(f"主循环异常: {str(e)}")
-                    sleep(1)  # 异常后等待1秒
+                    print(f"运行时异常: {str(e)}")
+                    sleep(1)
 
-        finally:  # 无论是否发生异常都会执行的代码块
+        finally:    # 无论是否发生异常都会执行的代码块
             self.cleanup()  # 清理socket连接等资源
-            self.finished.emit()  # type: ignore[attr-defined]# 发射完成信号通知主线程
-    def run_int(self):  # 定义线程运行方法(处理整数数据)
-        from time import sleep  # 导入sleep函数用于线程休眠
-
-        try:  # 开始异常捕获(最外层)
-            while self.keep_running:  # 主循环，当keep_running为True时持续运行
-                try:  # 中层异常捕获(连接和数据采集)
-                    if not self.init_connection():  # 尝试初始化连接
-                        sleep(1)  # 连接失败则休眠1秒
-                        continue  # 跳过本次循环，重新尝试
-
-                    # 遍历所有组配置(每个设备可能有多个寄存器组)
-                    for group_config in self.groups:
-                        # 解包组配置(表名和寄存器组)
-                        table_name, groups = group_config
-
-                        try:  # 最内层异常捕获(单个寄存器组操作)
-                            # 调用数据插入器插入整数数据
-                            success = self.int_inserter.insert_combined_mcgs_int_data(
-                                table_name=table_name,  # 目标表名
-                                groups=groups,  # 寄存器组配置
-                                ip=self.ip,  # 设备IP地址
-                                port=self.port,  # 设备端口
-                                sock=self.sock  # 已建立的socket连接
-                            )
-
-                            if not success:  # 如果插入失败
-                                self.reconnect()  # 执行重连
-
-                        # 捕获网络相关异常(超时/连接重置)
-                        except (socket.timeout, ConnectionResetError) as e:
-                            print(f"连接异常: {str(e)}，尝试重连...")
-                            self.reconnect()  # 执行重连
-                            sleep(1)  # 重连后等待1秒
-                            break  # 跳出当前组循环，重新开始
-
-                        # 捕获其他运行时异常
-                        except Exception as e:
-                            print(f"运行时异常: {str(e)}")
-                            sleep(1)  # 异常后等待1秒
-
-                # 捕获主循环中的其他异常
-                except Exception as e:
-                    print(f"主循环异常: {str(e)}")
-                    sleep(1)  # 异常后等待1秒
-
-        finally:  # 无论是否发生异常都会执行的代码块
-            self.cleanup()  # 清理socket连接等资源
-            self.finished.emit()  # type: ignore[attr-defined]# 发射完成信号通知主线程
+            self.finished.emit()    # type: ignore[attr-defined]# 发射完成信号通知主线程
+    # def run_int(self):  # 定义线程运行方法(处理整数数据)
+    #     from time import sleep  # 导入sleep函数用于线程休眠
+    #
+    #     try:  # 开始异常捕获(最外层)
+    #         while self.keep_running:  # 主循环，当keep_running为True时持续运行
+    #             try:  # 中层异常捕获(连接和数据采集)
+    #                 if not self.init_connection():  # 尝试初始化连接
+    #                     sleep(1)  # 连接失败则休眠1秒
+    #                     continue  # 跳过本次循环，重新尝试
+    #
+    #                 # 遍历所有组配置(每个设备可能有多个寄存器组)
+    #                 for group_config in self.groups:
+    #                     # 解包组配置(表名和寄存器组)
+    #                     table_name, groups = group_config
+    #
+    #                     try:  # 最内层异常捕获(单个寄存器组操作)
+    #                         # 调用数据插入器插入整数数据
+    #                         success = self.int_inserter.insert_combined_mcgs_int_data(
+    #                             table_name=table_name,  # 目标表名
+    #                             groups=groups,  # 寄存器组配置
+    #                             ip=self.ip,  # 设备IP地址
+    #                             port=self.port,  # 设备端口
+    #                             sock=self.sock  # 已建立的socket连接
+    #                         )
+    #
+    #                         if not success:  # 如果插入失败
+    #                             self.reconnect()  # 执行重连
+    #
+    #                     # 捕获网络相关异常(超时/连接重置)
+    #                     except (socket.timeout, ConnectionResetError) as e:
+    #                         print(f"连接异常: {str(e)}，尝试重连...")
+    #                         self.reconnect()  # 执行重连
+    #                         sleep(1)  # 重连后等待1秒
+    #                         break  # 跳出当前组循环，重新开始
+    #
+    #                     # 捕获其他运行时异常
+    #                     except Exception as e:
+    #                         print(f"运行时异常: {str(e)}")
+    #                         sleep(1)  # 异常后等待1秒
+    #
+    #             # 捕获主循环中的其他异常
+    #             except Exception as e:
+    #                 print(f"主循环异常: {str(e)}")
+    #                 sleep(1)  # 异常后等待1秒
+    #
+    #     finally:  # 无论是否发生异常都会执行的代码块
+    #         self.cleanup()  # 清理socket连接等资源
+    #         self.finished.emit()  # type: ignore[attr-defined]# 发射完成信号通知主线程
     def reconnect(self):
         if self.sock:
             try:
