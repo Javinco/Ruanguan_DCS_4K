@@ -23,7 +23,7 @@ from Ui_pop_historical_parameter_factory2_1 import Ui_Dialog_Pop_Historical_Para
 from Ui_pop_historical_parameter_factory2_2 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device2
 from Ui_pop_historical_parameter_factory2_3 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device3
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import DataManager, DataInserter,HistoricalDataManager
+from Data_Manager import data_manager, inserter,historical_data_manager
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
 from Ruanguan_Historical import HistoricalCurvePlotter
 
@@ -5381,7 +5381,7 @@ class DataUpdateWorker(QObject):
             tables_to_monitor: 需要监控的表名列表
         """
         super().__init__()
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         self.tables_to_monitor = tables_to_monitor
         self.running = True
         # 存储本地缓存的版本号
@@ -5426,8 +5426,8 @@ class InsertWorker(QObject):
         self.port = port
         self.sock = None  # 持久化socket连接
         self.keep_running = True
-        self.inserter = DataInserter()
-        self.int_inserter = DataInserter()
+        self.inserter = inserter
+        self.int_inserter = inserter
 
 
     # 新增连接初始化方法
@@ -5585,7 +5585,7 @@ class HistoricalDataQueryWorker(QObject):
         self.start_time = start_time
         self.end_time = end_time
         # 创建历史数据管理器实例
-        self.hist_data_manager = HistoricalDataManager()
+        self.hist_data_manager = historical_data_manager
 
     def run(self):
         """执行历史数据查询任务"""
@@ -5634,7 +5634,7 @@ class AlarmHistoryQueryWorker(QObject):
         self.start_time_str = start_time_str
         self.end_time_str = end_time_str
         # 创建历史数据管理器实例
-        self.hist_data_manager = HistoricalDataManager()
+        self.hist_data_manager = historical_data_manager
 
     def run(self):
         """执行报警历史数据查询任务"""

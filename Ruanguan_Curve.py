@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.dates as mdates
-from Data_Manager import DataManager
+from Data_Manager import data_manager
 from PyQt5.QtCore import QTimer
 import datetime
 
@@ -20,7 +20,7 @@ class RealTimeCurvePlotter(QWidget):
         # Y轴显示范围（例如：-1到1）
         self.y_limits = y_limits
         # 创建数据管理器实例（用于数据库操作）
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         # 创建Matplotlib图形对象（设置黑色背景）
         self.figure = Figure(facecolor='black')
         # 创建Qt画布组件，用于显示图形
@@ -207,7 +207,7 @@ class RealTimeJcjCurvePlotter(QWidget):
         # Y轴显示范围（例如：-1到1）
         self.y_limits = y_limits
         # 创建数据管理器实例（用于数据库操作）
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         # 创建Matplotlib图形对象（设置黑色背景）
         self.figure = Figure(facecolor='black')
         # 创建Qt画布组件，用于显示图形
@@ -394,7 +394,7 @@ class RealTimeMainWindowCurve1(QWidget):
         # Y轴显示范围（例如：-1到1）
         self.y_limits = y_limits
         # 创建数据管理器实例（用于数据库操作）
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         # 创建Matplotlib图形对象（设置黑色背景）
         self.figure = Figure(facecolor='black')
         # 创建Qt画布组件，用于显示图形

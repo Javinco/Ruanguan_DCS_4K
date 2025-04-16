@@ -1,6 +1,4 @@
 import threading# Python线程模块（实现多线程安全）
-from random import randint
-
 import mysql.connector# 导入MySQL官方连接驱动
 # 从驱动中导入错误处理模块
 from mysql.connector import Error
@@ -14,6 +12,19 @@ class DataInserter:
     """实时数据插入器（独立维护插入逻辑）
     功能：专门处理实时数据的批量插入操作
     设计考虑：采用mysql-connector连接池实现，与DataManager保持技术栈统一"""
+    _instance = None  # 单例实例
+    _lock = threading.Lock()  # 添加线程锁
+
+    def __new__(cls, *args, **kwargs):
+        """实例创建方法（线程安全单例模式实现）"""
+        with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
+            # 检查是否已有实例存在
+            if cls._instance is None:
+                # 调用父类__new__方法创建新实例
+                cls._instance = super().__new__(cls)
+                # 初始化标记（防止重复初始化）
+                cls._instance.__initialized = False
+            return cls._instance    # 返回单例实例
     def __init__(self, host='localhost', user='root', password='admin', database='dcs_data'):
         """类初始化构造器
         Args参数:
@@ -28,7 +39,7 @@ class DataInserter:
             'password': password,  # 数据库认证密码（生产环境需加密存储）
             'database': database,  # 默认操作的数据库名称
             'charset': 'utf8mb4',  # 字符集配置（支持4字节UTF-8编码）
-            'pool_size': 2,  # 连接池最大连接数（根据并发量调整）
+            'pool_size': 20,  # 连接池最大连接数（根据并发量调整）
             'autocommit': True  # 自动提交模式（确保实时数据立即持久化）
         }
         # （在Python中，每次实例化对象时，__init__会被调用，
@@ -37,6 +48,10 @@ class DataInserter:
         # 为了避免这种情况，代码中添加了__initialized标志。
         # 当实例第一次被初始化时，该标志被设置为True，之后每次__init__被调用时，检查该标志，如果已经初始化过，则直接返回，不再执行后续的初始化代码。
         # 这样可以确保单例实例只被初始化一次，避免资源重复分配或其他副作用。）
+        # 单例初始化控制（防止重复初始化）
+        if self.__initialized:  # 检查是否已经初始化
+            return  # 如果已初始化则直接返回
+        self.__initialized = True   # 设置初始化标记
         self._init_pool()  # 立即执行连接池初始化（类实例化时自动完成）
 
     def _init_pool(self):
@@ -355,7 +370,7 @@ class DataManager:
             'user': user,  # 登录数据库的用户名凭证
             'password': password,  # 登录数据库的密码凭证
             'database': database,  # 要操作的数据库名称
-            'pool_size': 10,  # 连接池中保持的活跃连接数（防止多线程竞争）
+            'pool_size': 20,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
         # 单例初始化控制（防止重复初始化）
