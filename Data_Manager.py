@@ -265,167 +265,221 @@ class DataInserter:
 
     # 在DataInserter类中添加以下方法
     def insert_multiple_tables_data(self, table_groups: list, sock: socket.socket):
-        """多表组合采集方法（新增核心方法）"""
+        """多表组合采集方法（新增核心方法）
+        功能：处理多个表的Modbus数据采集和插入操作
+        参数：
+            table_groups: 表组列表，格式为[(表名1, [(起始地址1, 寄存器数1, 字段列表1), ...]), ...]
+            sock: 已建立的socket连接对象
+        返回：
+            bool: 操作成功返回True，失败返回False
+        """
         try:
-            # 合并所有寄存器请求
+            # 第一步：合并所有寄存器请求，优化通信效率
             merged_requests = self._merge_register_requests(table_groups)
 
-            # 发送合并后的Modbus请求
+            # 第二步：通过socket发送合并后的Modbus请求并获取响应
             responses = self._send_merged_requests(merged_requests, sock)
 
-            # 解析响应并分发数据到各表
+            # 第三步：解析响应数据并插入到对应的数据库表中
             return self._parse_and_insert(responses, table_groups)
         except Exception as e:
+            # 捕获所有异常并打印错误信息
             print(f"多表采集失败: {str(e)}")
             return False
 
     @staticmethod
     def _merge_register_requests(table_groups):
-        """合并寄存器请求（通信优化关键）"""
-        all_registers = []
+        """合并寄存器请求（通信优化关键）
+        功能：将多个表的寄存器请求合并为连续的地址块，减少通信次数
+        参数：
+            table_groups: 表组列表，格式同上
+        返回：
+            list: 合并后的寄存器块列表，格式为[(起始地址, 寄存器数量), ...]
+        """
+        all_registers = []  # 存储所有需要读取的寄存器地址
+        # 遍历每个表及其寄存器组配置
         for table_name, groups in table_groups:
             for start_addr, reg_count, _ in groups:
+                # 将每个寄存器组的地址范围添加到总列表
                 all_registers.extend(range(start_addr, start_addr + reg_count))
 
-        # 合并连续地址块
+        # 如果没有寄存器需要读取，返回空列表
         if not all_registers:
             return []
 
+        # 对寄存器地址进行去重和排序
         sorted_registers = sorted(list(set(all_registers)))
-        merged = []
-        current_start = sorted_registers[0]
-        current_end = current_start
+        merged = []  # 存储合并后的连续地址块
+        current_start = sorted_registers[0]  # 当前连续块的起始地址
+        current_end = current_start  # 当前连续块的结束地址
 
+        # 遍历排序后的寄存器地址，合并连续地址
         for addr in sorted_registers[1:]:
-            if addr == current_end + 1:
-                current_end = addr
-            else:
+            if addr == current_end + 1:  # 如果地址连续
+                current_end = addr  # 扩展当前连续块
+            else:  # 如果不连续
+                # 保存当前连续块（起始地址, 块长度）
                 merged.append((current_start, current_end - current_start + 1))
-                current_start = addr
+                current_start = addr  # 开始新的连续块
                 current_end = addr
+        # 添加最后一个连续块
         merged.append((current_start, current_end - current_start + 1))
 
         return merged
 
     @staticmethod
     def _send_merged_requests(merged_blocks, sock):
-        """发送合并后的请求（完整修正版）"""
-        responses = {}
-        transaction_id = 0x0001  # 初始化事务ID
+        """发送合并后的请求（完整修正版）
+        功能：发送合并后的Modbus请求并接收响应
+        参数：
+            merged_blocks: 合并后的寄存器块列表
+            sock: 已建立的socket连接
+        返回：
+            dict: 响应数据字典，键为(起始地址, 寄存器数)，值为响应数据
+        """
+        responses = {}  # 存储响应数据
+        transaction_id = 0x0001  # Modbus事务ID初始值（协议要求单调递增）
 
+        # 遍历每个合并后的寄存器块
         for start_addr, reg_count in merged_blocks:
             try:
-                # 协议帧构造（与insert_combined_mcgs_data完全一致）
+                # 构造Modbus TCP请求帧（大端字节序）
+                # 格式说明：
+                # >: 大端字节序
+                # H: 2字节无符号短整型
+                # B: 1字节无符号字符
                 modbus_request = struct.pack(
                     '>HHHBBHH',
-                    transaction_id,
-                    0x0000,  # Protocol identifier
-                    0x0006,  # Remaining bytes
-                    0x01,  # Unit ID
-                    0x03,  # Function code
-                    start_addr,
-                    reg_count
+                    transaction_id,  # 事务ID（2字节）
+                    0x0000,  # 协议标识符（ModbusTCP固定值）
+                    0x0006,  # 剩余字节数（后续数据包长度）
+                    0x01,  # 单元ID（设备地址）
+                    0x03,  # 功能码（读保持寄存器）
+                    start_addr,  # 起始寄存器地址
+                    reg_count  # 要读取的寄存器数量
                 )
 
+                # 发送请求帧（确保完整发送）
                 sock.sendall(modbus_request)
+                # 接收响应数据（缓冲区大小1KB）
                 response = sock.recv(1024)
 
-                # 响应头验证（与原方法一致）
+                # 响应头验证（Modbus TCP头部固定8字节）
                 if len(response) < 8:
                     raise ValueError("响应头长度不足")
 
+                # 解析响应头（大端字节序）
+                # 格式：事务ID|协议ID|长度|单元ID|功能码
                 resp_tid, resp_pid, resp_len, resp_uid, resp_fc = struct.unpack(
-                    '>HHHBB', response[:8]
+                    '>HHHBB', response[:8]  # 只解析前8字节头部
                 )
 
-                # 事务ID校验
+                # 事务ID校验（响应应与请求匹配）
                 if resp_tid != transaction_id:
                     raise ValueError(f"事务ID不匹配 请求:{transaction_id} 响应:{resp_tid}")
 
-                # 错误处理（与原方法一致）
+                # 错误处理（功能码高位为1表示异常）
                 if resp_fc & 0x80:
-                    error_code = response[8]
+                    error_code = response[8]  # 异常码位于第9字节
                     raise ValueError(f"Modbus异常 错误码:{error_code}")
 
-                # 数据区解析（保持原有逻辑）
-                byte_count = response[8]
-                if byte_count != reg_count * 2:
+                # 数据区长度验证
+                byte_count = response[8]  # 数据部分字节数（位于第9字节）
+                if byte_count != reg_count * 2:  # 每个寄存器2字节
                     raise ValueError(f"字节数不匹配 预期:{reg_count * 2} 实际:{byte_count}")
 
+                # 提取有效数据部分（从第9字节开始，长度为byte_count）
                 data = response[9:9 + byte_count]
+                # 存储响应数据，键为(起始地址, 寄存器数)
                 responses[(start_addr, reg_count)] = data
 
+                # 更新事务ID（循环递增，防止溢出）
                 transaction_id = (transaction_id % 0xFFFF) + 1
 
             except Exception as e:
+                # 记录请求失败信息
                 print(f"寄存器{start_addr}-{reg_count}请求失败: {str(e)}")
-                responses[(start_addr, reg_count)] = None
+                responses[(start_addr, reg_count)] = None  # 标记为失败
         return responses
 
     def _parse_and_insert(self, responses, table_groups):
-        """解析响应并插入多表数据（修正数据类型）"""
+        """解析响应并插入多表数据（修正数据类型）
+        功能：解析Modbus响应数据并插入到对应的数据库表中
+        参数：
+            responses: 响应数据字典
+            table_groups: 表组列表
+        返回：
+            bool: 操作成功返回True，失败返回False
+        """
+        # 从连接池获取数据库连接
         with self.connection_pool.get_connection() as conn:
-            cursor = conn.cursor()
+            cursor = conn.cursor()  # 创建数据库游标
             try:
+                # 遍历每个表及其寄存器组配置
                 for table_name, groups in table_groups:
-                    table_data = {'timestamp': datetime.now()}
+                    table_data = {'timestamp': datetime.now()}  # 初始化数据字典
+
+                    # 处理每个寄存器组
                     for start_addr, reg_count, fields in groups:
-                        # 查找对应的响应块
-                        data = None
+                        data = None  # 存储当前寄存器组的响应数据
+
+                        # 在响应中查找匹配的数据块
                         for (block_start, block_size), block_data in responses.items():
-                            if block_start <= start_addr and (block_start + block_size) >= (start_addr + reg_count):
+                            # 检查当前寄存器组是否包含在某个响应块中
+                            if (block_start <= start_addr and
+                                    (block_start + block_size) >= (start_addr + reg_count)):
+                                # 计算数据偏移量（字节为单位）
                                 offset = (start_addr - block_start) * 2
+                                # 提取对应数据段
                                 data = block_data[offset: offset + reg_count * 2]
                                 break
 
-                        if not data:
+                        if not data:  # 如果没有找到匹配数据，跳过该组
                             continue
 
-                        # 根据寄存器数量判断数据类型（与原方法一致）
+                        values = []  # 存储解析后的数值
+                        # 根据寄存器数量判断数据类型
                         if reg_count % 2 == 0:  # 浮点数类型（4字节）
-                            values = []
-                            for i in range(0, len(data), 4):
-                                if i + 4 > len(data):
+                            for i in range(0, len(data), 4):  # 每4字节处理
+                                if i + 4 > len(data):  # 检查边界
                                     break
-                                # 转换为浮点数（与insert_combined_mcgs_data一致）
+                                # 大端字节序解析为浮点数，保留4位小数
                                 value = round(struct.unpack('>f', data[i:i + 4])[0], 4)
                                 values.append(value)
                         else:  # 整数类型（2字节）
-                            values = []
-                            for i in range(0, len(data), 2):
-                                if i + 2 > len(data):
+                            for i in range(0, len(data), 2):  # 每2字节处理
+                                if i + 2 > len(data):  # 检查边界
                                     break
+                                # 大端字节序解析为无符号短整型
                                 value = struct.unpack('>H', data[i:i + 2])[0]
                                 values.append(value)
 
-                        # 将数值映射到字段（添加字段数校验）
-                        if len(values) >= len(fields):
+                        # 将数值映射到字段
+                        if len(values) >= len(fields):  # 检查数据与字段数量匹配
                             for i, field in enumerate(fields):
-                                # 添加数值范围校验（防止数据库溢出）
-                                if isinstance(values[i], float):
-                                    table_data[field] = max(-999999.9999, min(999999.9999, values[i]))
-                                else:
-                                    table_data[field] = max(0, min(65535, values[i]))
+                                table_data[field] = values[i]  # 添加到数据字典
 
-                    # 生成并执行插入语句（添加空数据校验）
+                    # 执行数据库插入（确保有有效数据）
                     if table_data and len(table_data) > 1:  # 排除仅有timestamp的情况
                         try:
-                            columns = ', '.join(table_data.keys())
-                            placeholders = ', '.join(['%s'] * len(table_data))
+                            # 动态构造SQL语句
+                            columns = ', '.join(table_data.keys())  # 列名
+                            placeholders = ', '.join(['%s'] * len(table_data))  # 占位符
                             sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+                            # 执行参数化查询（防止SQL注入）
                             cursor.execute(sql, list(table_data.values()))
                         except Exception as e:
                             print(f"表{table_name}插入失败: {str(e)}")
                             continue
 
-                conn.commit()
+                conn.commit()  # 提交事务
                 return True
             except Exception as e:
-                conn.rollback()
+                conn.rollback()  # 回滚事务
                 print(f"数据库事务失败: {str(e)}")
                 return False
             finally:
-                cursor.close()
+                cursor.close()  # 确保关闭游标
 class DataManager:
     # 定义全局表名常量（新增）
     CLASS_TABLES = [
