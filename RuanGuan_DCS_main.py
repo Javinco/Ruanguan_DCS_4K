@@ -71,52 +71,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory1_1_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory1_1_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory1_1_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory1_1_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory1_1_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory1_1_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory1_1_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.155.10"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -148,39 +102,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -429,52 +351,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory1_2_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory1_2_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory1_2_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory1_2_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory1_2_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory1_2_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory1_2_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.155.14"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -506,39 +382,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -784,52 +628,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory1_3_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory1_3_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory1_3_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory1_3_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory1_3_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory1_3_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory1_3_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.155.22"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -861,39 +659,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -1139,52 +905,6 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory1_4_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory1_4_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory1_4_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory1_4_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory1_4_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory1_4_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory1_4_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.155.26"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -1216,39 +936,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -1494,52 +1182,6 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory2_1_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory2_1_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory2_1_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory2_1_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory2_1_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory2_1_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory2_1_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.156.18"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -1571,39 +1213,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 ------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -1849,52 +1459,6 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory2_2_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory2_2_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory2_2_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory2_2_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory2_2_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory2_2_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory2_2_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.156.14"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -1926,39 +1490,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -2204,52 +1736,6 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 合并所有采集任务到单个线程
-        self._start_insert_thread(
-            groups=[
-                ("factory2_3_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
-                ]),
-                ("factory2_3_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
-                ]),
-                ("factory2_3_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
-                ]),
-                ("factory2_3_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
-                ]),
-                ("factory2_3_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
-                ]),
-                ("factory2_3_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
-                ]),
-                ("factory2_3_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
-                ])
-            ],
-            ip="192.168.156.22"
-        )
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
@@ -2281,39 +1767,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
 
-    # ------------------------- 线程启动方法 -------------------------
-
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
+    # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -2584,13 +2038,6 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -2842,13 +2289,6 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -3101,13 +2541,6 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -3361,13 +2794,6 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -3622,12 +3048,6 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
 
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -3881,13 +3301,6 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -4141,13 +3554,6 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # # 计算结束时间（格式化成SQL可识别的字符串）
-        # start_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # # 计算起始时间（当前查询时间前推10分钟）
-        # end_time = (query_time + timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -4379,8 +3785,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.pushButton_query.clicked.connect(self.query_historical_alarms)
         # 启动报警数据更新线程 - 使用DataUpdateWorker
         self._start_data_update_thread(self.alarm_tables)
-        # 启动数据采集线程
-        self._start_insert_threads()
+
     # 添加新方法：启动所有数据采集线程
     # 添加新方法：启动数据更新线程 - 复用DataUpdateWorker
     def _start_data_update_thread(self, tables_to_monitor):
@@ -4489,103 +3894,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.tableWidget_realtime_alarm.scrollToBottom()
 
         print(f"新报警: {factory} {device} - {alarm_content}")
-    def _start_insert_threads(self):
-        """启动所有数据采集线程"""
-        # 工厂1设备1报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_1_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.10"
-        )
-        # 工厂1设备2报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_2_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.14"
-        )
-        # 工厂1设备3报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_3_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.22"
-        )
-        # 工厂1设备4报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_4_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.155.26"
-        )
-        # 工厂2设备1报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_1_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.156.18"
-        )
-        # 工厂2设备2报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_2_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.156.14"
-        )
-        # 工厂2设备3报警数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_3_alarm_data", [
-                    (16, 1, ["parameter1"])
-                ])
-            ],
-            ip="192.168.156.22"
-        )
-    # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
     def right_down_dialog(self):
         """将弹窗居中显示的方法"""
         # 获取主屏幕尺寸
@@ -4737,7 +4045,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 绑定曲线控件的鼠标点击事件
         self.curve1.mousePressEvent = self.show_pop_parameter
-        # 绑定曲线控件的鼠标点击事件
         self.curve2.mousePressEvent = self.show_pop_parameter_factory1_2
         self.curve3.mousePressEvent = self.show_pop_parameter_factory1_3
         self.curve4.mousePressEvent = self.show_pop_parameter_factory1_4
@@ -4753,7 +4060,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 初始化时间功能
         self.timer = QTimer(self)  # 创建定时器对象
         self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        # self.timer.timeout.connect(self.update_realtime_data)   # type: ignore[attr-defined] # 连接定时信号
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
@@ -4879,77 +4185,378 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 工厂1设备1产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory1_1_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory1_1_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory1_1_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory1_1_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory1_1_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory1_1_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory1_1_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory1_1_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory1_1_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.155.10"
         )
         # 工厂1设备2产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory1_2_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory1_2_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory1_2_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory1_2_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory1_2_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory1_2_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory1_2_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory1_2_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory1_2_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.155.14"
         )
         # 工厂1设备3产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory1_3_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory1_3_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory1_3_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory1_3_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory1_3_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory1_3_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory1_3_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory1_3_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory1_3_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.155.22"
         )
         # 工厂1设备4产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory1_4_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory1_4_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory1_4_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory1_4_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory1_4_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory1_4_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory1_4_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory1_4_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory1_4_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.155.26"
         )
         # 工厂2设备1产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory2_1_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory2_1_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory2_1_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory2_1_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory2_1_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory2_1_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory2_1_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory2_1_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory2_1_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.156.18"
         )
         # 工厂2设备2产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory2_2_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory2_2_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory2_2_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory2_2_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory2_2_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory2_2_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory2_2_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory2_2_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory2_2_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.156.14"
         )
         # 工厂2设备3产量数据采集
         self._start_insert_thread(
             groups=[
+                ("factory2_3_realtime_data_jcj", [
+                    (11, 4, ["parameter1", "parameter2"]),
+                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
+                    (1, 2, ["parameter9"]),
+                    (5, 2, ["parameter10"]),
+                    (7, 2, ["parameter11"])
+                ]),
+                ("factory2_3_realtime_data_fjj", [
+                    (103, 2, ["parameter12"]),
+                    (107, 4, ["parameter13", "parameter15"]),
+                    (113, 2, ["parameter14"])
+                ]),
+                ("factory2_3_realtime_data_zdj", [
+                    (201, 2, ["parameter16"]),
+                    (221, 2, ["parameter17"]),
+                    (203, 2, ["parameter18"]),
+                    (231, 2, ["parameter19"]),
+                    (235, 2, ["parameter20"]),
+                    (239, 2, ["parameter21"])
+                ]),
+                ("factory2_3_set_data_curve", [
+                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
+                    (103, 2, ["parameter4"]),
+                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                ]),
+                ("factory2_3_set_data_jcj", [
+                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
+                    (3, 2, ["parameter6"])
+                ]),
+                ("factory2_3_set_data_fjj", [
+                    (101, 2, ["parameter1"]),
+                    (105, 2, ["parameter2"]),
+                    (123, 2, ["parameter3"])
+                ]),
+                ("factory2_3_set_data_zdj", [
+                    (201, 2, ["parameter1"]),
+                    (217, 2, ["parameter2"]),
+                    (209, 2, ["parameter3"]),
+                    (233, 2, ["parameter4"])
+                ]),
                 ("factory2_3_production_data", [
-                (231, 4, ["parameter1", "parameter2"]),
-                (237, 4, ["parameter3", "parameter4"]),
-                (1, 2, ["parameter5"])
-            ])
+                    (231, 4, ["parameter1", "parameter2"]),
+                    (237, 4, ["parameter3", "parameter4"]),
+                    (1, 2, ["parameter5"])
+                ]),
+                ("factory2_3_alarm_data", [
+                    (16, 1, ["parameter1"])
+                ])
             ],
             ip="192.168.156.22"
         )
