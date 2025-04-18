@@ -3,7 +3,6 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.dates as mdates
 from Data_Manager import data_manager
-from PyQt5.QtCore import QTimer
 import datetime
 
 
@@ -31,8 +30,6 @@ class RealTimeCurvePlotter(QWidget):
         self._init_plot_style()
         # 设置界面布局
         self._setup_layout()
-        # 初始化定时器（用于实时更新）
-        self._init_timer()
 
     def _init_plot_style(self):
         # 设置子图背景为黑色
@@ -72,16 +69,7 @@ class RealTimeCurvePlotter(QWidget):
         layout.addWidget(self.canvas)
         # 将布局设置到父容器
         self.parent_widget.setLayout(layout)
-
-    def _init_timer(self):
-        # 创建Qt定时器对象
-        self.timer = QTimer(self)
-        # 连接定时信号到更新曲线的槽函数
-        self.timer.timeout.connect(self.update_plot)  # type: ignore[attr-defined]
-        # 启动定时器（1000毫秒=1秒触发一次）
-        self.timer.start(1000)
-
-    def update_plot(self):
+    def update_plot(self,data):
         # 获取当前系统时间（精确到毫秒）
         now = datetime.datetime.now()
         # 计算X轴起始时间：当前时间往前推10分钟（用于显示时间窗口）
@@ -89,7 +77,7 @@ class RealTimeCurvePlotter(QWidget):
         # X轴结束时间设置为当前时间（形成右边界）
         x_end = now
         # 通过数据管理器获取实时数据（self.table_name指定数据表）
-        data = self.data_manager.get_realtime_data(self.table_name)
+        data = data
         # 数据有效性检查：如果没有获取到数据则退出本次更新
         if not data:
             return
@@ -218,8 +206,6 @@ class RealTimeJcjCurvePlotter(QWidget):
         self._init_plot_style()
         # 设置界面布局
         self._setup_layout()
-        # 初始化定时器（用于实时更新）
-        self._init_timer()
 
     def _init_plot_style(self):
         # 设置子图背景为黑色
@@ -260,15 +246,7 @@ class RealTimeJcjCurvePlotter(QWidget):
         # 将布局设置到父容器
         self.parent_widget.setLayout(layout)
 
-    def _init_timer(self):
-        # 创建Qt定时器对象
-        self.timer = QTimer(self)
-        # 连接定时信号到更新曲线的槽函数
-        self.timer.timeout.connect(self.update_jcj_plot)  # type: ignore[attr-defined]
-        # 启动定时器（1000毫秒=1秒触发一次）
-        self.timer.start(1000)
-
-    def update_jcj_plot(self):
+    def update_jcj_plot(self,data):
         # 获取当前系统时间（精确到毫秒）
         now = datetime.datetime.now()
         # 计算X轴起始时间：当前时间往前推10分钟（用于显示时间窗口）
@@ -276,7 +254,7 @@ class RealTimeJcjCurvePlotter(QWidget):
         # X轴结束时间设置为当前时间（形成右边界）
         x_end = now
         # 通过数据管理器获取实时数据（self.table_name指定数据表）
-        data = self.data_manager.get_realtime_data(self.table_name)
+        data = data
         # 数据有效性检查：如果没有获取到数据则退出本次更新
         if not data:
             return
@@ -405,8 +383,6 @@ class RealTimeMainWindowCurve1(QWidget):
         self._init_plot_style()
         # 设置界面布局
         self._setup_layout()
-        # 初始化定时器（用于实时更新）
-        self._init_timer()
 
     def _init_plot_style(self):
         # 设置子图背景为黑色
@@ -446,16 +422,7 @@ class RealTimeMainWindowCurve1(QWidget):
         layout.addWidget(self.canvas)
         # 将布局设置到父容器
         self.parent_widget.setLayout(layout)
-
-    def _init_timer(self):
-        # 创建Qt定时器对象
-        self.timer = QTimer(self)
-        # 连接定时信号到更新曲线的槽函数
-        self.timer.timeout.connect(self.update_plot)  # type: ignore[attr-defined]
-        # 启动定时器（1000毫秒=1秒触发一次）
-        self.timer.start(1000)
-
-    def update_plot(self):
+    def update_plot(self,data):
         # 获取当前系统时间（精确到毫秒）
         now = datetime.datetime.now()
         # 计算X轴起始时间：当前时间往前推10分钟（用于显示时间窗口）
@@ -463,7 +430,7 @@ class RealTimeMainWindowCurve1(QWidget):
         # X轴结束时间设置为当前时间（形成右边界）
         x_end = now
         # 通过数据管理器获取实时数据（self.table_name指定数据表）
-        data = self.data_manager.get_realtime_data(self.table_name)
+        data = data
         # 数据有效性检查：如果没有获取到数据则退出本次更新
         if not data:
             return
