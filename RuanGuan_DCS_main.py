@@ -71,35 +71,35 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_1_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory1_1_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
 
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_1_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory1_1_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -127,7 +127,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update1'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -152,7 +152,11 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -291,8 +295,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-        super().closeEvent(event)  # 调用父类的关闭事件处理
-
     @staticmethod  # 静态方法，不依赖实例对象
     def get_localtime():
         """获取本地时间的静态方法"""
@@ -351,35 +353,35 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_2_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_2_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory1_2_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
+        #
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory1_2_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -407,7 +409,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update2'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -432,7 +434,11 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -628,35 +634,35 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_3_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_3_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory1_3_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
+        #
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory1_3_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -684,7 +690,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update3'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -709,7 +715,11 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -905,35 +915,35 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_4_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_4_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory1_4_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
+        #
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory1_4_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -961,7 +971,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update4'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -986,7 +996,11 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -1182,35 +1196,35 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_1_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_1_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory2_1_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
+        #
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory2_1_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 ------------------------
@@ -1238,7 +1252,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update5'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -1263,7 +1277,11 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -1459,35 +1477,35 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_2_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_2_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory2_2_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
+        #
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory2_2_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -1515,7 +1533,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update6'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -1540,7 +1558,11 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -1736,35 +1758,35 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 启动数据更新线程
         self._start_data_update_thread(self.tables_to_monitor)
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_3_set_data_curve",
-            params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
-            },
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_3_realtime_data_jcj",
-            params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
-            },
-            y_limits=(0, 200)
-        )
+        # # 添加管径实时曲线（示例配置）
+        # self.curve_plotter = RealTimeCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+        #     table_name="factory2_3_set_data_curve",
+        #     params_config={
+        #         'curve3': 'parameter3',
+        #         'curve1': 'parameter1',
+        #         'curve6': 'parameter6',
+        #         'curve4': 'parameter4',
+        #         'curve2': 'parameter2',
+        #         'curve5': 'parameter5'
+        #     },
+        #     y_limits=(-1, 1)
+        # )
+        #
+        # # 添加挤出机参数实时曲线（示例配置）
+        # self.curve_jcj = RealTimeJcjCurvePlotter(
+        #     parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+        #     table_name="factory2_3_realtime_data_jcj",
+        #     params_config={
+        #         'curve1': 'parameter3',
+        #         'curve2': 'parameter4',
+        #         'curve3': 'parameter5',
+        #         'curve4': 'parameter6',
+        #         'curve5': 'parameter9',
+        #         'curve6': 'parameter10'
+        #     },
+        #     y_limits=(0, 200)
+        # )
 
 
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -1792,7 +1814,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         worker.data_updated.connect(self._handle_data_update)# type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update7'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -1817,7 +1839,11 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)# type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
@@ -3811,7 +3837,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         worker.data_updated.connect(self._handle_alarm_update)#type: ignore[arg-type]
 
         # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        self.threads['data_update_alarm'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -4073,7 +4099,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "factory1_4_set_data_curve",
             "factory2_1_set_data_curve",
             "factory2_2_set_data_curve",
-            "factory2_3_set_data_curve"
+            "factory2_3_set_data_curve",
+            "factory1_1_realtime_data_jcj",
+            "factory1_2_realtime_data_jcj",
+            "factory1_3_realtime_data_jcj",
+            "factory1_4_realtime_data_jcj",
+            "factory2_1_realtime_data_jcj",
+            "factory2_2_realtime_data_jcj",
+            "factory2_3_realtime_data_jcj"
         ]
 
         # 启动数据更新线程
@@ -4172,6 +4205,196 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             },
             y_limits=(-1, 1)
         )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime1 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory1_1_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime1 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory1_1_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime2 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog_factory1_2.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory1_2_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime2 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog_factory1_2.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory1_2_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime3 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog_factory1_3.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory1_3_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime3 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog_factory1_3.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory1_3_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime4 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog_factory1_4.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory1_4_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime4 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog_factory1_4.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory1_4_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime5 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog_factory2_1.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory2_1_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime5 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog_factory2_1.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory2_1_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime6 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog_factory2_2.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory2__set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime6 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog_factory2_2.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory2_2_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter_realtime7 = RealTimeCurvePlotter(
+            parent_widget=self.pop_dialog_factory2_3.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory2_3_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+        self.curve_jcj_realtime7 = RealTimeJcjCurvePlotter(
+            parent_widget=self.pop_dialog_factory2_3.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory2_3_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+
         # 在初始化曲线后添加事件穿透设置
         self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
@@ -4629,18 +4852,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_set_data_curve": self._update_curve1_realtime,
-            "factory1_2_set_data_curve": self._update_curve2_realtime,
-            "factory1_3_set_data_curve": self._update_curve3_realtime,
-            "factory1_4_set_data_curve": self._update_curve4_realtime,
-            "factory2_1_set_data_curve": self._update_curve5_realtime,
-            "factory2_2_set_data_curve": self._update_curve6_realtime,
-            "factory2_3_set_data_curve": self._update_curve7_realtime
+            "factory1_1_set_data_curve": [self._update_curve1_realtime, self.curve_plotter1.update_plot, self.curve_plotter_realtime1.update_plot],
+            "factory1_2_set_data_curve": [self._update_curve2_realtime, self.curve_plotter2.update_plot, self.curve_plotter_realtime2.update_plot],
+            "factory1_3_set_data_curve": [self._update_curve3_realtime, self.curve_plotter3.update_plot, self.curve_plotter_realtime3.update_plot],
+            "factory1_4_set_data_curve": [self._update_curve4_realtime, self.curve_plotter4.update_plot, self.curve_plotter_realtime4.update_plot],
+            "factory2_1_set_data_curve": [self._update_curve5_realtime, self.curve_plotter5.update_plot, self.curve_plotter_realtime5.update_plot],
+            "factory2_2_set_data_curve": [self._update_curve6_realtime, self.curve_plotter6.update_plot, self.curve_plotter_realtime6.update_plot],
+            "factory2_3_set_data_curve": [self._update_curve7_realtime, self.curve_plotter7.update_plot, self.curve_plotter_realtime7.update_plot],
+            "factory1_1_realtime_data_jcj": self.curve_jcj_realtime1.update_jcj_plot,
+            "factory1_2_realtime_data_jcj": self.curve_jcj_realtime2.update_jcj_plot,
+            "factory1_3_realtime_data_jcj": self.curve_jcj_realtime3.update_jcj_plot,
+            "factory1_4_realtime_data_jcj": self.curve_jcj_realtime4.update_jcj_plot,
+            "factory2_1_realtime_data_jcj": self.curve_jcj_realtime5.update_jcj_plot,
+            "factory2_2_realtime_data_jcj": self.curve_jcj_realtime6.update_jcj_plot,
+            "factory2_3_realtime_data_jcj": self.curve_jcj_realtime7.update_jcj_plot
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            strategy(data)  # type: ignore[attr-defined]
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_curve1_realtime(self, data):
         """更新挤出机实时数据"""
