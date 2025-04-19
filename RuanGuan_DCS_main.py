@@ -277,6 +277,11 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         else:
             # 忽略无效拖动操作
             event.ignore()
+    # 重写 show 函数
+    def show(self):
+        super().show()  # 调用父类 show 方法
+        self._start_data_update_thread(self.tables_to_monitor)
+        print("启动数据更新线程")
 
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
