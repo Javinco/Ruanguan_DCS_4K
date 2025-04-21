@@ -273,6 +273,11 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
             event.ignore()
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -556,6 +561,11 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -838,6 +848,11 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1121,6 +1136,11 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1403,6 +1423,11 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1685,6 +1710,11 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1967,6 +1997,11 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动2_3数据更新线程")
@@ -4215,6 +4250,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter7.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         # 添加首页面采集子线程
         self._start_insert_threads()
+        self._start_data_update_thread(self.tables_to_monitor)
+
     def _start_insert_threads(self):
         """启动所有数据采集线程"""
         # 工厂1设备1产量数据采集

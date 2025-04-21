@@ -182,6 +182,23 @@ class RealTimeCurvePlotter(QWidget):
         # 强制刷新画布（更新图形界面显示）
         self.canvas.draw()
 
+    def clear_data(self):
+        """清空历史数据，重新开始绘制曲线"""
+        if hasattr(self, 'time_data'):
+            self.time_data = []
+            self.curve1_data = []
+            self.curve2_data = []
+            self.curve3_data = []
+            self.curve4_data = []
+            self.curve5_data = []
+            self.curve6_data = []
+            # 清空坐标系
+            self.axes.cla()
+            # 重新初始化图形样式
+            self._init_plot_style()
+            # 更新画布
+            self.canvas.draw()
+
 class RealTimeJcjCurvePlotter(QWidget):
     def __init__(self, parent_widget, table_name, params_config, y_limits=(0, 200)):
         # 调用父类QWidget的初始化方法
@@ -358,6 +375,23 @@ class RealTimeJcjCurvePlotter(QWidget):
 
         # 强制刷新画布（更新图形界面显示）
         self.canvas.draw()
+
+    def clear_data(self):
+        """清空历史数据，重新开始绘制曲线"""
+        if hasattr(self, 'time_data'):
+            self.time_data = []
+            self.curve1_data = []
+            self.curve2_data = []
+            self.curve3_data = []
+            self.curve4_data = []
+            self.curve5_data = []
+            self.curve6_data = []
+            # 清空坐标系
+            self.axes.cla()
+            # 重新初始化图形样式
+            self._init_plot_style()
+            # 更新画布
+            self.canvas.draw()
 
 class RealTimeMainWindowCurve1(QWidget):
     def __init__(self, parent_widget, table_name, params_config, y_limits=(-1, 1)):
