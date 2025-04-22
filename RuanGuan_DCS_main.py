@@ -3850,8 +3850,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 连接查询按钮的点击信号到查询方法
         self.pushButton_query.clicked.connect(self.query_historical_alarms)
-        # 启动报警数据更新线程 - 使用DataUpdateWorker
-        self._start_data_update_thread(self.alarm_tables)
 
     # 添加新方法：启动所有数据采集线程
     # 添加新方法：启动数据更新线程 - 复用DataUpdateWorker
