@@ -4304,7 +4304,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     (16, 1, ["parameter1"])
                 ])
             ],
-            ip="192.168.155.10"
+            ip="192.168.10.14"
         )
         # 工厂1设备2产量数据采集
         self._start_insert_thread(
@@ -5142,7 +5142,7 @@ class InsertWorker(QObject):
                         table_groups=self.groups,   # 寄存器组配置
                         sock=self.sock  # 已建立的socket连接
                     )
-                    sleep(0.5)
+                    # sleep(0.1)
 
                     if not success:  # 如果插入失败
                         self.reconnect()  # 执行重连
