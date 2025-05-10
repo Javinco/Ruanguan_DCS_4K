@@ -631,9 +631,9 @@ def send_to_plc(address, length):
     send_data = [0x02, 0x30, *bytes(f"{new_address:04X}", 'ascii'), *bytes(f"{length:02X}", 'ascii'), 0x03]
     checksum = calculate_checksum(send_data)
     print(f'校验和：{checksum}')
-    send_data.extend(bytes(f"{checksum:02X}", 'ascii'))  # SUM
-    # send_data = send_data.extend(bytes(f"{checksum:02X}", 'ascii'))  # SUM
-    # print(f"发送的数据：{send_data}")
+    checksum_str = f"{checksum:04X}"[-2:]
+    print(f'校验和后两位：{checksum_str}')
+    send_data.extend(bytes(checksum_str, 'ascii'))   # SUM
     try:
         # 打开串口
         with serial.Serial(port, baudrate, bytesize=bytesize, parity=parity, stopbits=stopbits, timeout=1) as ser:
@@ -660,4 +660,4 @@ def send_to_plc(address, length):
 
 
 if __name__ == "__main__":
-    send_to_plc(10,2)
+    send_to_plc(10,4)
