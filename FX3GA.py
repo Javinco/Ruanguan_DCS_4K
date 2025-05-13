@@ -605,59 +605,272 @@
 
 import serial
 import time
+import struct
 
 def calculate_checksum(data):
     """计算三菱协议校验和（ASCII字符累加和取低16位）"""
     return sum(data[1:]) & 0xFFFF  # 从CMD到ETX求和
-# def calculate_checksum(data):
-#     """计算三菱协议校验和（16进制加法）"""
-#     checksum = 0
-#     for byte in data[1:-1]:  # 从CMD到ETX求和
-#         checksum += byte
-#         checksum &= 0xFFFF  # 保持16位
-#     return checksum
-def send_to_plc(address, length):
-    # 配置串口参数
-    port = 'COM15'
-    baudrate = 9600
-    parity = serial.PARITY_EVEN  # 偶校验
-    bytesize = serial.SEVENBITS  # 数据位7
-    stopbits = serial.STOPBITS_ONE  # 停止位1
+
+def read_d(address, length):
+    # # 配置串口参数
+    # port = 'COM5'
+    # baudrate = 9600
+    # parity = serial.PARITY_EVEN  # 偶校验
+    # bytesize = serial.SEVENBITS  # 数据位7
+    # stopbits = serial.STOPBITS_ONE  # 停止位1
     new_address = int(hex(address * 2), 16) + 0x1000  # 地址转换公式
-    print(f'转换后的地址：{hex(new_address)}')
+    print(f'读D寄存器-->转换后的地址：{hex(new_address)}')
 
     # 要发送的数据 (十六进制格式)
     # send_data = bytes([0x02, 0x30, 0x31, 0x30, 0x46, 0x36, 0x30, 0x34, 0x03, 0x37, 0x34])
     send_data = [0x02, 0x30, *bytes(f"{new_address:04X}", 'ascii'), *bytes(f"{length:02X}", 'ascii'), 0x03]
     checksum = calculate_checksum(send_data)
-    print(f'校验和：{checksum}')
+    print(f'读D寄存器-->校验和：{checksum}')
     checksum_str = f"{checksum:04X}"[-2:]
-    print(f'校验和后两位：{checksum_str}')
+    print(f'读D寄存器-->校验和后两位：{checksum_str}')
     send_data.extend(bytes(checksum_str, 'ascii'))   # SUM
+    # try:
+    #     # # 打开串口
+    #     # with serial.Serial(port, baudrate, bytesize=bytesize, parity=parity, stopbits=stopbits, timeout=1) as ser:
+    #     #     print(f"已连接到串口 {port}")
+
+    # 发送数据
+    print("读D寄存器-->发送数据:", ' '.join([f"{x:02X}" for x in send_data]))
+    ser.write(send_data)
+
+    # 等待数据发送完成
+    time.sleep(0.1)
+
+    if ser.in_waiting > 0:
+        received_data = ser.read(ser.in_waiting)
+        print("读D寄存器-->接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
+
+        try:
+            values = parse_plc_response(received_data)
+            print(f"读D寄存器-->解析结果: {values}")
+            return values
+        except Exception as e:
+            print(f"读D寄存器-->解析失败: {str(e)}")
+            return []
+    else:
+        print("读D寄存器-->没有接收到数据")
+        return []
+    #
+    # except serial.SerialException as e:
+    #     print(f"读D寄存器-->串口错误: {e}")
+    # except Exception as e:
+    #     print(f"读D寄存器-->发生错误: {e}")
+
+def write_d(address, length, value):
+    # # 配置串口参数
+    # port = 'COM5'
+    # baudrate = 9600
+    # parity = serial.PARITY_EVEN  # 偶校验
+    # bytesize = serial.SEVENBITS  # 数据位7
+    # stopbits = serial.STOPBITS_ONE  # 停止位1
+    new_address = int(hex(address * 2), 16) + 0x1000  # 地址转换公式
+    print(f'写D寄存器-->转换后的地址：{hex(new_address)}')
+
+
+    # 要发送的数据 (十六进制格式)
+    # send_data = bytes([0x02, 0x30, 0x31, 0x30, 0x46, 0x36, 0x30, 0x34, 0x03, 0x37, 0x34])
+    # send_data = [0x02, 0x31, *bytes(f"{new_address:04X}", 'ascii'), *bytes(f"{length:02X}", 'ascii'), *bytes(f"{value_str:04X}", 'ascii'),0x03]
+    send_data = [0x02, 0x31, *bytes(f"{new_address:04X}", 'ascii'), *bytes(f"{length:02X}", 'ascii')]
+    for _ in value:
+        # 1. 将整数转为4位十六进制字符串（不足补零）
+        hex_str = f"{_:04X}"  # 如1234转成"04D2"
+        print(f'写D寄存器-->4位16进制{hex_str}')
+        # 2. 重新排列字符位置 [2][3][0][1]
+        # 例如 "04D2" → "D204"
+        rearranged = hex_str[2] + hex_str[3] + hex_str[0] + hex_str[1]
+        # 3. 将每个字符转为ASCII码值
+        # 例如 "D204" → [0x44, 0x32, 0x30, 0x34]
+        send_data.extend([ord(c) for c in rearranged])
+    send_data.append(0x03)
+    checksum = calculate_checksum(send_data)
+    print(f'写D寄存器-->校验和：{checksum}')
+    checksum_str = f"{checksum:04X}"[-2:]
+    print(f'写D寄存器-->校验和后两位：{checksum_str}')
+    send_data.extend(bytes(checksum_str, 'ascii'))   # SUM
+    # try:
+    #     # # 打开串口
+    #     # with serial.Serial(port, baudrate, bytesize=bytesize, parity=parity, stopbits=stopbits, timeout=1) as ser:
+    #     #     print(f"已连接到串口 {port}")
+    # 发送数据
+    print("写D寄存器-->发送数据:", ' '.join([f"{x:02X}" for x in send_data]))
+    ser.write(send_data)
+
+    # 等待数据发送完成
+    time.sleep(0.1)
+
+    if ser.in_waiting > 0:
+        received_data = ser.read(ser.in_waiting)
+        print("写D寄存器-->接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
+    else:
+        print("写D寄存器-->没有接收到数据")
+        return []
+    #
+    # except serial.SerialException as e:
+    #     print(f"串口错误: {e}")
+    # except Exception as e:
+    #     print(f"发生错误: {e}")
+
+def force(address,studus):
+    # # 配置串口参数
+    # port = 'COM5'
+    # baudrate = 9600
+    # parity = serial.PARITY_EVEN  # 偶校验
+    # bytesize = serial.SEVENBITS  # 数据位7
+    # stopbits = serial.STOPBITS_ONE  # 停止位1
+    new_address = int(hex(address * 256), 16) + 0x08  # 地址转换公式
+    print(f'M寄存器-->转换后的地址：{hex(new_address)}')
+    send_data = [0x02]
+
+    if studus == 'on':
+        # 要发送的数据 (十六进制格式
+        # send_data = [0x02, 0x37, *bytes(f"{new_address:04X}", 'ascii'), 0x03]
+        send_data.extend([0x37])
+    elif studus == 'off':
+        send_data.extend([0x38])
+
+    send_data.extend(bytes(f"{new_address:04X}", 'ascii'))
+    send_data.extend([0x03])
+    checksum = calculate_checksum(send_data)
+    print(f'M寄存器-->校验和：{checksum}')
+    checksum_str = f"{checksum:04X}"[-2:]
+    print(f'M寄存器-->校验和后两位：{checksum_str}')
+    send_data.extend(bytes(checksum_str, 'ascii'))   # SUM
+    # try:
+    #     # # 打开串口
+    #     # with serial.Serial(port, baudrate, bytesize=bytesize, parity=parity, stopbits=stopbits, timeout=1) as ser:
+    #     #     print(f"已连接到串口 {port}")
+
+    # 发送数据
+    print("M寄存器-->置位发送数据:", ' '.join([f"{x:02X}" for x in send_data]))
+    ser.write(send_data)
+
+    # 等待数据发送完成
+    time.sleep(0.1)
+
+    if ser.in_waiting > 0:
+        received_data = ser.read(ser.in_waiting)
+        print("M寄存器-->接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
+    else:
+        print("M寄存器-->没有接收到数据")
+        return []
+    # except serial.SerialException as e:
+    #     print(f"串口错误: {e}")
+    # except Exception as e:
+    #     print(f"发生错误: {e}")
+def read_float(address, length):
+    # # 配置串口参数
+    # port = 'COM5'
+    # baudrate = 9600
+    # parity = serial.PARITY_EVEN  # 偶校验
+    # bytesize = serial.SEVENBITS  # 数据位7
+    # stopbits = serial.STOPBITS_ONE  # 停止位1
+    new_address = int(hex(address * 2), 16) + 0x1000  # 地址转换公式
+    print(f'读D寄存器浮点数-->转换后的地址：{hex(new_address)}')
+
+    # 要发送的数据 (十六进制格式)
+    # send_data = bytes([0x02, 0x30, 0x31, 0x30, 0x46, 0x36, 0x30, 0x34, 0x03, 0x37, 0x34])
+    send_data = [0x02, 0x30, *bytes(f"{new_address:04X}", 'ascii'), *bytes(f"{2*length:02X}", 'ascii'), 0x03]
+    checksum = calculate_checksum(send_data)
+    print(f'读D寄存器浮点数-->校验和：{checksum}')
+    checksum_str = f"{checksum:04X}"[-2:]
+    print(f'读D寄存器浮点数-->校验和后两位：{checksum_str}')
+    send_data.extend(bytes(checksum_str, 'ascii'))   # SUM
+    # try:
+    #     # # 打开串口
+    #     # with serial.Serial(port, baudrate, bytesize=bytesize, parity=parity, stopbits=stopbits, timeout=1) as ser:
+    #     #     print(f"已连接到串口 {port}")
+
+    # 发送数据
+    print("读D寄存器浮点数-->发送数据:", ' '.join([f"{x:02X}" for x in send_data]))
+    ser.write(send_data)
+
+    # 等待数据发送完成
+    time.sleep(0.1)
+
+    if ser.in_waiting > 0:
+        received_data = ser.read(ser.in_waiting)
+        print("读D寄存器浮点数-->接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
+        try:
+            # 解析响应数据（每个浮点数占4字节）
+            values = []
+            parsed = parse_plc_response(received_data)  # 获取寄存器值列表
+
+            # 将每个寄存器的两个字节转换为字节数据
+            byte_data = bytearray()
+            for val in parsed:
+                byte_data.extend(val.to_bytes(2, byteorder='little'))  # 三菱使用小端字序
+
+                # 每4字节转换为一个浮点数（IEEE 754）
+                if len(byte_data) >= 4:
+                    # 使用大端字节序（Big-endian）处理整个浮点数
+                    float_value = struct.unpack('>f', byte_data[:4])[0]
+                    values.append(round(float_value, 4))
+                    byte_data = byte_data[4:]
+
+            print(f"读D寄存器浮点数-->解析成功: {values}")
+            return values
+        except Exception as e:
+            print(f"读D寄存器浮点数-->解析失败: {str(e)}")
+            return []
+    else:
+        print("读D寄存器浮点数-->没有接收到数据")
+        return []
+
+def parse_plc_response(response: bytes) -> list:
+    """
+    解析PLC返回数据包
+    输入示例：b'\x02334132CDAB\x03D7'
+    返回十进制数值列表，如：[4660, 43981]
+    """
+    if len(response) < 5:
+        raise ValueError("响应数据过短")
+
+    # 校验帧结构
+    if response[0] != 0x02 or response[-3] != 0x03:
+        raise ValueError("无效的帧头/帧尾")
+
+    # 计算校验和
+    calc_checksum = sum(response[1:-2]) & 0xFFFF
+    expected_checksum = bytes(f"{calc_checksum:04X}"[-2:], 'ascii')
+
+    if response[-2:] != expected_checksum:
+        raise ValueError(f"校验失败: 收到{response[-2:]} vs 计算{expected_checksum}")
+
+    # 提取数据部分（示例：b'334132CDAB'）
+    data_part = response[1:-3]
+
+    # 每4个字符解析为一个寄存器值（小端序处理）
+    registers = []
+    for i in range(0, len(data_part), 4):
+        chunk = data_part[i:i + 4].decode('ascii')
+
+        # 小端序转换（示例："3412" → 0x1234 → 4660）
+        hex_str = chunk[2:4] + chunk[0:2]
+        registers.append(int(hex_str, 16))
+
+    return registers
+
+
+if __name__ == "__main__":
+    port = 'COM5'
+    baudrate = 9600
+    parity = serial.PARITY_EVEN  # 偶校验
+    bytesize = serial.SEVENBITS  # 数据位7
+    stopbits = serial.STOPBITS_ONE  # 停止位1
     try:
         # 打开串口
         with serial.Serial(port, baudrate, bytesize=bytesize, parity=parity, stopbits=stopbits, timeout=1) as ser:
             print(f"已连接到串口 {port}")
-
-            # 发送数据
-            print("发送数据:", ' '.join([f"{x:02X}" for x in send_data]))
-            ser.write(send_data)
-
-            # 等待数据发送完成
-            time.sleep(0.1)
-
-            # 接收数据
-            if ser.in_waiting > 0:
-                received_data = ser.read(ser.in_waiting)
-                print("接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
-            else:
-                print("没有接收到数据")
-
+            read_d(193,32)
+            write_d(123,6,[4,6,8])
+            force(4,'off')
+            read_float(10, 2)
     except serial.SerialException as e:
         print(f"串口错误: {e}")
     except Exception as e:
         print(f"发生错误: {e}")
-
-
-if __name__ == "__main__":
-    send_to_plc(10,4)
