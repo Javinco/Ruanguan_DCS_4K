@@ -545,7 +545,16 @@ class DataManager:
         'factory2_3_set_data_zdj',
         'factory2_3_set_data_curve',
         'factory2_3_production_data',  # 新增生产数据表
-        'factory2_3_alarm_data'
+        'factory2_3_alarm_data',
+        'factory2_4_realtime_data_jcj',
+        'factory2_4_realtime_data_fjj',
+        'factory2_4_realtime_data_zdj',
+        'factory2_4_set_data_jcj',
+        'factory2_4_set_data_fjj',
+        'factory2_4_set_data_zdj',
+        'factory2_4_set_data_curve',
+        'factory2_4_production_data',  # 新增生产数据表
+        'factory2_4_alarm_data',
     ]
     _instance = None  # 单例实例
     _lock = threading.Lock()  # 添加线程锁

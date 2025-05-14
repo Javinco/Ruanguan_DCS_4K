@@ -15,6 +15,7 @@ from Ui_pop_parameter_factory1_4 import Ui_Dialog_Pop_Parameter_Factory1Device4
 from Ui_pop_parameter_factory2_1 import Ui_Dialog_Pop_Parameter_Factory2Device1
 from Ui_pop_parameter_factory2_2 import Ui_Dialog_Pop_Parameter_Factory2Device2
 from Ui_pop_parameter_factory2_3 import Ui_Dialog_Pop_Parameter_Factory2Device3
+from Ui_pop_parameter_factory2_4 import Ui_Dialog_Pop_Parameter_Factory2Device4
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_historical_parameter_factory1_2 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device2
 from Ui_pop_historical_parameter_factory1_3 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device3
@@ -22,6 +23,7 @@ from Ui_pop_historical_parameter_factory1_4 import Ui_Dialog_Pop_Historical_Para
 from Ui_pop_historical_parameter_factory2_1 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device1
 from Ui_pop_historical_parameter_factory2_2 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device2
 from Ui_pop_historical_parameter_factory2_3 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device3
+from Ui_pop_historical_parameter_factory2_4 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device4
 from Ui_pop_alarm import Ui_Dialog_alarm
 from Data_Manager import data_manager, inserter,historical_data_manager
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
@@ -2039,6 +2041,293 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.label_112.setText(time_start_str)  # 更新日期标签
         self.label_113.setText(time_end_str)  # 更新时间标签
 
+class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device4):
+    def __init__(self):
+        # 调用QDialog父类构造方法
+        super().__init__()
+        # 初始化UI界面
+        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
+        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
+        self.setupUi(self)  # 调用 UI 设计的 setupUi 方法
+
+        self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
+        self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+
+        # 初始化位置记录变量
+        self.dialog_original_pos = None  # 窗口原始位置
+        self.drag_start_pos = None  # 鼠标拖动起始位置
+        # 绑定鼠标事件到自身方法
+        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
+        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
+        # 设置窗口居中属性
+        self.center_dialog()  # 初始居中显示
+        # 初始化时间功能
+        self.timer = QTimer(self)  # 创建定时器对象
+        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
+        self.timer.start(1000)  # 启动定时器（1秒间隔）
+        self.update_time()  # 立即更新时间显示
+        # 创建线程管理器字典
+        self.threads = {}
+        # 需要监控的表名列表
+        self.tables_to_monitor = [
+            "factory2_4_realtime_data_jcj",
+            "factory2_4_realtime_data_fjj",
+            "factory2_4_realtime_data_zdj",
+            "factory2_4_set_data_jcj",
+            "factory2_4_set_data_fjj",
+            "factory2_4_set_data_zdj",
+            "factory2_4_set_data_curve"
+        ]
+        # 添加管径实时曲线（示例配置）
+        self.curve_plotter = RealTimeCurvePlotter(
+            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
+            table_name="factory2_4_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
+
+        # 添加挤出机参数实时曲线（示例配置）
+        self.curve_jcj = RealTimeJcjCurvePlotter(
+            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
+            table_name="factory2_4_realtime_data_jcj",
+            params_config={
+                'curve1': 'parameter3',
+                'curve2': 'parameter4',
+                'curve3': 'parameter5',
+                'curve4': 'parameter6',
+                'curve5': 'parameter9',
+                'curve6': 'parameter10'
+            },
+            y_limits=(0, 200)
+        )
+
+
+    # ------------------------- 数据更新线程启动方法 -------------------------
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(tables_to_monitor)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
+
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['data_update4'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_jcj_set,
+            "factory2_4_set_data_fjj": self._update_fjj_set,
+            "factory2_4_set_data_zdj": self._update_zdj_set,
+            "factory2_4_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)    # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
+    # 分解原有的大更新方法为多个私有方法
+    def _update_jcj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_10.setText(str(data.get('parameter1', '')))
+        self.label_14.setText(str(data.get('parameter2', '')))
+        self.label_18.setText(str(data.get('parameter3', '')))
+        self.label_22.setText(str(data.get('parameter4', '')))
+        self.label_26.setText(str(data.get('parameter5', '')))
+        self.label_30.setText(str(data.get('parameter6', '')))
+        self.label_34.setText(str(data.get('parameter7', '')))
+        self.label_38.setText(str(data.get('parameter8', '')))
+        self.label_42.setText(str(data.get('parameter9', '')))
+        self.label_46.setText(str(data.get('parameter10', '')))
+        self.label_50.setText(str(data.get('parameter11', '')))
+        self.label_116.setText(str(data.get('parameter3', '')))
+        self.label_117.setText(str(data.get('parameter4', '')))
+        self.label_118.setText(str(data.get('parameter5', '')))
+        self.label_119.setText(str(data.get('parameter6', '')))
+        self.label_104.setText(str(data.get('parameter9', '')))
+        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+    def _update_fjj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_53.setText(str(data.get('parameter12', '')))
+        self.label_57.setText(str(data.get('parameter13', '')))
+        self.label_61.setText(str(data.get('parameter14', '')))
+        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+    def _update_zdj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_73.setText(str(data.get('parameter16', '')))
+        self.label_77.setText(str(data.get('parameter17', '')))
+        self.label_81.setText(str(data.get('parameter18', '')))
+        self.label_85.setText(str(data.get('parameter19', '')))
+        self.label_89.setText(str(data.get('parameter20', '')))
+        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+    def _update_jcj_set(self, data):
+        """更新挤出机实时数据"""
+        self.lineEdit_4.setText(str(data.get('parameter1', '')))
+        self.lineEdit_5.setText(str(data.get('parameter2', '')))
+        self.lineEdit_6.setText(str(data.get('parameter3', '')))
+        self.lineEdit_7.setText(str(data.get('parameter4', '')))
+        self.lineEdit_8.setText(str(data.get('parameter5', '')))
+        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+    def _update_fjj_set(self, data):
+        """更新挤出机实时数据"""
+        self.lineEdit_13.setText(str(data.get('parameter1', '')))
+        self.lineEdit_14.setText(str(data.get('parameter2', '')))
+        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+    def _update_zdj_set(self, data):
+        """更新挤出机实时数据"""
+        self.lineEdit_17.setText(str(data.get('parameter1', '')))
+        self.lineEdit_18.setText(str(data.get('parameter2', '')))
+        self.lineEdit_19.setText(str(data.get('parameter3', '')))
+        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+    def _update_curve_set(self, data):
+        """更新挤出机实时数据"""
+        self.lineEdit_23.setText(str(data.get('parameter1', '')))
+        self.lineEdit_48.setText(str(data.get('parameter2', '')))
+        self.label_114.setText(str(data.get('parameter3', '')))
+        self.label_115.setText(str(data.get('parameter4', '')))
+        self.lineEdit_51.setText(str(data.get('parameter5', '')))
+        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+    def show_dialog_pop_historical_parameter(self):
+        """显示历史参数弹窗的方法"""
+        self.hide()  # 隐藏当前窗口
+        # 检查历史参数弹窗是否已存在
+        if self.dialog_historical:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.dialog_historical.isMinimized():
+                self.dialog_historical.showNormal()  # 从最小化状态恢复
+            elif not self.dialog_historical.isVisible():
+                self.dialog_historical.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
+            self.dialog_historical.raise_()  # 提升窗口层级
+
+    def center_dialog(self):
+        """将弹窗居中显示的方法"""
+        # 获取主屏幕尺寸
+        screen = QApplication.primaryScreen().geometry()
+        # 计算居中坐标（屏幕宽度-窗口宽度）/2
+        x = (screen.width() - self.width()) // 2
+        y = (screen.height() - self.height()) // 2
+        # 移动窗口到计算位置
+        self.move(x, y)
+
+    def dialog_mouse_press(self, event):
+        """处理鼠标按下事件（用于窗口拖动）"""
+        # 判断点击位置是否在标题栏区域内
+        point_in_title = self.widget_title.rect().contains(event.pos())
+        # 当左键点击且位置在标题栏时
+        if event.button() == Qt.LeftButton and point_in_title:
+            # 记录全局鼠标位置（屏幕坐标系）
+            self.drag_start_pos = event.globalPos()
+            # 保存窗口当前位置
+            self.dialog_original_pos = self.pos()
+            # 接受事件，阻止事件传递
+            event.accept()
+        else:
+            # 忽略非标题栏区域的点击
+            event.ignore()
+
+    def dialog_mouse_move(self, event):
+        """处理鼠标移动事件（实现窗口拖动）"""
+        # 当满足三个条件时处理拖动：
+        # 1. 左键保持按下状态
+        # 2. 存在初始拖动位置记录
+        # 3. 鼠标在标题栏区域
+        if (event.buttons() & Qt.LeftButton and
+                hasattr(self, 'drag_start_pos') and
+                self.widget_title.rect().contains(event.pos())):
+
+            # 计算位置偏移量（当前鼠标位置 - 起始位置）
+            delta = event.globalPos() - self.drag_start_pos
+            # 移动窗口到新位置（原始位置 + 偏移量）
+            self.move(self.dialog_original_pos + delta)
+            # 接受事件，确保操作流畅
+            event.accept()
+        else:
+            # 忽略无效拖动操作
+            event.ignore()
+
+    # 重写 show 函数,讲数据更新线程启动放在show函数中
+    def show(self):
+        # 清空曲线数据
+        if hasattr(self, 'curve_plotter'):
+            self.curve_plotter.clear_data()
+        if hasattr(self, 'curve_jcj'):
+            self.curve_jcj.clear_data()
+        super().show()  # 调用父类 show 方法
+        self._start_data_update_thread(self.tables_to_monitor)
+        print("启动数据更新线程")
+
+    # 参数弹窗类新增关闭事件处理
+    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
+    def closeEvent(self, event):
+        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
+        # 停止数据更新线程
+        if hasattr(self, 'threads'):
+            for key, (thread, worker) in self.threads.items():
+                if hasattr(worker, 'stop'):
+                    worker.stop()
+
+        # 检查是否存在历史参数弹窗实例
+        if self.dialog_historical:
+            self.dialog_historical.close()
+
+        super().closeEvent(event)  # 调用父类的关闭事件处理
+
+    @staticmethod  # 静态方法，不依赖实例对象
+    def get_localtime():
+        """获取本地时间的静态方法"""
+        from datetime import datetime , timedelta
+        now = datetime.now()  # 获取当前时间对象
+        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
+        # 返回格式化后的日期和时间字符串
+        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
+
+    def update_time(self):
+        """更新时间显示的方法"""
+        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
+        self.label_106.setText(time_start_str)  # 更新日期标签
+        self.label_107.setText(time_end_str)  # 更新时间标签
+        self.label_112.setText(time_start_str)  # 更新日期标签
+        self.label_113.setText(time_end_str)  # 更新时间标签
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
     def __init__(self):
@@ -3809,7 +4098,258 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
             self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
+class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory2Device4):
+    def __init__(self):
+        # 调用父类构造方法
+        super().__init__()
+        # 初始化UI界面
+        self.threads = {}
+        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
+        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
+        self.setupUi(self)
 
+        self.dialog_realtime = None  # 定义创建用于存储历史数据曲线弹窗的实例
+        self.pushButton_realtime.clicked.connect(self.show_dialog_pop_parameter)  # 连接按钮点击信号
+
+        # 初始化位置记录变量
+        self.dialog_original_pos = None  # 窗口原始位置
+        self.drag_start_pos = None  # 鼠标拖动起始位置
+        # 绑定鼠标事件到自身方法
+        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
+        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
+        # 设置窗口居中属性
+        self.center_dialog()  # 初始居中显示
+        self.dateTimeEdit.setDateTime(datetime.now())
+        # 连接查询按钮
+        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 初始化历史曲线
+        self._init_historical_curves()
+
+    def _init_historical_curves(self):
+        """初始化历史曲线组件"""
+        # 管径历史曲线 (创建历史曲线绘制组件)
+        self.hist_curve1 = HistoricalCurvePlotter(
+            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            "factory2_4_set_data_curve",  # 对应的数据库表名
+            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
+                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
+                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
+                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
+                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
+                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+             },  # 曲线参数映射配置
+            (-1, 1)  # Y轴显示范围
+        )
+
+        # 挤出机历史曲线 (第二组历史曲线)
+        self.hist_curve2 = HistoricalCurvePlotter(
+            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            "factory2_4_realtime_data_jcj",  # 挤出机实时数据表
+            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
+             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
+             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
+             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
+             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
+             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+             },  # 参数映射关系
+            (0, 200)  # Y轴最大范围200
+        )
+
+    def handle_historical_query(self):
+        """处理历史查询按钮点击事件的核心方法"""
+        # 获取界面选择的时间（转换为Python datetime对象）
+        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
+        # 计算结束时间（格式化成SQL可识别的字符串）
+        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
+        # 计算起始时间（当前查询时间前推10分钟）
+        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        # 更新两条历史曲线（触发重绘）
+        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
+        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
+
+        # 更新参数显示（精确到秒的查询）
+        self._update_parameters(
+        query_time.strftime("%Y-%m-%d %H:%M:%S"),
+        start_time,
+        end_time)
+
+    def _update_parameters(self, exact_time, start_time, end_time):
+        """更新指定时间点的参数显示
+        Args:
+            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
+        """
+        # 定义需要查询的数据表列表
+        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj" , "factory2_4_set_data_curve",
+                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
+
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['historical_query'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
+            # 如果有返回数据（即使只有一条）
+            if data:
+                # 更新界面标签（取第一条/唯一一条数据）
+                self._update_ui_labels(table_name, data)
+
+    def _update_ui_labels(self, table_name, data):
+        """根据数据表名更新对应的UI标签
+        Args:
+            table_name: 数据表名称（用于分支判断）
+            data: 单条历史数据记录（字典格式）
+        """
+        # 挤出机实时数据表处理分支
+        if table_name == "factory2_4_realtime_data_jcj":
+            # 更新参数1显示（label_10标签）
+            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            # 更新参数2显示（label_14标签）
+            self.label_14.setText(str(data.get('parameter2', '')))
+            self.label_18.setText(str(data.get('parameter3', '')))
+            self.label_22.setText(str(data.get('parameter4', '')))
+            self.label_26.setText(str(data.get('parameter5', '')))
+            self.label_30.setText(str(data.get('parameter6', '')))
+            self.label_34.setText(str(data.get('parameter7', '')))
+            self.label_38.setText(str(data.get('parameter8', '')))
+            self.label_42.setText(str(data.get('parameter9', '')))
+            self.label_46.setText(str(data.get('parameter10', '')))
+            self.label_50.setText(str(data.get('parameter11', '')))
+            self.label_123.setText(str(data.get('parameter3', '')))
+            self.label_127.setText(str(data.get('parameter4', '')))
+            self.label_125.setText(str(data.get('parameter5', '')))
+            self.label_126.setText(str(data.get('parameter6', '')))
+            self.label_128.setText(str(data.get('parameter9', '')))
+            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+        # 放卷机实时数据表处理分支
+        elif table_name == "factory2_4_realtime_data_fjj":
+            # 更新参数12显示（label_53标签）
+            self.label_53.setText(str(data.get('parameter12', '')))
+            self.label_57.setText(str(data.get('parameter13', '')))
+            self.label_61.setText(str(data.get('parameter14', '')))
+            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        # 自动机历史数据表处理分支
+        elif table_name == "factory2_4_realtime_data_zdj":
+            self.label_73.setText(str(data.get('parameter16', '')))
+            self.label_77.setText(str(data.get('parameter17', '')))
+            self.label_81.setText(str(data.get('parameter18', '')))
+            self.label_85.setText(str(data.get('parameter19', '')))
+            self.label_89.setText(str(data.get('parameter20', '')))
+            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        elif table_name == "factory2_4_set_data_jcj":
+            self.label_104.setText(str(data.get('parameter1', '')))
+            self.label_105.setText(str(data.get('parameter2', '')))
+            self.label_106.setText(str(data.get('parameter3', '')))
+            self.label_107.setText(str(data.get('parameter4', '')))
+            self.label_108.setText(str(data.get('parameter5', '')))
+            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        elif table_name == "factory2_4_set_data_fjj":
+            self.label_109.setText(str(data.get('parameter1', '')))
+            self.label_110.setText(str(data.get('parameter2', '')))
+            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+        elif table_name == "factory2_4_set_data_zdj":
+            self.label_112.setText(str(data.get('parameter1', '')))
+            self.label_113.setText(str(data.get('parameter2', '')))
+            self.label_114.setText(str(data.get('parameter3', '')))
+            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        elif table_name == "factory2_4_set_data_curve":
+            self.label_117.setText(str(data.get('parameter1', '')))
+            self.label_118.setText(str(data.get('parameter2', '')))
+            self.label_114.setText(str(data.get('parameter3', '')))
+            self.label_115.setText(str(data.get('parameter4', '')))
+            self.label_121.setText(str(data.get('parameter5', '')))
+            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+    def show_dialog_pop_parameter(self):
+        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
+        self.hide()  # 隐藏当前窗口
+        # 检查实时参数弹窗是否已存在
+        if self.dialog_realtime:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.dialog_realtime.isMinimized():
+                self.dialog_realtime.showNormal()  # 从最小化状态恢复
+            elif not self.dialog_realtime.isVisible():
+                self.dialog_realtime.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
+            self.dialog_realtime.raise_()  # 提升窗口层级
+
+    def center_dialog(self):
+        """将弹窗居中显示的方法"""
+        # 获取主屏幕尺寸
+        screen = QApplication.primaryScreen().geometry()
+        # 计算居中坐标（屏幕宽度-窗口宽度）/2
+        x = (screen.width() - self.width()) // 2
+        y = (screen.height() - self.height()) // 2
+        # 移动窗口到计算位置
+        self.move(x, y)
+
+    def dialog_mouse_press(self, event):
+        """处理鼠标按下事件（用于窗口拖动）"""
+        # 判断点击位置是否在标题栏区域内
+        point_in_title = self.widget_historical_title.rect().contains(event.pos())
+        # 当左键点击且位置在标题栏时
+        if event.button() == Qt.LeftButton and point_in_title:
+            # 记录全局鼠标位置（屏幕坐标系）
+            self.drag_start_pos = event.globalPos()
+            # 保存窗口当前位置
+            self.dialog_original_pos = self.pos()
+            # 接受事件，阻止事件传递
+            event.accept()
+        else:
+            # 忽略非标题栏区域的点击
+            event.ignore()
+
+    def dialog_mouse_move(self, event):
+        """处理鼠标移动事件（实现窗口拖动）"""
+        # 当满足三个条件时处理拖动：
+        # 1. 左键保持按下状态
+        # 2. 存在初始拖动位置记录
+        # 3. 鼠标在标题栏区域
+        if (event.buttons() & Qt.LeftButton and
+                hasattr(self, 'drag_start_pos') and
+                self.widget_historical_title.rect().contains(event.pos())):
+
+            # 计算位置偏移量（当前鼠标位置 - 起始位置）
+            delta = event.globalPos() - self.drag_start_pos
+            # 移动窗口到新位置（原始位置 + 偏移量）
+            self.move(self.dialog_original_pos + delta)
+            # 接受事件，确保操作流畅
+            event.accept()
+        else:
+            # 忽略无效拖动操作
+            event.ignore()
+
+    # 历史参数弹窗类新增关闭事件处理
+    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
+    def closeEvent(self, event):
+        """处理关闭事件：关闭关联的实时参数弹窗"""
+        # 检查是否存在实时参数弹窗实例
+        if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
+            self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
+        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class AlarmDialog(QDialog, Ui_Dialog_alarm):
     def __init__(self):
@@ -3831,7 +4371,8 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             'factory1_4_alarm_data',
             'factory2_1_alarm_data',
             'factory2_2_alarm_data',
-            'factory2_3_alarm_data'
+            'factory2_3_alarm_data',
+            'factory2_4_alarm_data'
         ]
 
         # 存储每个表最后一次的报警值，用于比较变化
@@ -4084,6 +4625,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pop_dialog_factory2_1 = ParameterDialogFactory2Device1()
         self.pop_dialog_factory2_2 = ParameterDialogFactory2Device2()
         self.pop_dialog_factory2_3 = ParameterDialogFactory2Device3()
+        self.pop_dialog_factory2_4 = ParameterDialogFactory2Device4()
 
 
         # 初始化历史弹窗（使用自定义弹窗类）
@@ -4094,6 +4636,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dialog_historical_factory2_1 = HistoricalParameterDialogFactory2Device1()
         self.dialog_historical_factory2_2 = HistoricalParameterDialogFactory2Device2()
         self.dialog_historical_factory2_3 = HistoricalParameterDialogFactory2Device3()
+        self.dialog_historical_factory2_4 = HistoricalParameterDialogFactory2Device4()
 
         # 建立实例关联
         self.pop_dialog.dialog_historical = self.dialog_historical
@@ -4111,6 +4654,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dialog_historical_factory2_2.dialog_realtime = self.pop_dialog_factory2_2
         self.pop_dialog_factory2_3.dialog_historical = self.dialog_historical_factory2_3
         self.dialog_historical_factory2_3.dialog_realtime = self.pop_dialog_factory2_3
+        self.pop_dialog_factory2_4.dialog_historical = self.dialog_historical_factory2_4
+        self.dialog_historical_factory2_4.dialog_realtime = self.pop_dialog_factory2_4
         # 初始化报警弹窗（使用自定义弹窗类）
         self.pop_alarm_dialog = AlarmDialog()
 
@@ -4122,6 +4667,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve5.mousePressEvent = self.show_pop_parameter_factory2_1
         self.curve6.mousePressEvent = self.show_pop_parameter_factory2_2
         self.curve7.mousePressEvent = self.show_pop_parameter_factory2_3
+        self.curve8.mousePressEvent = self.show_pop_parameter_factory2_4
         # 绑定曲线控件的鼠标点击事件
         self.pushButton_alarm.mousePressEvent = self.show_pop_alarm
         # 绑定关闭按钮：点击时关闭所有窗口
@@ -4144,7 +4690,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "factory1_4_set_data_curve",
             "factory2_1_set_data_curve",
             "factory2_2_set_data_curve",
-            "factory2_3_set_data_curve"
+            "factory2_3_set_data_curve",
+            "factory2_4_set_data_curve"
         ]
         # 添加管径实时曲线
         self.curve_plotter1 = RealTimeMainWindowCurve1(
@@ -4238,6 +4785,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             },
             y_limits=(-1, 1)
         )
+        self.curve_plotter8 = RealTimeMainWindowCurve1(
+            parent_widget=self.curve8,  # 对应UI中的曲线容器
+            table_name="factory2_4_set_data_curve",
+            params_config={
+                'curve3': 'parameter3',
+                'curve1': 'parameter1',
+                'curve6': 'parameter6',
+                'curve4': 'parameter4',
+                'curve2': 'parameter2',
+                'curve5': 'parameter5'
+            },
+            y_limits=(-1, 1)
+        )
         # 在初始化曲线后添加事件穿透设置
         self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
@@ -4246,6 +4806,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter5.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter6.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter7.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+        self.curve_plotter8.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         # 添加首页面采集子线程
         self._start_insert_threads()
         self._start_data_update_thread(self.tables_to_monitor)
@@ -4705,7 +5266,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "factory1_4_set_data_curve": [self._update_curve4_realtime, self.curve_plotter4.update_plot],
             "factory2_1_set_data_curve": [self._update_curve5_realtime, self.curve_plotter5.update_plot],
             "factory2_2_set_data_curve": [self._update_curve6_realtime, self.curve_plotter6.update_plot],
-            "factory2_3_set_data_curve": [self._update_curve7_realtime, self.curve_plotter7.update_plot]
+            "factory2_3_set_data_curve": [self._update_curve7_realtime, self.curve_plotter7.update_plot],
+            "factory2_4_set_data_curve": [self._update_curve8_realtime, self.curve_plotter8.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -4765,6 +5327,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve7_lable6.setText(str(data.get('parameter3', '')))
         self.curve7_lable8.setText(str(data.get('parameter4', '')))
         self.curve7_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+    def _update_curve8_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.curve1_lable2_5.setText(str(data.get('parameter1', '')))
+        self.curve1_lable4_5.setText(str(data.get('parameter2', '')))
+        self.curve1_lable6_5.setText(str(data.get('parameter3', '')))
+        self.curve1_lable8_5.setText(str(data.get('parameter4', '')))
+        self.curve1_lable10_5.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
 
     def minimize_all_windows(self):
         """最小化所有窗口的方法"""
@@ -4784,6 +5353,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory2_2.hide()
         if hasattr(self, 'pop_dialog_factory2_3') and self.pop_dialog_factory2_3.isVisible():
             self.pop_dialog_factory2_3.hide()
+        if hasattr(self, 'pop_dialog_factory2_4') and self.pop_dialog_factory2_4.isVisible():
+            self.pop_dialog_factory2_4.hide()
 
         # 隐藏历史参数弹窗
         if hasattr(self, 'dialog_historical') and self.dialog_historical.isVisible():
@@ -4800,6 +5371,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dialog_historical_factory2_2.hide()
         if hasattr(self, 'dialog_historical_factory2_3') and self.dialog_historical_factory2_3.isVisible():
             self.dialog_historical_factory2_3.hide()
+        if hasattr(self, 'dialog_historical_factory2_4') and self.dialog_historical_factory2_4.isVisible():
+            self.dialog_historical_factory2_4.hide()
 
         # 隐藏报警弹窗
         if hasattr(self, 'pop_alarm_dialog') and self.pop_alarm_dialog.isVisible():
@@ -4836,6 +5409,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory2_2.close()
         if hasattr(self, 'pop_dialog_factory2_3'):
             self.pop_dialog_factory2_3.close()
+        if hasattr(self, 'pop_dialog_factory2_4'):
+            self.pop_dialog_factory2_4.close()
 
         # 关闭所有历史参数弹窗
         if hasattr(self, 'dialog_historical'):
@@ -4852,6 +5427,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dialog_historical_factory2_2.close()
         if hasattr(self, 'dialog_historical_factory2_3'):
             self.dialog_historical_factory2_3.close()
+        if hasattr(self, 'dialog_historical_factory2_4'):
+            self.dialog_historical_factory2_4.close()
 
         # 关闭报警弹窗
         if hasattr(self, 'pop_alarm_dialog'):
@@ -4980,6 +5557,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory2_3.activateWindow()  # 激活窗口（置于前台）
             self.pop_dialog_factory2_3.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
+    def show_pop_parameter_factory2_4(self, event):
+        """显示参数弹窗的槽函数"""
+        # 检查弹窗是否已存在
+        if self.pop_dialog_factory2_4:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.pop_dialog_factory2_4.isMinimized():
+                self.pop_dialog_factory2_4.showNormal()  # 从最小化状态恢复
+            elif not self.pop_dialog_factory2_4.isVisible():
+                self.pop_dialog_factory2_4.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.pop_dialog_factory2_4.activateWindow()  # 激活窗口（置于前台）
+            self.pop_dialog_factory2_4.raise_()  # 提升窗口层级
+        event.accept()  # 接受事件，阻止进一步传播
     def show_pop_alarm(self, event):
         """显示报警弹窗的槽函数"""
         # 检查弹窗是否已存在
@@ -5024,6 +5614,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory2_2.close()
         if hasattr(self, 'pop_dialog_factory2_3'):
             self.pop_dialog_factory2_3.close()
+        if hasattr(self, 'pop_dialog_factory2_4'):
+            self.pop_dialog_factory2_4.close()
 
         # 关闭所有历史参数弹窗
         if hasattr(self, 'dialog_historical'):
@@ -5040,6 +5632,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dialog_historical_factory2_2.close()
         if hasattr(self, 'dialog_historical_factory2_3'):
             self.dialog_historical_factory2_3.close()
+        if hasattr(self, 'dialog_historical_factory2_4'):
+            self.dialog_historical_factory2_4.close()
 
         # 关闭报警弹窗
         if hasattr(self, 'pop_alarm_dialog'):
