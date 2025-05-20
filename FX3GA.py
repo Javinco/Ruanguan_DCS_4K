@@ -253,11 +253,18 @@ def parse_plc_response(response: bytes) -> list:
     # 每4个字符解析为一个寄存器值（小端序处理）
     registers = []
     for i in range(0, len(data_part), 4):
-        chunk = data_part[i:i + 4].decode('ascii')
+        chunk = data_part[i:i + 4].decode('ascii')  # 实际收到的是 "9CFF"
 
-        # 小端序转换（示例："3412" → 0x1234 → 4660）
-        hex_str = chunk[2:4] + chunk[0:2]
-        registers.append(int(hex_str, 16))
+        # 将ASCII字符转换为原始字节数据（"9CFF" -> b'\x39\x43\x46\x46 这个有问题）
+        # 需要先转换为真正的十六进制字节（"9CFF" 实际应该是 "FF9C"）
+        # 修正方法：交换前两个和后两个字符
+        corrected_chunk = chunk[2:] + chunk[:2]  # 将 "9CFF" 转换为 "FF9C"
+        byte_data = bytes.fromhex(corrected_chunk)
+
+        # 使用小端序解析（因为PLC实际传输的是高位在前）
+        value = struct.unpack('>h', byte_data)[0]  # 使用大端序解析 FF9C 为 -100
+
+        registers.append(value)
 
     return registers
 
@@ -360,7 +367,7 @@ if __name__ == "__main__":
                     (11, 2, ["parameter1", "parameter2"]),
                     (21, 6, ["parameter3", "parameter4", "parameter5",
                              "parameter6", "parameter7", "parameter8"]),
-                    (1, 1, ["parameter9"]),
+                    (124, 1, ["parameter9"]),
                     (5, 1, ["parameter10"]),
                     (7, 1, ["parameter11"])
                 ]
