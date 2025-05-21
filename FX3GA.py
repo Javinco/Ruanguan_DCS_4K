@@ -112,7 +112,7 @@ def write_d(address, length, value):
     # except Exception as e:
     #     print(f"发生错误: {e}")
 
-def force(address,studus):
+def force(address,status):
     # # 配置串口参数
     # port = 'COM5'
     # baudrate = 9600
@@ -123,11 +123,11 @@ def force(address,studus):
     print(f'M寄存器-->转换后的地址：{hex(new_address)}')
     send_data = [0x02]
 
-    if studus == 'on':
+    if status == 'on':
         # 要发送的数据 (十六进制格式
         # send_data = [0x02, 0x37, *bytes(f"{new_address:04X}", 'ascii'), 0x03]
         send_data.extend([0x37])
-    elif studus == 'off':
+    elif status == 'off':
         send_data.extend([0x38])
 
     send_data.extend(bytes(f"{new_address:04X}", 'ascii'))
@@ -363,33 +363,34 @@ if __name__ == "__main__":
                 # # force(4,'off')
                 # # read_float(10, 2)
                 # 定义采集组配置
-                groups_config = [
-                    (11, 2, ["parameter1", "parameter2"]),
-                    (21, 6, ["parameter3", "parameter4", "parameter5",
-                             "parameter6", "parameter7", "parameter8"]),
-                    (124, 1, ["parameter9"]),
-                    (5, 1, ["parameter10"]),
-                    (7, 1, ["parameter11"])
-                ]
+                groups_config = [("factory2_4_realtime_data_jcj", [
+                                    (11, 2, ["parameter1", "parameter2"]),
+                                    (21, 6, ["parameter3", "parameter4", "parameter5", "parameter6", "parameter7", "parameter8"]),
+                                    (124, 1, ["parameter9"]),
+                                    (5, 1, ["parameter10"]),
+                                    (7, 1, ["parameter11"])
+                                    ])
+                                 ]
 
                 combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
                 try:
-                    for start_addr, reg_count, fields in groups_config:
-                        values = read_d(start_addr, reg_count)
-                        # 添加数据有效性检查
-                        if len(values) < reg_count:
-                            raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
+                    for table_name, groups in groups_config:
+                        for start_addr, reg_count, fields in groups:
+                            values = read_d(start_addr, reg_count)
+                            # 添加数据有效性检查
+                            if len(values) < reg_count:
+                                raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
 
-                        # 使用字典推导式映射字段
-                        combined_data.update({
-                            field: values[i]
-                            for i, field in enumerate(fields)
-                            if i < len(values)
-                        })
+                            # 使用字典推导式映射字段
+                            combined_data.update({
+                                field: values[i]
+                                for i, field in enumerate(fields)
+                                if i < len(values)
+                            })
 
-                    data_manager.save_combined_data("factory2_4_realtime_data_jcj", combined_data)
-                    print(f"数据存储成功: {combined_data}")
+                        data_manager.save_combined_data(table_name, combined_data)
+                        print(f"向{table_name}存储数据成功: {combined_data}")
 
                 except Exception as e:
                     print(f"数据采集异常: {str(e)}")
