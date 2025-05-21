@@ -36,7 +36,7 @@ def read_d(address, length):
     ser.write(send_data)  # type: ignore[attr-defined]
 
     # 等待数据发送完成
-    time.sleep(0.1)
+    time.sleep(0.2)
 
     if ser.in_waiting > 0:
         received_data = ser.read(ser.in_waiting)
@@ -367,12 +367,18 @@ if __name__ == "__main__":
                 # # force(4,'off')
                 # # read_float(10, 2)
                 # 定义采集组配置
-                groups_config = [("factory2_4_realtime_data_jcj", [
-                                    (4, 4, ["parameter1", "parameter2"]),
-                                    (20, 12, ["parameter3", "parameter4", "parameter5", "parameter6", "parameter7", "parameter8"]),
-                                    (124, 2, ["parameter9"]),
-                                    (0, 2, ["parameter10"]),
-                                    (2, 2, ["parameter11"])
+                # groups_config = [("factory2_4_plc0", [
+                #                     (900, 16, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                #                                "parameter6", "parameter7", "parameter8"]),
+                #                     (916, 14, ["parameter9", "parameter10",
+                #                                "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
+                #
+                #                     ])
+                #                  ]
+                groups_config = [("factory2_4_plc0", [
+                                    (900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                                               "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                                               "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
                                     ])
                                  ]
 
