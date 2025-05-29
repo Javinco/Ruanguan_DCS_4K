@@ -2,6 +2,7 @@
 import sys
 from datetime import datetime, timedelta
 import socket
+import serial
 
 # 从PyQt5导入需要的组件
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QTableWidgetItem
@@ -28,6 +29,7 @@ from Ui_pop_alarm import Ui_Dialog_alarm
 from Data_Manager import data_manager, inserter,historical_data_manager
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
 from Ruanguan_Historical import HistoricalCurvePlotter
+from NEWFX3GA import plc_data_manager
 
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
@@ -5191,6 +5193,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ],
             ip="192.168.156.22"
         )
+        # 工厂2设备4产量数据采集
+        self._start_plc_insert_thread(
+            groups_config=[("factory2_4_plc0", [(900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
+                            ])
+                           ],
+            COM = 'COM22')
+        self._start_plc_insert_thread(
+            groups_config=[("factory2_4_plc1", [
+                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7"])
+            ])
+                           ],
+            COM = 'COM21')
+        # self._start_plc_insert_thread(
+        #     groups_config=[("factory2_4_plc2", [
+        #         (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+        #                     "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+        #                     "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+        #     ])
+        #                    ],
+        #     COM = 'COM20')
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
@@ -5222,6 +5247,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.threads[key] = (thread, worker) # 使用字符串作为键
         # 启动线程（开始执行事件循环）
         thread.start()
+
+    # ------------------------- 线程启动方法 -------------------------
+    def _start_plc_insert_thread(self, groups_config, COM):
+        # 创建线程对象
+        thread = QThread()
+        worker = PlcDataWorker(groups_config, COM)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run) #type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)#type: ignore[attr-defined] # 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)#type: ignore[attr-defined]  # 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)#type: ignore[attr-defined]  # 线程退出后销毁线程对象
+
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   #type: ignore[attr-defined] # 处理数据更新的方法
+
+        # 存储线程引用
+        self.threads['plc_data'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
         """启动数据更新线程
@@ -5968,6 +6018,108 @@ class AlarmHistoryQueryWorker(QObject):
 
         # 返回对应的报警内容，如果没有对应的内容则返回默认文本
         return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
+
+# ---------------------------------PLC数据工作线程类---------------------------------
+class PlcDataWorker(QObject):
+    """执行PLC数据读取和保存的工作类（在线程中运行）"""
+    # 定义信号
+    finished = pyqtSignal()  # 完成信号
+    data_updated = pyqtSignal(str, dict)  # 数据更新信号：表名和数据字典
+
+    def __init__(self, groups_config, COM, serial_port=None):
+        """构造函数
+        参数:
+            plc_config: PLC配置参数，包含地址映射和表名
+            serial_port: 串口对象
+        """
+        super().__init__()
+        self.groups_config = groups_config  # PLC配置参数
+        self.COM = COM  # com口对象
+        self.serial_port = serial_port  # 串口对象
+        self.keep_running = True  # 控制线程运行的标志
+        self.data_manager = plc_data_manager  # 数据管理器实例
+
+    def init_serial(self):
+        """初始化串口连接"""
+        if not self.serial_port or not self.serial_port.is_open:
+            try:
+                # 如果没有提供串口对象或串口未打开，则创建新的串口连接
+                self.serial_port = serial.Serial(
+                    port= self.COM,  # 串口号
+                    baudrate=9600,  # 波特率
+                    bytesize=serial.SEVENBITS,  # 数据位7
+                    parity=serial.PARITY_EVEN,  # 偶验位
+                    stopbits=serial.STOPBITS_ONE,  # 停止位
+                    timeout=1  # 超时时间
+                )
+                print(f"成功打开串口 {self.serial_port.port}")
+                return True
+            except Exception as e:
+                print(f"串口打开失败: {str(e)}")
+                self.serial_port = None
+                return False
+        return True
+
+    def run(self):
+        """线程运行方法，定期读取PLC数据并保存"""
+        from time import sleep
+
+        try:
+            while self.keep_running:
+                try:
+                    if not self.init_serial():
+                        sleep(1)  # 连接失败则休眠1秒
+                        continue  # 跳过本次循环，重新尝试
+
+                    combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+                    for table_name, groups in self.groups_config:
+                        for start_addr, reg_count, fields in groups:
+                            values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)
+                            print(f'values:{values}---reg_count:{reg_count}')
+                            # 添加数据有效性检查
+                            if len(values) < reg_count/2:
+                                raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
+
+                            # 使用字典推导式映射字段
+                            combined_data.update({
+                                field: values[i]
+                                for i, field in enumerate(fields)
+                                if i < len(values)
+                            })
+
+                        self.data_manager.save_combined_data(table_name, combined_data)
+                        print(f"向{table_name}存储数据成功: {combined_data}")
+
+                    # # 短暂休眠，控制读取频率
+                    # sleep(1)
+
+                except serial.SerialException as e:
+                    print(f"串口异常: {str(e)}")
+                    self.serial_port = None  # 清除串口对象，下次循环重新初始化
+                    sleep(1)
+                except Exception as e:
+                    print(f"运行时异常: {str(e)}")
+                    sleep(1)
+
+        finally:
+            # 清理资源
+            self.cleanup()
+            # 发送完成信号
+            self.finished.emit()  #type: ignore[attr-defined]
+
+    def cleanup(self):
+        """清理资源"""
+        if self.serial_port and self.serial_port.is_open:
+            try:
+                self.serial_port.close()
+                print("串口已关闭")
+            except Exception as e:
+                print(f"关闭串口异常: {str(e)}")
+
+    def stop(self):
+        """停止线程运行"""
+        self.keep_running = False
 # ---------------------------------程序入口---------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # 创建应用实例

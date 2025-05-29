@@ -381,6 +381,17 @@ if __name__ == "__main__":
                                                "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
                                     ])
                                  ]
+                # groups_config = [("factory2_4_plc1", [
+                #                     (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                #                                "parameter6", "parameter7"])
+                #                     ])
+                #                  ]
+                # groups_config = [("factory2_4_plc2", [
+                #                     (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                #                                "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                #                                "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+                #                     ])
+                #                  ]
 
                 combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
