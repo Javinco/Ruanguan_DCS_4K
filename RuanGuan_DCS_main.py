@@ -5208,14 +5208,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ])
                            ],
             COM = 'COM21')
-        # self._start_plc_insert_thread(
-        #     groups_config=[("factory2_4_plc2", [
-        #         (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-        #                     "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-        #                     "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-        #     ])
-        #                    ],
-        #     COM = 'COM20')
+        self._start_plc_insert_thread(
+            groups_config=[("factory2_4_plc2", [
+                (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            ])
+                           ],
+            COM = 'COM20')
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
@@ -5265,9 +5265,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 连接数据更新信号到处理方法
         worker.data_updated.connect(self._handle_data_update)   #type: ignore[attr-defined] # 处理数据更新的方法
-
+        thread_key = f'plc_data_{COM}'
         # 存储线程引用
-        self.threads['plc_data'] = (thread, worker)
+        self.threads[thread_key] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -6052,10 +6052,10 @@ class PlcDataWorker(QObject):
                     stopbits=serial.STOPBITS_ONE,  # 停止位
                     timeout=1  # 超时时间
                 )
-                print(f"成功打开串口 {self.serial_port.port}")
+                print(f"成功打开串口 {self.COM}")
                 return True
             except Exception as e:
-                print(f"串口打开失败: {str(e)}")
+                print(f"串口{self.COM}打开失败: {str(e)}")
                 self.serial_port = None
                 return False
         return True
