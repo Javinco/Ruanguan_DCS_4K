@@ -7,13 +7,11 @@ import datetime
 
 
 class RealTimeCurvePlotter(QWidget):
-    def __init__(self, parent_widget, table_name, params_config, y_limits=(-1, 1)):
+    def __init__(self, parent_widget, params_config, y_limits=(-1, 1)):
         # 调用父类QWidget的初始化方法
         super().__init__()
         # 存储父容器窗口引用（用于界面布局）
         self.parent_widget = parent_widget
-        # 数据库表名称（用于数据查询）
-        self.table_name = table_name
         # 参数配置字典（包含曲线和报警线的参数名称）
         self.params_config = params_config
         # Y轴显示范围（例如：-1到1）
@@ -30,6 +28,13 @@ class RealTimeCurvePlotter(QWidget):
         self._init_plot_style()
         # 设置界面布局
         self._setup_layout()
+        self.time_data = []
+        self.curve1_data = []
+        self.curve2_data = []
+        self.curve3_data = []
+        self.curve4_data = []
+        self.curve5_data = []
+        self.curve6_data = []
 
     def _init_plot_style(self):
         # 设置子图背景为黑色
@@ -200,13 +205,11 @@ class RealTimeCurvePlotter(QWidget):
             self.canvas.draw()
 
 class RealTimeJcjCurvePlotter(QWidget):
-    def __init__(self, parent_widget, table_name, params_config, y_limits=(0, 200)):
+    def __init__(self, parent_widget, params_config, y_limits=(0, 200)):
         # 调用父类QWidget的初始化方法
         super().__init__()
         # 存储父容器窗口引用（用于界面布局）
         self.parent_widget = parent_widget
-        # 数据库表名称（用于数据查询）
-        self.table_name = table_name
         # 参数配置字典（包含曲线和报警线的参数名称）
         self.params_config = params_config
         # Y轴显示范围（例如：-1到1）
@@ -223,6 +226,13 @@ class RealTimeJcjCurvePlotter(QWidget):
         self._init_plot_style()
         # 设置界面布局
         self._setup_layout()
+        self.time_data = []
+        self.curve1_data = []
+        self.curve2_data = []
+        self.curve3_data = []
+        self.curve4_data = []
+        self.curve5_data = []
+        self.curve6_data = []
 
     def _init_plot_style(self):
         # 设置子图背景为黑色
@@ -394,13 +404,11 @@ class RealTimeJcjCurvePlotter(QWidget):
             self.canvas.draw()
 
 class RealTimeMainWindowCurve1(QWidget):
-    def __init__(self, parent_widget, table_name, params_config, y_limits=(-1, 1)):
+    def __init__(self, parent_widget, params_config, y_limits=(-1, 1)):
         # 调用父类QWidget的初始化方法
         super().__init__()
         # 存储父容器窗口引用（用于界面布局）
         self.parent_widget = parent_widget
-        # 数据库表名称（用于数据查询）
-        self.table_name = table_name
         # 参数配置字典（包含曲线和报警线的参数名称）
         self.params_config = params_config
         # Y轴显示范围（例如：-1到1）
@@ -417,6 +425,13 @@ class RealTimeMainWindowCurve1(QWidget):
         self._init_plot_style()
         # 设置界面布局
         self._setup_layout()
+        self.time_data = []
+        self.curve1_data = []
+        self.curve2_data = []
+        self.curve3_data = []
+        self.curve4_data = []
+        self.curve5_data = []
+        self.curve6_data = []
 
     def _init_plot_style(self):
         # 设置子图背景为黑色

@@ -74,7 +74,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_1_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -89,7 +88,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_1_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -360,7 +358,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_2_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -375,7 +372,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_2_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -647,7 +643,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_3_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -662,7 +657,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_3_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -934,7 +928,6 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory1_4_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -949,7 +942,6 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory1_4_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -1222,7 +1214,6 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_1_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -1237,7 +1228,6 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_1_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -1509,7 +1499,6 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_2_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -1524,7 +1513,6 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_2_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -1796,7 +1784,6 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_3_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -1811,7 +1798,6 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_3_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -2083,7 +2069,6 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            table_name="factory2_4_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -2098,7 +2083,6 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 添加挤出机参数实时曲线（示例配置）
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            table_name="factory2_4_realtime_data_jcj",
             params_config={
                 'curve1': 'parameter3',
                 'curve2': 'parameter4',
@@ -4688,7 +4672,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tables_to_monitor = [
             "factory1_1_set_data_curve",
             "factory1_2_set_data_curve",
-            "factory1_2_set_data_curve",
+            "factory1_3_set_data_curve",
             "factory1_4_set_data_curve",
             "factory2_1_set_data_curve",
             "factory2_2_set_data_curve",
@@ -4698,7 +4682,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 添加管径实时曲线
         self.curve_plotter1 = RealTimeMainWindowCurve1(
             parent_widget=self.curve1,  # 对应UI中的曲线容器
-            table_name="factory1_1_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4711,7 +4694,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter2 = RealTimeMainWindowCurve1(
             parent_widget=self.curve2,  # 对应UI中的曲线容器
-            table_name="factory1_2_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4724,7 +4706,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter3 = RealTimeMainWindowCurve1(
             parent_widget=self.curve3,  # 对应UI中的曲线容器
-            table_name="factory1_3_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4737,7 +4718,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter4 = RealTimeMainWindowCurve1(
             parent_widget=self.curve4,  # 对应UI中的曲线容器
-            table_name="factory1_4_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4750,7 +4730,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter5 = RealTimeMainWindowCurve1(
             parent_widget=self.curve5,  # 对应UI中的曲线容器
-            table_name="factory2_1_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4763,7 +4742,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter6 = RealTimeMainWindowCurve1(
             parent_widget=self.curve6,  # 对应UI中的曲线容器
-            table_name="factory2_2_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4776,7 +4754,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter7 = RealTimeMainWindowCurve1(
             parent_widget=self.curve7,  # 对应UI中的曲线容器
-            table_name="factory2_3_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4789,7 +4766,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.curve_plotter8 = RealTimeMainWindowCurve1(
             parent_widget=self.curve8,  # 对应UI中的曲线容器
-            table_name="factory2_4_set_data_curve",
             params_config={
                 'curve3': 'parameter3',
                 'curve1': 'parameter1',
@@ -4867,7 +4843,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     (16, 1, ["parameter1"])
                 ])
             ],
-            ip="192.168.10.14"
+            ip="192.168.155.10"
         )
         # 工厂1设备2产量数据采集
         self._start_insert_thread(
@@ -5200,14 +5176,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
                             ])
                            ],
-            COM = 'COM22')
+            com = 'COM22')
         self._start_plc_insert_thread(
             groups_config=[("factory2_4_plc1", [
                 (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
                            "parameter6", "parameter7"])
             ])
                            ],
-            COM = 'COM21')
+            com = 'COM21')
         self._start_plc_insert_thread(
             groups_config=[("factory2_4_plc2", [
                 (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
@@ -5215,7 +5191,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
             ])
                            ],
-            COM = 'COM20')
+            com = 'COM20')
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
@@ -5249,10 +5225,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.start()
 
     # ------------------------- 线程启动方法 -------------------------
-    def _start_plc_insert_thread(self, groups_config, COM):
+    def _start_plc_insert_thread(self, groups_config, com):
         # 创建线程对象
         thread = QThread()
-        worker = PlcDataWorker(groups_config, COM)
+        worker = PlcDataWorker(groups_config, com)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -5265,7 +5241,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 连接数据更新信号到处理方法
         worker.data_updated.connect(self._handle_data_update)   #type: ignore[attr-defined] # 处理数据更新的方法
-        thread_key = f'plc_data_{COM}'
+        thread_key = f'plc_data_{com}'
         # 存储线程引用
         self.threads[thread_key] = (thread, worker)
 
@@ -6026,7 +6002,7 @@ class PlcDataWorker(QObject):
     finished = pyqtSignal()  # 完成信号
     data_updated = pyqtSignal(str, dict)  # 数据更新信号：表名和数据字典
 
-    def __init__(self, groups_config, COM, serial_port=None):
+    def __init__(self, groups_config, com, serial_port=None):
         """构造函数
         参数:
             plc_config: PLC配置参数，包含地址映射和表名
@@ -6034,7 +6010,7 @@ class PlcDataWorker(QObject):
         """
         super().__init__()
         self.groups_config = groups_config  # PLC配置参数
-        self.COM = COM  # com口对象
+        self.com = com  # com口对象
         self.serial_port = serial_port  # 串口对象
         self.keep_running = True  # 控制线程运行的标志
         self.data_manager = plc_data_manager  # 数据管理器实例
@@ -6045,17 +6021,17 @@ class PlcDataWorker(QObject):
             try:
                 # 如果没有提供串口对象或串口未打开，则创建新的串口连接
                 self.serial_port = serial.Serial(
-                    port= self.COM,  # 串口号
+                    port= self.com,  # 串口号
                     baudrate=9600,  # 波特率
                     bytesize=serial.SEVENBITS,  # 数据位7
                     parity=serial.PARITY_EVEN,  # 偶验位
                     stopbits=serial.STOPBITS_ONE,  # 停止位
                     timeout=1  # 超时时间
                 )
-                print(f"成功打开串口 {self.COM}")
+                print(f"成功打开串口 {self.com}")
                 return True
             except Exception as e:
-                print(f"串口{self.COM}打开失败: {str(e)}")
+                print(f"串口{self.com}打开失败: {str(e)}")
                 self.serial_port = None
                 return False
         return True
