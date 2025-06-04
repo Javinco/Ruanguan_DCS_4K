@@ -216,7 +216,8 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.lineEdit_52.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -501,7 +502,8 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -786,7 +788,8 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -1072,7 +1075,8 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -1357,7 +1361,8 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -1642,7 +1647,8 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -1927,7 +1933,8 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -2213,7 +2220,8 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查历史参数弹窗是否已存在
         if self.dialog_historical:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -2499,7 +2507,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -2751,7 +2760,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -3004,7 +3014,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -3257,7 +3268,8 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -3511,7 +3523,8 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -3764,7 +3777,8 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -4017,7 +4031,8 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
@@ -4270,7 +4285,8 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
             self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        self.hide()  # 隐藏当前窗口
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
         # 检查实时参数弹窗是否已存在
         if self.dialog_realtime:
             # 如果弹窗已最小化或隐藏，则恢复显示
