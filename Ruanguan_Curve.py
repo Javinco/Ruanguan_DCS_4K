@@ -16,6 +16,8 @@ class RealTimeCurvePlotter(QWidget):
         self.params_config = params_config
         # Y轴显示范围（例如：-1到1）
         self.y_limits = y_limits
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 创建数据管理器实例（用于数据库操作）
         self.data_manager = data_manager
         # 创建Matplotlib图形对象（设置黑色背景）
@@ -74,11 +76,19 @@ class RealTimeCurvePlotter(QWidget):
         layout.addWidget(self.canvas)
         # 将布局设置到父容器
         self.parent_widget.setLayout(layout)
+
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def update_plot(self,data):
         # 获取当前系统时间（精确到毫秒）
         now = datetime.datetime.now()
-        # 计算X轴起始时间：当前时间往前推10分钟（用于显示时间窗口）
-        x_start = now - datetime.timedelta(minutes=10)
+        # 计算X轴起始时间：使用动态时间间隔
+        x_start = now - datetime.timedelta(minutes=self.time_interval_minutes)
         # X轴结束时间设置为当前时间（形成右边界）
         x_end = now
         # 通过数据管理器获取实时数据（self.table_name指定数据表）
@@ -110,9 +120,14 @@ class RealTimeCurvePlotter(QWidget):
         self.curve5_data.append(data.get(self.params_config['curve5'], 0))
         # 从数据字典获取curve6参数值，若不存在则默认为0
         self.curve6_data.append(data.get(self.params_config['curve6'], 0))
-        # 维护数据队列长度（保持10分钟窗口）
-        # while循环会删除超过10分钟（600秒）的旧数据
-        while self.time_data and (now - self.time_data[0]).seconds > 600:
+
+        # # 维护数据队列长度（保持10分钟窗口）
+        # # while循环会删除超过10分钟（600秒）的旧数据
+        # while self.time_data and (now - self.time_data[0]).seconds > 600:
+        # 动态维护数据队列长度（保持动态时间窗口）
+        # while循环会删除超过设定时间间隔的旧数据
+        time_limit_seconds = self.time_interval_minutes * 60
+        while self.time_data and (now - self.time_data[0]).seconds > time_limit_seconds:
             self.time_data.pop(0)  # 移除最旧的时间戳
             self.curve1_data.pop(0)  # 移除对应的curve1数据
             self.curve2_data.pop(0)  # 移除对应的curve2数据
@@ -214,6 +229,8 @@ class RealTimeJcjCurvePlotter(QWidget):
         self.params_config = params_config
         # Y轴显示范围（例如：-1到1）
         self.y_limits = y_limits
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 创建数据管理器实例（用于数据库操作）
         self.data_manager = data_manager
         # 创建Matplotlib图形对象（设置黑色背景）
@@ -273,11 +290,18 @@ class RealTimeJcjCurvePlotter(QWidget):
         # 将布局设置到父容器
         self.parent_widget.setLayout(layout)
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def update_jcj_plot(self,data):
         # 获取当前系统时间（精确到毫秒）
         now = datetime.datetime.now()
-        # 计算X轴起始时间：当前时间往前推10分钟（用于显示时间窗口）
-        x_start = now - datetime.timedelta(minutes=10)
+        # 计算X轴起始时间：使用动态时间间隔
+        x_start = now - datetime.timedelta(minutes=self.time_interval_minutes)
         # X轴结束时间设置为当前时间（形成右边界）
         x_end = now
         # 通过数据管理器获取实时数据（self.table_name指定数据表）
@@ -308,9 +332,14 @@ class RealTimeJcjCurvePlotter(QWidget):
         self.curve5_data.append(data.get(self.params_config['curve5'], 0))
         # 从数据字典获取curve6参数值，若不存在则默认为0
         self.curve6_data.append(data.get(self.params_config['curve6'], 0))
-        # 维护数据队列长度（保持10分钟窗口）
-        # while循环会删除超过10分钟（600秒）的旧数据
-        while self.time_data and (now - self.time_data[0]).seconds > 600:
+
+        # # 维护数据队列长度（保持10分钟窗口）
+        # # while循环会删除超过10分钟（600秒）的旧数据
+        # while self.time_data and (now - self.time_data[0]).seconds > 600:
+        # 维护数据队列长度（保持动态时间窗口）
+        # while循环会删除超过设定时间间隔的旧数据
+        time_limit_seconds = self.time_interval_minutes * 60
+        while self.time_data and (now - self.time_data[0]).seconds > time_limit_seconds:
             self.time_data.pop(0)  # 移除最旧的时间戳
             self.curve1_data.pop(0)  # 移除对应的curve1数据
             self.curve2_data.pop(0)  # 移除对应的curve2数据

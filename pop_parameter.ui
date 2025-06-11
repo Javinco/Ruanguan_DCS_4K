@@ -3755,6 +3755,74 @@ background-color: rgb(170, 170, 255);
       <string/>
      </property>
     </widget>
+    <widget class="QLineEdit" name="lineEdit_SetTime">
+     <property name="geometry">
+      <rect>
+       <x>670</x>
+       <y>15</y>
+       <width>130</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">padding: 0;
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+     </property>
+     <property name="text">
+      <string>10</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_factory_num_2">
+     <property name="geometry">
+      <rect>
+       <x>550</x>
+       <y>15</y>
+       <width>110</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>华文中宋</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>时间轴长度:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_factory_num_3">
+     <property name="geometry">
+      <rect>
+       <x>810</x>
+       <y>15</y>
+       <width>40</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>华文中宋</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>分钟</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="widget_pop_parameter_curve1" native="true">
     <property name="geometry">

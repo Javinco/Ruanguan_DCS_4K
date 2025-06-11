@@ -44,6 +44,10 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -274,6 +278,24 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         else:
             # 忽略无效拖动操作
             event.ignore()
+
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -330,6 +352,10 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -561,6 +587,23 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -616,6 +659,10 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -847,6 +894,23 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -902,6 +966,10 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -1134,6 +1202,23 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -1189,6 +1274,10 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -1420,6 +1509,23 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -1475,6 +1581,10 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -1706,6 +1816,23 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -1761,6 +1888,10 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -1992,6 +2123,23 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         # 清空曲线数据
@@ -2047,6 +2195,10 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
         self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
 
         # 初始化位置记录变量
         self.dialog_original_pos = None  # 窗口原始位置
@@ -2278,6 +2430,23 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         else:
             # 忽略无效拖动操作
             event.ignore()
+
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
