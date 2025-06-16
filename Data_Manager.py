@@ -546,15 +546,15 @@ class DataManager:
         'factory2_3_set_data_curve',
         'factory2_3_production_data',  # 新增生产数据表
         'factory2_3_alarm_data',
-        'factory2_4_realtime_data_jcj',
-        'factory2_4_realtime_data_fjj',
-        'factory2_4_realtime_data_zdj',
-        'factory2_4_set_data_jcj',
-        'factory2_4_set_data_fjj',
-        'factory2_4_set_data_zdj',
-        'factory2_4_set_data_curve',
-        'factory2_4_production_data',  # 新增生产数据表
-        'factory2_4_alarm_data',
+        # 'factory2_4_realtime_data_jcj',
+        # 'factory2_4_realtime_data_fjj',
+        # 'factory2_4_realtime_data_zdj',
+        # 'factory2_4_set_data_jcj',
+        # 'factory2_4_set_data_fjj',
+        # 'factory2_4_set_data_zdj',
+        # 'factory2_4_set_data_curve',
+        # 'factory2_4_production_data',  # 新增生产数据表
+        # 'factory2_4_alarm_data',
     ]
     _instance = None  # 单例实例
     _lock = threading.Lock()  # 添加线程锁
@@ -815,6 +815,360 @@ class HistoricalDataManager:
             if conn.is_connected():
                 conn.close()
 
+class PLCDataManager:
+    # 定义全局表名常量（新增）
+    CLASS_TABLES = [
+        'factory2_4_realtime_data_jcj',
+        'factory2_4_realtime_data_fjj',
+        'factory2_4_realtime_data_zdj',
+        'factory2_4_set_data_jcj',
+        'factory2_4_set_data_fjj',
+        'factory2_4_set_data_zdj',
+        'factory2_4_set_data_curve',
+        'factory2_4_production_data',  # 新增生产数据表
+        'factory2_4_alarm_data',
+    ]
+    _instance = None  # 单例实例
+    _lock = threading.Lock()  # 添加线程锁
+
+    def __new__(cls, *args, **kwargs):
+        """实例创建方法（线程安全单例模式实现）"""
+        with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
+            # 检查是否已有实例存在
+            if cls._instance is None:
+                # 调用父类__new__方法创建新实例
+                cls._instance = super().__new__(cls)
+                # 初始化标记（防止重复初始化）
+                cls._instance.__initialized = False
+            return cls._instance    # 返回单例实例
+    # 初始化方法（构造器）
+    def __init__(self, host='192.168.10.99', user='root', password='admin', database='dcs_data'):
+        """数据库管理器
+        Args参数说明:
+            host: MySQL服务器地址（默认mini机192.168.10.99）
+            user: 数据库用户名（默认root）
+            password: 数据库密码（需根据实际修改）
+            database: 要连接的数据库名称（默认dcs_data）
+        """
+        # 创建配置字典存储连接参数
+        self.config = {
+            'host': host,  # 数据库服务器的主机名或IP地址
+            'user': user,  # 登录数据库的用户名凭证
+            'password': password,  # 登录数据库的密码凭证
+            'database': database,  # 要操作的数据库名称
+            'pool_size': 20,  # 连接池中保持的活跃连接数（防止多线程竞争）
+            'autocommit': True
+        }
+        # 单例初始化控制（防止重复初始化）
+        if self.__initialized:  # 检查是否已经初始化
+            return  # 如果已初始化则直接返回
+        self.__initialized = True   # 设置初始化标记
+        self.connection_pool = None  # 添加连接池状态标记
+        self.connection_available = False  # 添加连接可用性标记
+        self._init_pool()  # 调用私有方法初始化连接池
+
+    def get_data_versions(self):
+        """获取各表数据版本号（实际查询数据库）"""
+        versions = {}
+        try:
+            # 使用连接池获取连接
+            with self.connection_pool.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    # 查询所有监控表的最新ID
+                    for table in self.CLASS_TABLES:
+                        # 添加表存在性检查
+                        cursor.execute(f"SHOW TABLES LIKE '{table}'")
+                        if not cursor.fetchone():
+                            print(f"警告：数据表 {table} 不存在")
+                            continue
+                        # 添加字段存在性检查
+                        cursor.execute(f"""
+                            SELECT COUNT(*)
+                            FROM information_schema.columns 
+                            WHERE table_name = '{table}' AND column_name = 'id'
+                        """)
+                        if cursor.fetchone()[0] == 0:
+                            print(f"警告：数据表 {table} 缺少id字段")
+                            continue
+
+                        # 添加COALESCE处理空值
+                        cursor.execute(f"SELECT COALESCE(MAX(id), 0) FROM `{table}`")
+                        result = cursor.fetchone()
+                        versions[table] = result[0] if result else 0
+        except Exception as e:
+            print(f"版本查询失败: {str(e)}")
+            # 返回空字典避免后续错误
+            return {}
+        return versions
+
+    def _init_pool(self):
+        """初始化连接池（解决多线程访问问题）"""
+        try:
+            # 使用mysql.connector的连接池功能创建连接池
+            self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+                pool_name=f"dcs_inserter_pool_{id(self)}",  # 连接池的名称标识
+                pool_reset_session=True,  # 重置会话状态后返回连接池
+                **self.config  # 解包连接配置参数
+            )
+            self.connection_available = True  # 标记连接可用
+            print(f"PLCDataManager连接池初始化成功")
+        except Error as e:
+            print(f"PLCDataManager连接池初始化失败: {e}")  # 输出错误详细信息
+            print(f"将在后台尝试重连mini机数据库...")
+            self.connection_available = False  # 标记连接不可用
+            self.connection_pool = None
+            # 启动重连线程，不退出程序
+            self._start_reconnect_thread()
+
+    def _start_reconnect_thread(self):
+        """启动重连线程"""
+        import threading
+        import time
+
+        def reconnect_worker():
+            retry_count = 0
+            max_retries = -1  # -1表示无限重试
+            retry_interval = 1  # 重连间隔30秒
+
+            while not self.connection_available and (max_retries == -1 or retry_count < max_retries):
+                retry_count += 1
+                print(f"PLCDataManager第{retry_count}次尝试重连mini机数据库...")
+
+                try:
+                    self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+                        pool_name=f"dcs_inserter_pool_{id(self)}_{retry_count}",
+                        pool_reset_session=True,
+                        **self.config
+                    )
+                    self.connection_available = True
+                    print(f"PLCDataManager重连成功！")
+                    break
+                except Error as e:
+                    print(f"PLCDataManager重连失败: {e}，{retry_interval}秒后重试...")
+                    time.sleep(retry_interval)
+
+        # 创建并启动重连线程
+        reconnect_thread = threading.Thread(target=reconnect_worker, daemon=True)
+        reconnect_thread.start()
+
+    def get_realtime_data(self, table_name):
+        """获取实时数据（完全重构）
+        Args参数:
+            id: int类型，设备唯一标识符（当前版本暂未使用，保留参数位）
+        Returns返回:
+            dict: 包含最新实时数据的字典，键为字段名（timestamp/parameter1/parameter2）
+                  None表示查询失败
+        """
+        if not self.connection_available or not self.connection_pool:
+            print(f"PLCDataManager连接不可用，跳过数据查询")
+            return None
+
+        try:  # try关键字：异常处理开始，捕获代码块中可能发生的异常
+            # with语句：上下文管理器，自动管理连接对象的关闭操作
+            # self.connection_pool.get_connection()：从连接池获取一个数据库连接
+            with self.connection_pool.get_connection() as connection:  # connection变量：数据库连接对象实例
+
+                # dictionary=True参数：使游标返回字典类型的结果（键为字段名）
+                with connection.cursor(dictionary=True) as cursor:  # cursor变量：数据库游标对象，用于执行SQL语句
+
+                    # f-string：Python格式化字符串语法，动态插入表名参数
+                    # 三引号字符串：定义跨行SQL语句（保留原有缩进格式）
+                    cursor.execute(f"""     # execute()方法：执行SQL查询语句
+                        SELECT *            # SQL关键字：选择所有字段
+                        FROM {table_name}   # SQL关键字：指定查询的表名（通过参数动态传入）
+                        ORDER BY id DESC    # SQL子句：按id字段降序排列（DESC表示降序）
+                        LIMIT 1             # SQL子句：限制返回1条记录
+                    """)  # 分号：SQL语句结束符（Python中可省略）
+
+                    result = cursor.fetchone()  # fetchone()方法：获取查询结果的第一行数据
+
+                    if result:  # if条件判断：检查结果是否非空
+                        # isoformat()方法：将datetime对象转换为ISO 8601格式字符串
+                        result['timestamp'] = result['timestamp'].isoformat()  # 赋值操作：更新timestamp字段格式
+
+                    return result  # return关键字：返回查询结果字典（无数据时返回None）
+
+        except Error as e:  # except关键字：捕获mysql.connector.Error类型的异常
+            # f-string格式化：将错误对象转换为字符串嵌入输出信息
+            print(f"数据库操作失败: {e}")  # print函数：输出错误信息到控制台
+            return None  # 返回空值：表示查询操作失败
+
+class PLCHistoricalDataManager:
+    """历史数据管理器（采用相同连接池配置）
+    功能：独立管理历史数据的数据库连接与查询操作
+    设计特点：与DataManager解耦，但保持表结构一致"""
+
+    # 复用实时数据表结构定义（保持数据结构一致性）
+    CLASS_TABLES = PLCDataManager.CLASS_TABLES  # 从DataManager继承表名常量
+
+    def __init__(self, host='192.168.10.99', user='root', password='admin', database='dcs_data'):
+        """构造器初始化（独立配置连接池）
+        Args参数：
+            host: MySQL服务器地址（默认mini机192.168.10.99）
+            user: 数据库用户名（root管理员）
+            password: 数据库访问密码
+            database: 目标数据库名称"""
+        # 连接池配置字典（独立配置项）
+        self.config = {
+            'host': host,  # MySQL服务器IP/域名
+            'user': user,  # 数据库认证用户名
+            'password': password,  # 数据库访问密码（需加密存储）
+            'database': database,  # 指定操作数据库
+            'pool_size': 1,  # 连接池容量（根据历史查询并发量设置）
+            'autocommit': True  # 自动提交模式（查询操作无需事务）
+        }
+        self.connection_pool = None  # 连接池对象占位符
+        self.connection_available = False  # 添加连接可用性标记
+        self._init_pool()  # 立即初始化连接池
+
+    def _init_pool(self):
+        """私有方法：初始化MySQL连接池
+        异常处理：连接失败时终止程序"""
+        try:
+            # 创建独立命名的连接池（避免与实时数据池冲突）
+            self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+                pool_name=f"dcs_inserter_pool_{id(self)}",  # 连接池唯一标识
+                pool_reset_session=True,  # 重置会话状态后回收连接
+                **self.config  # 解包连接配置参数
+            )
+            self.connection_available = True  # 标记连接可用
+            print(f"PLCHistoricalDataManager连接池初始化成功")
+        except Error as e:  # 捕获数据库驱动异常
+            print(f"PLCHistoricalDataManager连接池初始化失败: {e}")  # 输出详细错误信息
+            print(f"将在后台尝试重连mini机数据库...")
+            self.connection_available = False  # 标记连接不可用
+            self.connection_pool = None
+            # 启动重连线程，不退出程序
+            self._start_reconnect_thread()
+
+    def _start_reconnect_thread(self):
+        """启动重连线程"""
+        import threading
+        import time
+
+        def reconnect_worker():
+            retry_count = 0
+            max_retries = -1  # -1表示无限重试
+            retry_interval = 1  # 重连间隔30秒
+
+            while not self.connection_available and (max_retries == -1 or retry_count < max_retries):
+                retry_count += 1
+                print(f"PLCHistoricalDataManager第{retry_count}次尝试重连mini机数据库...")
+
+                try:
+                    self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+                        pool_name=f"dcs_inserter_pool_{id(self)}_{retry_count}",
+                        pool_reset_session=True,
+                        **self.config
+                    )
+                    self.connection_available = True
+                    print(f"PLCHistoricalDataManager重连成功！")
+                    break
+                except Error as e:
+                    print(f"PLCHistoricalDataManager重连失败: {e}，{retry_interval}秒后重试...")
+                    time.sleep(retry_interval)
+
+        # 创建并启动重连线程
+        reconnect_thread = threading.Thread(target=reconnect_worker, daemon=True)
+        reconnect_thread.start()
+
+    def get_historical_data(self, table_name, start_time, end_time):
+        """历史数据查询核心方法
+        Args参数：
+            table_name: 目标数据表名（需存在于CLASS_TABLES）
+            start_time: 查询起始时间（格式：'YYYY-MM-DD HH:MM:SS'）
+            end_time: 查询结束时间（格式同上）
+        Returns返回：
+            list[dict]: 查询结果集（字典列表），无数据返回空列表"""
+
+        # 连接池有效性验证（防御性编程）
+        # 检查连接是否可用
+        if not self.connection_available or not self.connection_pool:
+            print(f"PLCHistoricalDataManager连接不可用，跳过历史数据查询")
+            return []
+
+        # 从连接池获取数据库连接
+        conn = self.connection_pool.get_connection()
+        try:
+            # 创建字典游标（结果以字段名为键）
+            cursor = conn.cursor(dictionary=True)
+
+            # 验证目标表存在性（防止SQL注入）
+            cursor.execute(f"SHOW TABLES LIKE '{table_name}'")
+            if not cursor.fetchone():  # 无匹配表时返回空
+                print(f"[历史数据] 数据表 {table_name} 不存在")
+                return []
+
+            # 构造参数化SQL查询（BETWEEN时间范围查询）
+            query = f"""SELECT * FROM {table_name} 
+                      WHERE timestamp BETWEEN %s AND %s 
+                      ORDER BY timestamp ASC"""  # 按时间正序排列
+            cursor.execute(query, (start_time, end_time))
+
+            # 获取全部结果（无数据时返回空列表）
+            return cursor.fetchall() or []  # or []确保返回列表类型
+
+        except Error as e:  # 捕获数据库操作异常
+            print(f"[历史数据] 查询失败: {e}")
+            return []  # 异常时返回空列表保证程序健壮性
+        finally:  # 资源清理块（确保连接回收）
+            if conn.is_connected():  # 检查连接状态
+                conn.close()  # 归还连接到连接池
+
+    # 在Data_Manager.py的HistoricalDataManager类中修改
+    def get_nearest_data(self, table_name, target_time, start_time=None, end_time=None):
+        """
+        增强版最近数据查询（支持时间范围）
+        :param table_name: 目标数据表名（需存在于CLASS_TABLES白名单）
+        :param target_time: 目标查询时间（datetime对象）
+        :param start_time: 可选时间范围起始（datetime对象）
+        :param end_time: 可选时间范围结束（datetime对象）
+        :return: 字典格式的单条数据记录 | None表示查询失败
+        """
+        # 从连接池获取数据库连接（使用连接池管理避免资源泄漏）
+        conn = self.connection_pool.get_connection()
+        try:
+            # 创建字典游标（查询结果以字段名为键）
+            with conn.cursor(dictionary=True) as cursor:
+                # 表名白名单验证（防御SQL注入攻击）
+                if table_name not in self.CLASS_TABLES:
+                    return None
+
+                # 动态构建WHERE条件（支持时间范围筛选）
+                where_clause = "WHERE 1=1"  # 基础真值条件（便于后续AND拼接）
+                params = []  # SQL参数列表（保证参数化查询安全）
+
+                # 添加时间范围筛选条件（当参数有效时）
+                if start_time and end_time:
+                    where_clause += " AND timestamp BETWEEN %s AND %s"
+                    params.extend([start_time, end_time])  # 扩展参数列表
+
+                # 构建参数化SQL查询语句
+                query = f"""
+                    SELECT * 
+                    FROM {table_name}
+                    {where_clause}
+                    ORDER BY 
+                        # 按时间差绝对值排序（数值越小越接近目标时间）
+                        ABS(TIMESTAMPDIFF(SECOND, %s, timestamp)),
+                        # 次排序条件（时间戳倒序，取最新记录）
+                        timestamp DESC
+                    LIMIT 1  # 仅返回最优解
+                """
+                params.append(target_time)  # 添加目标时间参数
+
+                # 执行参数化查询（防止SQL注入）
+                cursor.execute(query, params)
+                # 获取单条结果（无数据返回None）
+                return cursor.fetchone()
+        except Error as e:
+            # 打印错误日志（保留排查线索）
+            print(f"最近数据查询失败: {e}")
+            return None
+        finally:
+            # 确保连接归还连接池（避免连接泄漏）
+            if conn.is_connected():
+                conn.close()
 
 # # 测试函数
 # if __name__ == "__main__":
@@ -830,3 +1184,29 @@ class HistoricalDataManager:
 inserter = DataInserter()
 data_manager = DataManager()
 historical_data_manager = HistoricalDataManager()
+# 延迟初始化的PLC数据管理器
+_plc_data_manager = None
+_plc_historical_data_manager = None
+
+def get_plc_data_manager():
+    """获取PLC数据管理器实例（懒加载）"""
+    global _plc_data_manager
+    if _plc_data_manager is None:
+        _plc_data_manager = PLCDataManager()
+    return _plc_data_manager
+
+def get_plc_historical_data_manager():
+    """获取PLC历史数据管理器实例（懒加载）"""
+    global _plc_historical_data_manager
+    if _plc_historical_data_manager is None:
+        _plc_historical_data_manager = PLCHistoricalDataManager()
+    return _plc_historical_data_manager
+
+# 为了保持向后兼容，提供属性访问方式
+@property
+def plc_data_manager():
+    return get_plc_data_manager()
+
+@property
+def plc_historical_data_manager():
+    return get_plc_historical_data_manager()

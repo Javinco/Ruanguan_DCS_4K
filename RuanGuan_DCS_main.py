@@ -26,7 +26,7 @@ from Ui_pop_historical_parameter_factory2_2 import Ui_Dialog_Pop_Historical_Para
 from Ui_pop_historical_parameter_factory2_3 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device3
 from Ui_pop_historical_parameter_factory2_4 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device4
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import data_manager, inserter,historical_data_manager
+from Data_Manager import data_manager, inserter,historical_data_manager,get_plc_data_manager, get_plc_historical_data_manager
 from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
 from Ruanguan_Historical import HistoricalCurvePlotter
 from NEWFX3GA import plc_data_manager
@@ -2264,7 +2264,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
+        worker = PLCDataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -4355,7 +4355,7 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        worker = PLCHistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -6281,6 +6281,124 @@ class PlcDataWorker(QObject):
     def stop(self):
         """停止线程运行"""
         self.keep_running = False
+
+# ---------------------------------PLC数据更新工作线程类---------------------------------
+class PLCDataUpdateWorker(QObject):
+    """数据更新工作线程类，负责从数据库获取数据并发送信号"""
+    # 定义信号，用于将获取的数据传递给主线程
+    data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
+    finished = pyqtSignal()  # 完成信号
+
+    def __init__(self, tables_to_monitor):
+        """初始化数据更新工作线程
+        参数:
+            data_manager: 数据管理器实例
+            tables_to_monitor: 需要监控的表名列表
+        """
+        super().__init__()
+        self.data_manager = get_plc_data_manager()  # 调用函数获取实例
+        if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
+            print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
+            self.data_manager = None
+
+        self.tables_to_monitor = tables_to_monitor
+        self.running = True
+        # 存储本地缓存的版本号
+        self.data_versions = {table: 0 for table in self.tables_to_monitor}
+
+    def run(self):
+        """线程运行方法，定期检查数据库更新"""
+        while self.running:
+            # 检查数据管理器是否可用
+            if not self.data_manager or not getattr(self.data_manager, 'connection_available', False):
+                QThread.msleep(1000)  # 等待1秒后重试
+                continue
+
+            try:
+                # 获取所有表的当前版本号
+                current_versions = self.data_manager.get_data_versions()
+
+                # 检查每个监控的表是否有更新
+                for table_name in self.tables_to_monitor:
+                    if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
+                        # 获取表的最新数据
+                        data = self.data_manager.get_realtime_data(table_name)
+                        if data:  # 确保数据有效
+                            # 发送信号，将表名和数据传递给主线程
+                            self.data_updated.emit(table_name, data)    # type: ignore[attr-defined]
+                        # 更新本地版本号
+                        self.data_versions[table_name] = current_versions[table_name]
+
+            except Exception as e:
+                print(f"数据更新异常: {e}")
+                QThread.msleep(1000)
+                continue
+
+            # 短暂休眠，避免过度占用CPU
+            QThread.msleep(100)  # 休眠100毫秒
+
+    def stop(self):
+        """停止线程运行"""
+        self.running = False
+        self.finished.emit()    # type: ignore[attr-defined]
+
+# ---------------------------------PLC参数弹窗历史数据查询工作线程类---------------------------------
+class PLCHistoricalDataQueryWorker(QObject):
+    """执行历史数据查询的工作线程类"""
+    # 定义信号，用于将查询结果传递给主线程
+    data_ready = pyqtSignal(dict)
+    finished = pyqtSignal()
+    error = pyqtSignal(str)
+
+    def __init__(self, tables, exact_time, start_time, end_time):
+        """初始化历史数据查询工作线程
+        Args:
+            tables: 要查询的表名列表
+            exact_time: 精确时间点
+            start_time: 查询开始时间
+            end_time: 查询结束时间
+        """
+        super().__init__()
+        self.tables = tables
+        self.exact_time = exact_time
+        self.start_time = start_time
+        self.end_time = end_time
+        # 创建历史数据管理器实例
+        self.hist_data_manager = get_plc_historical_data_manager()  # 调用函数获取实例
+        if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
+            print("警告：历史数据管理器连接不可用")
+            self.hist_data_manager = None
+
+    def run(self):
+        """执行历史数据查询任务"""
+        try:
+            # 检查历史数据管理器是否可用
+            if not self.hist_data_manager:
+                self.error.emit("历史数据管理器连接不可用，请检查数据库连接") # type: ignore[attr-defined]
+                return
+            # 存储所有查询结果的字典
+            result_data = {}
+
+            # 遍历所有目标数据表
+            for table in self.tables:
+                # 执行精确时间点查询
+                data = self.hist_data_manager.get_nearest_data(
+                    table,
+                    self.exact_time,
+                    self.start_time,
+                    self.end_time
+                )
+                # 存储查询结果
+                result_data[table] = data
+
+            # 发送查询结果信号
+            self.data_ready.emit(result_data) # type: ignore[attr-defined]
+        except Exception as e:
+            print(f"历史数据查询异常: {str(e)}")
+            self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
+        finally:
+            # 发送完成信号
+            self.finished.emit()    # type: ignore[attr-defined]
 # ---------------------------------程序入口---------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # 创建应用实例
