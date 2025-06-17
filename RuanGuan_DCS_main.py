@@ -6296,19 +6296,35 @@ class PLCDataUpdateWorker(QObject):
             tables_to_monitor: 需要监控的表名列表
         """
         super().__init__()
-        self.data_manager = get_plc_data_manager()  # 调用函数获取实例
-        if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
-            print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
-            self.data_manager = None
-
         self.tables_to_monitor = tables_to_monitor
         self.running = True
+        self.data_manager = None  # 延迟初始化
         # 存储本地缓存的版本号
         self.data_versions = {table: 0 for table in self.tables_to_monitor}
+
+    def init_data_manager(self):
+        """初始化数据管理器连接（在run方法中调用）"""
+        if not self.data_manager:
+            try:
+                self.data_manager = get_plc_data_manager()
+                if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
+                    print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
+                    self.data_manager = None
+                    return False
+                return True
+            except Exception as e:
+                print(f"数据管理器初始化失败: {e}")
+                self.data_manager = None
+                return False
+        return True
 
     def run(self):
         """线程运行方法，定期检查数据库更新"""
         while self.running:
+            # 延迟初始化数据管理器
+            if not self.init_data_manager():
+                QThread.msleep(1000)  # 等待1秒后重试
+                continue
             # 检查数据管理器是否可用
             if not self.data_manager or not getattr(self.data_manager, 'connection_available', False):
                 QThread.msleep(1000)  # 等待1秒后重试
@@ -6363,15 +6379,31 @@ class PLCHistoricalDataQueryWorker(QObject):
         self.exact_time = exact_time
         self.start_time = start_time
         self.end_time = end_time
-        # 创建历史数据管理器实例
-        self.hist_data_manager = get_plc_historical_data_manager()  # 调用函数获取实例
-        if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
-            print("警告：历史数据管理器连接不可用")
-            self.hist_data_manager = None
+        self.hist_data_manager = None  # 延迟初始化
+
+    def init_hist_data_manager(self):
+        """初始化历史数据管理器连接（在run方法中调用）"""
+        if not self.hist_data_manager:
+            try:
+                self.hist_data_manager = get_plc_historical_data_manager()
+                if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
+                    print("警告：历史数据管理器连接不可用")
+                    self.hist_data_manager = None
+                    return False
+                return True
+            except Exception as e:
+                print(f"历史数据管理器初始化失败: {e}")
+                self.hist_data_manager = None
+                return False
+        return True
 
     def run(self):
         """执行历史数据查询任务"""
         try:
+            # 延迟初始化历史数据管理器
+            if not self.init_hist_data_manager():
+                self.error.emit("历史数据管理器连接不可用，请检查数据库连接")
+                return
             # 检查历史数据管理器是否可用
             if not self.hist_data_manager:
                 self.error.emit("历史数据管理器连接不可用，请检查数据库连接") # type: ignore[attr-defined]
