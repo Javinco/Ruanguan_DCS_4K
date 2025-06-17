@@ -2516,6 +2516,12 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -2549,6 +2555,13 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -2556,7 +2569,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -2735,6 +2748,21 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -2768,6 +2796,12 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -2801,6 +2835,13 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -2808,7 +2849,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -2988,6 +3029,21 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -3021,6 +3077,12 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -3054,6 +3116,13 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -3061,7 +3130,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -3242,6 +3311,21 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -3275,6 +3359,12 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -3308,6 +3398,13 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -3315,7 +3412,7 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -3496,6 +3593,21 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -3529,6 +3641,12 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -3562,6 +3680,13 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -3569,7 +3694,7 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
 
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
@@ -3751,6 +3876,21 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -3784,6 +3924,12 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -3817,6 +3963,13 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -3824,7 +3977,7 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -4005,6 +4158,21 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -4038,6 +4206,12 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -4071,6 +4245,13 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -4078,7 +4259,7 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -4259,6 +4440,21 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
             # 忽略无效拖动操作
             event.ignore()
 
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
@@ -4292,6 +4488,12 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
+        # 连接时间设置输入框的信号
+        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
+        # 设置默认值
+        self.lineEdit_SetTime.setText("10")
+        # 添加时间间隔属性，默认为10分钟
+        self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
 
@@ -4325,6 +4527,13 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
             (0, 200)  # Y轴最大范围200
         )
 
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
         # 获取界面选择的时间（转换为Python datetime对象）
@@ -4332,7 +4541,7 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
         # 更新两条历史曲线（触发重绘）
         self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
         self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
@@ -4512,6 +4721,21 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         else:
             # 忽略无效拖动操作
             event.ignore()
+
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'hist_curve1'):
+                        self.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
 
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
@@ -6402,7 +6626,7 @@ class PLCHistoricalDataQueryWorker(QObject):
         try:
             # 延迟初始化历史数据管理器
             if not self.init_hist_data_manager():
-                self.error.emit("历史数据管理器连接不可用，请检查数据库连接")
+                self.error.emit("历史数据管理器连接不可用，请检查数据库连接") # type: ignore[attr-defined]
                 return
             # 检查历史数据管理器是否可用
             if not self.hist_data_manager:
