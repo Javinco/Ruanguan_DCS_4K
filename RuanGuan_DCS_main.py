@@ -79,12 +79,12 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -93,12 +93,12 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -160,64 +160,64 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))    # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))     # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))     # 使用get方法提供默认值
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))       # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))   # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))   # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -386,12 +386,12 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -400,12 +400,12 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -468,64 +468,64 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))    # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))     # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))     # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))   # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))   # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))   # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -693,12 +693,12 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -707,12 +707,12 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -775,64 +775,64 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))   # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))     # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -1000,12 +1000,12 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -1014,12 +1014,12 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -1083,64 +1083,64 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -1308,12 +1308,12 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -1322,12 +1322,12 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -1390,64 +1390,64 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -1615,12 +1615,12 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -1629,12 +1629,12 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -1697,64 +1697,64 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -1922,12 +1922,12 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -1936,12 +1936,12 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -2004,64 +2004,64 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -2229,12 +2229,12 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_plotter = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -2243,12 +2243,12 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.curve_jcj = RealTimeJcjCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve1': 'parameter3',
-                'curve2': 'parameter4',
-                'curve3': 'parameter5',
-                'curve4': 'parameter6',
-                'curve5': 'parameter9',
-                'curve6': 'parameter10'
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
             },
             y_limits=(0, 200)
         )
@@ -2312,64 +2312,64 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
     # 分解原有的大更新方法为多个私有方法
     def _update_jcj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('parameter1', '')))
-        self.label_14.setText(str(data.get('parameter2', '')))
-        self.label_18.setText(str(data.get('parameter3', '')))
-        self.label_22.setText(str(data.get('parameter4', '')))
-        self.label_26.setText(str(data.get('parameter5', '')))
-        self.label_30.setText(str(data.get('parameter6', '')))
-        self.label_34.setText(str(data.get('parameter7', '')))
-        self.label_38.setText(str(data.get('parameter8', '')))
-        self.label_42.setText(str(data.get('parameter9', '')))
-        self.label_46.setText(str(data.get('parameter10', '')))
-        self.label_50.setText(str(data.get('parameter11', '')))
-        self.label_116.setText(str(data.get('parameter3', '')))
-        self.label_117.setText(str(data.get('parameter4', '')))
-        self.label_118.setText(str(data.get('parameter5', '')))
-        self.label_119.setText(str(data.get('parameter6', '')))
-        self.label_104.setText(str(data.get('parameter9', '')))
-        self.label_105.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
     def _update_fjj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('parameter12', '')))
-        self.label_57.setText(str(data.get('parameter13', '')))
-        self.label_61.setText(str(data.get('parameter14', '')))
-        self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))
     def _update_zdj_realtime(self, data):
         """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('parameter16', '')))
-        self.label_77.setText(str(data.get('parameter17', '')))
-        self.label_81.setText(str(data.get('parameter18', '')))
-        self.label_85.setText(str(data.get('parameter19', '')))
-        self.label_89.setText(str(data.get('parameter20', '')))
-        self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
     def _update_jcj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('parameter1', '')))
-        self.lineEdit_5.setText(str(data.get('parameter2', '')))
-        self.lineEdit_6.setText(str(data.get('parameter3', '')))
-        self.lineEdit_7.setText(str(data.get('parameter4', '')))
-        self.lineEdit_8.setText(str(data.get('parameter5', '')))
-        self.lineEdit_10.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
+        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
+        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
+        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
+        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
+        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
     def _update_fjj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('parameter1', '')))
-        self.lineEdit_14.setText(str(data.get('parameter2', '')))
-        self.lineEdit_16.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
+        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
+        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
     def _update_zdj_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('parameter1', '')))
-        self.lineEdit_18.setText(str(data.get('parameter2', '')))
-        self.lineEdit_19.setText(str(data.get('parameter3', '')))
-        self.lineEdit_20.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
+        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
+        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
+        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
     def _update_curve_set(self, data):
         """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('parameter1', '')))
-        self.lineEdit_48.setText(str(data.get('parameter2', '')))
-        self.label_114.setText(str(data.get('parameter3', '')))
-        self.label_115.setText(str(data.get('parameter4', '')))
-        self.lineEdit_51.setText(str(data.get('parameter5', '')))
-        self.lineEdit_52.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
+        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
+        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -2531,12 +2531,12 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory1_1_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -2545,12 +2545,12 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -2631,62 +2631,62 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         # 挤出机实时数据表处理分支
         if table_name == "factory1_1_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_1_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_1_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_1_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -2811,12 +2811,12 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory1_2_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -2825,12 +2825,12 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory1_2_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -2912,62 +2912,62 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory1_2_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_2_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_2_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_2_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -3092,12 +3092,12 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory1_3_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -3106,12 +3106,12 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory1_3_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -3194,62 +3194,62 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory1_3_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_3_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_3_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_3_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -3374,12 +3374,12 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory1_4_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -3388,12 +3388,12 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory1_4_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -3476,62 +3476,62 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory1_4_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory1_4_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory1_4_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory1_4_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -3656,12 +3656,12 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory2_1_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -3670,12 +3670,12 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory2_1_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -3759,62 +3759,62 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory2_1_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_1_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_1_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_1_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -3939,12 +3939,12 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory2_2_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -3953,12 +3953,12 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory2_2_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -4041,62 +4041,62 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory2_2_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_2_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_2_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_2_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -4221,12 +4221,12 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory2_3_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -4235,12 +4235,12 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory2_3_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -4323,62 +4323,62 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory2_3_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_3_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_3_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_3_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -4503,12 +4503,12 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve1 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
             "factory2_4_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'parameter1', 'color': '#FF0000'},
-                        'curve2': {'field': 'parameter2', 'color': '#FFFF00'},
-                        'curve3': {'field': 'parameter3', 'color': '#00FFFF'},
-                        'curve4': {'field': 'parameter4', 'color': '#00FF00'},
-                        'curve5': {'field': 'parameter5', 'color': '#FFFF00'},
-                        'curve6': {'field': 'parameter6', 'color': '#FF0000'}
+            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
+            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
+            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
+            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
+            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
+            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
              },  # 曲线参数映射配置
             (-1, 1)  # Y轴显示范围
         )
@@ -4517,12 +4517,12 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         self.hist_curve2 = HistoricalCurvePlotter(
             self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
             "factory2_4_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'parameter3', 'color': '#FF0000'},
-             'curve2': {'field': 'parameter4', 'color': '#FFFF00'},
-             'curve3': {'field': 'parameter5', 'color': '#00FFFF'},
-             'curve4': {'field': 'parameter6', 'color': '#00FF00'},
-             'curve5': {'field': 'parameter9', 'color': '#FFAA00'},
-             'curve6': {'field': 'parameter10', 'color': '#FF55FF'}
+            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
+             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
+             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
+             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
+             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
+             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
              },  # 参数映射关系
             (0, 200)  # Y轴最大范围200
         )
@@ -4605,62 +4605,62 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机实时数据表处理分支
         if table_name == "factory2_4_realtime_data_jcj":
             # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('parameter1', '')))  # 使用空字符串作为默认值
+            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
             # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('parameter2', '')))
-            self.label_18.setText(str(data.get('parameter3', '')))
-            self.label_22.setText(str(data.get('parameter4', '')))
-            self.label_26.setText(str(data.get('parameter5', '')))
-            self.label_30.setText(str(data.get('parameter6', '')))
-            self.label_34.setText(str(data.get('parameter7', '')))
-            self.label_38.setText(str(data.get('parameter8', '')))
-            self.label_42.setText(str(data.get('parameter9', '')))
-            self.label_46.setText(str(data.get('parameter10', '')))
-            self.label_50.setText(str(data.get('parameter11', '')))
-            self.label_123.setText(str(data.get('parameter3', '')))
-            self.label_127.setText(str(data.get('parameter4', '')))
-            self.label_125.setText(str(data.get('parameter5', '')))
-            self.label_126.setText(str(data.get('parameter6', '')))
-            self.label_128.setText(str(data.get('parameter9', '')))
-            self.label_124.setText(str(data.get('parameter10', '')))  # 使用get方法提供默认值
+            self.label_14.setText(str(data.get('preheating_timer', '')))
+            self.label_18.setText(str(data.get('temperature1', '')))
+            self.label_22.setText(str(data.get('temperature2', '')))
+            self.label_26.setText(str(data.get('temperature3', '')))
+            self.label_30.setText(str(data.get('temperature4', '')))
+            self.label_34.setText(str(data.get('exhaust_temperature', '')))
+            self.label_38.setText(str(data.get('cabinet_temperature', '')))
+            self.label_42.setText(str(data.get('extruder_rpm', '')))
+            self.label_46.setText(str(data.get('inverter_current', '')))
+            self.label_50.setText(str(data.get('inverter_error', '')))
+            self.label_123.setText(str(data.get('temperature1', '')))
+            self.label_127.setText(str(data.get('temperature2', '')))
+            self.label_125.setText(str(data.get('temperature3', '')))
+            self.label_126.setText(str(data.get('temperature4', '')))
+            self.label_128.setText(str(data.get('extruder_rpm', '')))
+            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
         # 放卷机实时数据表处理分支
         elif table_name == "factory2_4_realtime_data_fjj":
             # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('parameter12', '')))
-            self.label_57.setText(str(data.get('parameter13', '')))
-            self.label_61.setText(str(data.get('parameter14', '')))
-            self.label_65.setText(str(data.get('parameter15', '')))  # 使用get方法提供默认值
+            self.label_53.setText(str(data.get('wire_tension', '')))
+            self.label_57.setText(str(data.get('unwinding_speed', '')))
+            self.label_61.setText(str(data.get('linear_velocity', '')))
+            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
         # 自动机历史数据表处理分支
         elif table_name == "factory2_4_realtime_data_zdj":
-            self.label_73.setText(str(data.get('parameter16', '')))
-            self.label_77.setText(str(data.get('parameter17', '')))
-            self.label_81.setText(str(data.get('parameter18', '')))
-            self.label_85.setText(str(data.get('parameter19', '')))
-            self.label_89.setText(str(data.get('parameter20', '')))
-            self.label_93.setText(str(data.get('parameter21', '')))  # 使用get方法提供默认值
+            self.label_73.setText(str(data.get('rpm', '')))
+            self.label_77.setText(str(data.get('traction_speed', '')))
+            self.label_81.setText(str(data.get('pipe_diameter', '')))
+            self.label_85.setText(str(data.get('current_production', '')))
+            self.label_89.setText(str(data.get('equipment_production', '')))
+            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_4_set_data_jcj":
-            self.label_104.setText(str(data.get('parameter1', '')))
-            self.label_105.setText(str(data.get('parameter2', '')))
-            self.label_106.setText(str(data.get('parameter3', '')))
-            self.label_107.setText(str(data.get('parameter4', '')))
-            self.label_108.setText(str(data.get('parameter5', '')))
-            self.label_115.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_104.setText(str(data.get('temperature1_set', '')))
+            self.label_105.setText(str(data.get('temperature2_set', '')))
+            self.label_106.setText(str(data.get('temperature3_set', '')))
+            self.label_107.setText(str(data.get('temperature4_set', '')))
+            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_4_set_data_fjj":
-            self.label_109.setText(str(data.get('parameter1', '')))
-            self.label_110.setText(str(data.get('parameter2', '')))
-            self.label_111.setText(str(data.get('parameter3', '')))  # 使用get方法提供默认值
+            self.label_109.setText(str(data.get('wire_tension_set', '')))
+            self.label_110.setText(str(data.get('linear_velocity_set', '')))
+            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_4_set_data_zdj":
-            self.label_112.setText(str(data.get('parameter1', '')))
-            self.label_113.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_116.setText(str(data.get('parameter4', '')))  # 使用get方法提供默认值
+            self.label_112.setText(str(data.get('rpm_set', '')))
+            self.label_113.setText(str(data.get('traction_speed_set', '')))
+            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
         elif table_name == "factory2_4_set_data_curve":
-            self.label_117.setText(str(data.get('parameter1', '')))
-            self.label_118.setText(str(data.get('parameter2', '')))
-            self.label_114.setText(str(data.get('parameter3', '')))
-            self.label_115.setText(str(data.get('parameter4', '')))
-            self.label_121.setText(str(data.get('parameter5', '')))
-            self.label_122.setText(str(data.get('parameter6', '')))  # 使用get方法提供默认值
+            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+            self.label_118.setText(str(data.get('upper_limit_warning', '')))
+            self.label_114.setText(str(data.get('diameter_difference', '')))
+            self.label_115.setText(str(data.get('tension_percentage', '')))
+            self.label_121.setText(str(data.get('lower_limit_warning', '')))
+            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -4824,12 +4824,12 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             data: 数据字典
         """
         # 数据有效性检查
-        if not data or 'parameter1' not in data:
-            print("Invalid data or missing 'parameter1' field.")
+        if not data or 'alarm' not in data:
+            print("Invalid data or missing 'alarm' field.")
             return
 
         # 获取报警值
-        alarm_value = data.get('parameter1','')
+        alarm_value = data.get('alarm','')
 
         # 检查报警值是否有变化
         if table_name in self.last_alarm_values and self.last_alarm_values[table_name] == alarm_value:
@@ -5086,102 +5086,110 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "factory2_1_set_data_curve",
             "factory2_2_set_data_curve",
             "factory2_3_set_data_curve",
-            "factory2_4_set_data_curve"
+            "factory2_4_set_data_curve",
+            "factory1_1_production_data",
+            "factory1_2_production_data",
+            "factory1_3_production_data",
+            "factory1_4_production_data",
+            "factory2_1_production_data",
+            "factory2_2_production_data",
+            "factory2_3_production_data",
+            "factory2_4_production_data"
         ]
         # 添加管径实时曲线
         self.curve_plotter1 = RealTimeMainWindowCurve1(
             parent_widget=self.curve1,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter2 = RealTimeMainWindowCurve1(
             parent_widget=self.curve2,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter3 = RealTimeMainWindowCurve1(
             parent_widget=self.curve3,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter4 = RealTimeMainWindowCurve1(
             parent_widget=self.curve4,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter5 = RealTimeMainWindowCurve1(
             parent_widget=self.curve5,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter6 = RealTimeMainWindowCurve1(
             parent_widget=self.curve6,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter7 = RealTimeMainWindowCurve1(
             parent_widget=self.curve7,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
         self.curve_plotter8 = RealTimeMainWindowCurve1(
             parent_widget=self.curve8,  # 对应UI中的曲线容器
             params_config={
-                'curve3': 'parameter3',
-                'curve1': 'parameter1',
-                'curve6': 'parameter6',
-                'curve4': 'parameter4',
-                'curve2': 'parameter2',
-                'curve5': 'parameter5'
+                'curve3': 'diameter_difference',
+                'curve1': 'upper_limit_alarm',
+                'curve6': 'lower_limit_alarm',
+                'curve4': 'tension_percentage',
+                'curve2': 'upper_limit_warning',
+                'curve5': 'lower_limit_warning'
             },
             y_limits=(-1, 1)
         )
@@ -5204,52 +5212,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory1_1_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory1_1_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory1_1_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory1_1_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory1_1_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory1_1_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory1_1_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory1_1_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory1_1_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.155.10"
@@ -5258,52 +5266,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory1_2_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory1_2_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory1_2_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory1_2_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory1_2_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory1_2_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory1_2_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory1_2_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory1_2_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.155.14"
@@ -5312,52 +5320,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory1_3_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory1_3_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory1_3_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory1_3_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory1_3_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory1_3_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory1_3_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory1_3_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory1_3_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.155.22"
@@ -5366,52 +5374,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory1_4_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory1_4_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory1_4_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory1_4_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory1_4_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory1_4_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory1_4_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory1_4_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory1_4_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.155.26"
@@ -5420,52 +5428,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory2_1_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory2_1_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory2_1_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory2_1_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory2_1_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory2_1_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory2_1_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory2_1_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory2_1_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.156.18"
@@ -5474,52 +5482,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory2_2_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory2_2_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory2_2_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory2_2_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory2_2_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory2_2_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory2_2_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory2_2_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory2_2_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.156.14"
@@ -5528,52 +5536,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._start_insert_thread(
             groups=[
                 ("factory2_3_realtime_data_jcj", [
-                    (11, 4, ["parameter1", "parameter2"]),
-                    (21, 12, ["parameter3", "parameter4", "parameter5", "parameter6","parameter7","parameter8"]),
-                    (1, 2, ["parameter9"]),
-                    (5, 2, ["parameter10"]),
-                    (7, 2, ["parameter11"])
+                    (11, 4, ["preheating_stage", "preheating_timer"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (1, 2, ["extruder_rpm"]),
+                    (5, 2, ["inverter_current"]),
+                    (7, 2, ["inverter_error"])
                 ]),
                 ("factory2_3_realtime_data_fjj", [
-                    (103, 2, ["parameter12"]),
-                    (107, 4, ["parameter13", "parameter15"]),
-                    (113, 2, ["parameter14"])
+                    (103, 2, ["wire_tension"]),
+                    (107, 4, ["unwinding_speed", "ribs_usage"]),
+                    (113, 2, ["linear_velocity"])
                 ]),
                 ("factory2_3_realtime_data_zdj", [
-                    (201, 2, ["parameter16"]),
-                    (221, 2, ["parameter17"]),
-                    (203, 2, ["parameter18"]),
-                    (231, 2, ["parameter19"]),
-                    (235, 2, ["parameter20"]),
-                    (239, 2, ["parameter21"])
+                    (201, 2, ["rpm"]),
+                    (221, 2, ["traction_speed"]),
+                    (203, 2, ["pipe_diameter"]),
+                    (231, 2, ["current_production"]),
+                    (235, 2, ["equipment_production"]),
+                    (239, 2, ["pass_rate"])
                 ]),
                 ("factory2_3_set_data_curve", [
-                    (203, 6, ["parameter3", "parameter1", "parameter2"]),
-                    (103, 2, ["parameter4"]),
-                    (209, 6, ["parameter7", "parameter5", "parameter6"])
+                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
+                    (103, 2, ["tension_percentage"]),
+                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
                 ]),
                 ("factory2_3_set_data_jcj", [
-                    (41, 10, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5"]),
-                    (3, 2, ["parameter6"])
+                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
+                    (3, 2, ["cabinet_temperature_set"])
                 ]),
                 ("factory2_3_set_data_fjj", [
-                    (101, 2, ["parameter1"]),
-                    (105, 2, ["parameter2"]),
-                    (123, 2, ["parameter3"])
+                    (101, 2, ["wire_tension_set"]),
+                    (105, 2, ["linear_velocity_set"]),
+                    (123, 2, ["ribs_usage_set"])
                 ]),
                 ("factory2_3_set_data_zdj", [
-                    (201, 2, ["parameter1"]),
-                    (217, 2, ["parameter2"]),
-                    (209, 2, ["parameter3"]),
-                    (233, 2, ["parameter4"])
+                    (201, 2, ["rpm_set"]),
+                    (217, 2, ["traction_speed_set"]),
+                    (209, 2, ["pipe_diameter_set"]),
+                    (233, 2, ["planned_production"])
                 ]),
                 ("factory2_3_production_data", [
-                    (231, 4, ["parameter1", "parameter2"]),
-                    (237, 4, ["parameter3", "parameter4"]),
-                    (1, 2, ["parameter5"])
+                    (231, 4, ["current_production", "planned_production"]),
+                    (237, 4, ["qualified_products", "pass_rate"]),
+                    (1, 2, ["extruder_rpm"])
                 ]),
                 ("factory2_3_alarm_data", [
-                    (16, 1, ["parameter1"])
+                    (16, 1, ["alarm"])
                 ])
             ],
             ip="192.168.156.22"
@@ -5715,60 +5723,60 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 分解原有的大更新方法为多个私有方法
     def _update_curve1_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve1_lable2.setText(str(data.get('parameter1', '')))
-        self.curve1_lable4.setText(str(data.get('parameter2', '')))
-        self.curve1_lable6.setText(str(data.get('parameter3', '')))
-        self.curve1_lable8.setText(str(data.get('parameter4', '')))
-        self.curve1_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve1_lable2.setText(str(data.get('current_production', '')))
+        self.curve1_lable4.setText(str(data.get('planned_production', '')))
+        self.curve1_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve1_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve1_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve2_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve2_lable2.setText(str(data.get('parameter1', '')))
-        self.curve2_lable4.setText(str(data.get('parameter2', '')))
-        self.curve2_lable6.setText(str(data.get('parameter3', '')))
-        self.curve2_lable8.setText(str(data.get('parameter4', '')))
-        self.curve2_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve2_lable2.setText(str(data.get('current_production', '')))
+        self.curve2_lable4.setText(str(data.get('planned_production', '')))
+        self.curve2_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve2_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve2_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve3_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve3_lable2.setText(str(data.get('parameter1', '')))
-        self.curve3_lable4.setText(str(data.get('parameter2', '')))
-        self.curve3_lable6.setText(str(data.get('parameter3', '')))
-        self.curve3_lable8.setText(str(data.get('parameter4', '')))
-        self.curve3_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve3_lable2.setText(str(data.get('current_production', '')))
+        self.curve3_lable4.setText(str(data.get('planned_production', '')))
+        self.curve3_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve3_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve3_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve4_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve4_lable2.setText(str(data.get('parameter1', '')))
-        self.curve4_lable4.setText(str(data.get('parameter2', '')))
-        self.curve4_lable6.setText(str(data.get('parameter3', '')))
-        self.curve4_lable8.setText(str(data.get('parameter4', '')))
-        self.curve4_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve4_lable2.setText(str(data.get('current_production', '')))
+        self.curve4_lable4.setText(str(data.get('planned_production', '')))
+        self.curve4_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve4_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve4_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve5_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve5_lable2.setText(str(data.get('parameter1', '')))
-        self.curve5_lable4.setText(str(data.get('parameter2', '')))
-        self.curve5_lable6.setText(str(data.get('parameter3', '')))
-        self.curve5_lable8.setText(str(data.get('parameter4', '')))
-        self.curve5_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve5_lable2.setText(str(data.get('current_production', '')))
+        self.curve5_lable4.setText(str(data.get('planned_production', '')))
+        self.curve5_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve5_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve5_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve6_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve6_lable2.setText(str(data.get('parameter1', '')))
-        self.curve6_lable4.setText(str(data.get('parameter2', '')))
-        self.curve6_lable6.setText(str(data.get('parameter3', '')))
-        self.curve6_lable8.setText(str(data.get('parameter4', '')))
-        self.curve6_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve6_lable2.setText(str(data.get('current_production', '')))
+        self.curve6_lable4.setText(str(data.get('planned_production', '')))
+        self.curve6_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve6_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve6_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve7_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve7_lable2.setText(str(data.get('parameter1', '')))
-        self.curve7_lable4.setText(str(data.get('parameter2', '')))
-        self.curve7_lable6.setText(str(data.get('parameter3', '')))
-        self.curve7_lable8.setText(str(data.get('parameter4', '')))
-        self.curve7_lable10.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve7_lable2.setText(str(data.get('current_production', '')))
+        self.curve7_lable4.setText(str(data.get('planned_production', '')))
+        self.curve7_lable6.setText(str(data.get('qualified_products', '')))
+        self.curve7_lable8.setText(str(data.get('pass_rate', '')))
+        self.curve7_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
     def _update_curve8_realtime(self, data):
         """更新挤出机实时数据"""
-        self.curve1_lable2_5.setText(str(data.get('parameter1', '')))
-        self.curve1_lable4_5.setText(str(data.get('parameter2', '')))
-        self.curve1_lable6_5.setText(str(data.get('parameter3', '')))
-        self.curve1_lable8_5.setText(str(data.get('parameter4', '')))
-        self.curve1_lable10_5.setText(str(data.get('parameter5', '')))    # 使用get方法提供默认值
+        self.curve1_lable2_5.setText(str(data.get('current_production', '')))
+        self.curve1_lable4_5.setText(str(data.get('planned_production', '')))
+        self.curve1_lable6_5.setText(str(data.get('qualified_products', '')))
+        self.curve1_lable8_5.setText(str(data.get('pass_rate', '')))
+        self.curve1_lable10_5.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
 
     def minimize_all_windows(self):
         """最小化所有窗口的方法"""
@@ -6351,7 +6359,7 @@ class AlarmHistoryQueryWorker(QObject):
                 if alarm_data:
                     for record in alarm_data:
                         # 获取报警值
-                        alarm_value = record.get('parameter1')
+                        alarm_value = record.get('alarm')
 
                         # 如果报警值为0或空，则跳过
                         if not alarm_value:
