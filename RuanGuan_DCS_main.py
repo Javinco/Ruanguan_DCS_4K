@@ -5703,14 +5703,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_set_data_curve": [self._update_curve1_realtime, self.curve_plotter1.update_plot],
-            "factory1_2_set_data_curve": [self._update_curve2_realtime, self.curve_plotter2.update_plot],
-            "factory1_3_set_data_curve": [self._update_curve3_realtime, self.curve_plotter3.update_plot],
-            "factory1_4_set_data_curve": [self._update_curve4_realtime, self.curve_plotter4.update_plot],
-            "factory2_1_set_data_curve": [self._update_curve5_realtime, self.curve_plotter5.update_plot],
-            "factory2_2_set_data_curve": [self._update_curve6_realtime, self.curve_plotter6.update_plot],
-            "factory2_3_set_data_curve": [self._update_curve7_realtime, self.curve_plotter7.update_plot],
-            "factory2_4_set_data_curve": [self._update_curve8_realtime, self.curve_plotter8.update_plot]
+            "factory1_1_set_data_curve":  self.curve_plotter1.update_plot,
+            "factory1_2_set_data_curve":  self.curve_plotter2.update_plot,
+            "factory1_3_set_data_curve":  self.curve_plotter3.update_plot,
+            "factory1_4_set_data_curve":  self.curve_plotter4.update_plot,
+            "factory2_1_set_data_curve":  self.curve_plotter5.update_plot,
+            "factory2_2_set_data_curve":  self.curve_plotter6.update_plot,
+            "factory2_3_set_data_curve":  self.curve_plotter7.update_plot,
+            "factory2_4_set_data_curve":  self.curve_plotter8.update_plot,
+            "factory1_1_production_data": self._update_curve1_realtime,
+            "factory1_2_production_data": self._update_curve2_realtime,
+            "factory1_3_production_data": self._update_curve3_realtime,
+            "factory1_4_production_data": self._update_curve4_realtime,
+            "factory2_1_production_data": self._update_curve5_realtime,
+            "factory2_2_production_data": self._update_curve6_realtime,
+            "factory2_3_production_data": self._update_curve7_realtime,
+            "factory2_4_production_data": self._update_curve8_realtime
         }
 
         # 获取并执行对应的更新策略
@@ -5719,7 +5727,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for method in strategy:
                     method(data)    # type: ignore[attr-defined]
             else:
-                pass
+                strategy(data)  # type: ignore[attr-defined]
     # 分解原有的大更新方法为多个私有方法
     def _update_curve1_realtime(self, data):
         """更新挤出机实时数据"""
