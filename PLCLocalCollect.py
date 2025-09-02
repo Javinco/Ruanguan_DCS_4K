@@ -1,11 +1,13 @@
+import sys
 import serial
 import time
 import struct
 import mysql.connector
 from datetime import datetime
 # 添加PyQt5相关导入
-from PyQt5.QtCore import QObject, pyqtSignal, QThread
-
+from PyQt5.QtCore import QObject, pyqtSignal, QThread, Qt
+from PyQt5.QtWidgets import QApplication, QComboBox, QWidget, QVBoxLayout, QMainWindow
+from Ui_LocalCollectParameter import Ui_MainWindow
 
 class PlcDataManager:
     def __init__(self, pool_name='plc_pool', pool_size=3):
@@ -236,84 +238,100 @@ class PlcDataWorker(QObject):
 
 plc_data_manager = PlcDataManager()
 
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super().__init__()
+        # 初始化UI界面
+        self.setupUi(self)
+        # 设置窗口全屏显示
+        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
+        self.comboBox_1.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_1))
+        self.comboBox_2.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_2))
+        self.comboBox_3.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_3))
+        # self.comboBox_4.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_4)) #预留放卷机
+        self.threads = {}
+        # 启动三个独立的数据采集线程
+        self.start_plc_threads()
 
-# 添加启动线程的函数
-def start_plc_threads():
-    """启动三个PLC数据采集线程"""
-    threads = {}
 
-    # 工厂2设备4产量数据采集 - 线程1
-    thread1 = QThread()
-    worker1 = PlcDataWorker(
-        groups_config=[(
-            "factory2_4_plc0", [
-                (900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
-            ]
-        )],
-        com='COM5'
-    )
-    worker1.moveToThread(thread1)
-    thread1.started.connect(worker1.run)
-    worker1.finished.connect(thread1.quit)
-    worker1.finished.connect(worker1.deleteLater)
-    thread1.finished.connect(thread1.deleteLater)
-    threads['thread1'] = (thread1, worker1)
-    thread1.start()
+    @staticmethod
+    def get_com(index):
+        try:
+            com = index.currentText()
+            print(f'当前COM口：{com}')
+            return com
 
-    # 工厂2设备4产量数据采集 - 线程2
-    thread2 = QThread()
-    worker2 = PlcDataWorker(
-        groups_config=[(
-            "factory2_4_plc1", [
-                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                           "parameter6", "parameter7"])
-            ]
-        )],
-        com='COM21'
-    )
-    worker2.moveToThread(thread2)
-    thread2.started.connect(worker2.run)
-    worker2.finished.connect(thread2.quit)
-    worker2.finished.connect(worker2.deleteLater)
-    thread2.finished.connect(thread2.deleteLater)
-    threads['thread2'] = (thread2, worker2)
-    thread2.start()
+        except Exception as e:
+            print(f'{e}')
 
-    # 工厂2设备4产量数据采集 - 线程3
-    thread3 = QThread()
-    worker3 = PlcDataWorker(
-        groups_config=[(
-            "factory2_4_plc2", [
-                (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-            ]
-        )],
-        com='COM20'
-    )
-    worker3.moveToThread(thread3)
-    thread3.started.connect(worker3.run)
-    worker3.finished.connect(thread3.quit)
-    worker3.finished.connect(worker3.deleteLater)
-    thread3.finished.connect(thread3.deleteLater)
-    threads['thread3'] = (thread3, worker3)
-    thread3.start()
+    # 添加启动线程的函数
+    def start_plc_threads(self):
+        """启动三个PLC数据采集线程"""
 
-    return threads
+        # 工厂2设备4产量数据采集 - 线程1
+        thread1 = QThread()
+        worker1 = PlcDataWorker(
+            groups_config=[(
+                "factory2_4_plc0", [
+                    (900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                               "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                               "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
+                ]
+            )],
+            com=self.get_com(self.comboBox_1)
+        )
+        worker1.moveToThread(thread1)
+        thread1.started.connect(worker1.run)
+        worker1.finished.connect(thread1.quit)
+        worker1.finished.connect(worker1.deleteLater)
+        thread1.finished.connect(thread1.deleteLater)
+        self.threads['thread1'] = (thread1, worker1)
+        thread1.start()
+
+        # 工厂2设备4产量数据采集 - 线程2
+        thread2 = QThread()
+        worker2 = PlcDataWorker(
+            groups_config=[(
+                "factory2_4_plc1", [
+                    (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                               "parameter6", "parameter7"])
+                ]
+            )],
+            com=self.get_com(self.comboBox_2)
+        )
+        worker2.moveToThread(thread2)
+        thread2.started.connect(worker2.run)
+        worker2.finished.connect(thread2.quit)
+        worker2.finished.connect(worker2.deleteLater)
+        thread2.finished.connect(thread2.deleteLater)
+        self.threads['thread2'] = (thread2, worker2)
+        thread2.start()
+
+        # 工厂2设备4产量数据采集 - 线程3
+        thread3 = QThread()
+        worker3 = PlcDataWorker(
+            groups_config=[(
+                "factory2_4_plc2", [
+                    (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                                "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                                "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+                ]
+            )],
+            com=self.get_com(self.comboBox_3)
+        )
+        worker3.moveToThread(thread3)
+        thread3.started.connect(worker3.run)
+        worker3.finished.connect(thread3.quit)
+        worker3.finished.connect(worker3.deleteLater)
+        thread3.finished.connect(thread3.deleteLater)
+        self.threads['thread3'] = (thread3, worker3)
+        thread3.start()
+
 
 
 if __name__ == "__main__":
-    import sys
-    from PyQt5.QtWidgets import QApplication
-
     app = QApplication(sys.argv)
-
-    # 启动三个独立的数据采集线程
-    threads = start_plc_threads()
-
-    print("三个数据采集线程已启动，按Ctrl+C终止程序")
-
+    mainWindow = MainWindow()  # 创建主窗口对象
+    mainWindow.show()  # 显示主窗口
     # 进入Qt事件循环
     sys.exit(app.exec_())
