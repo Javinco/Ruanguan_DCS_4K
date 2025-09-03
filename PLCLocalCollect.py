@@ -245,87 +245,126 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # 设置窗口全屏显示
         self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.comboBox_1.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_1))
-        self.comboBox_2.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_2))
-        self.comboBox_3.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_3))
+        self.comboBox_1.currentIndexChanged.connect(lambda: self.restart_thread('thread1', self.comboBox_1))
+        self.comboBox_2.currentIndexChanged.connect(lambda: self.restart_thread('thread2', self.comboBox_2))
+        self.comboBox_3.currentIndexChanged.connect(lambda: self.restart_thread('thread3', self.comboBox_3))
         # self.comboBox_4.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_4)) #预留放卷机
         self.threads = {}
         # 启动三个独立的数据采集线程
         self.start_plc_threads()
 
-
-    @staticmethod
-    def get_com(index):
+    def get_com(self, combo_box):
+        """获取ComboBox当前选中的COM口"""
         try:
-            com = index.currentText()
+            com = combo_box.currentText()
             print(f'当前COM口：{com}')
             return com
-
         except Exception as e:
-            print(f'{e}')
+            print(f'获取COM口失败: {e}')
+            return None
 
-    # 添加启动线程的函数
+    def stop_thread(self, thread_name):
+        """停止指定的线程"""
+        if thread_name in self.threads:
+            thread, worker = self.threads[thread_name]
+            print(f'正在停止线程: {thread_name}')
+
+            # 停止worker
+            worker.stop()
+
+            # 等待线程结束
+            if thread.isRunning():
+                thread.quit()
+                thread.wait(2000)  # 等待最多2秒
+                if thread.isRunning():
+                    thread.terminate()  # 强制终止
+                    thread.wait(1000)
+
+            # 清理资源
+            del self.threads[thread_name]
+            print(f'线程 {thread_name} 已停止')
+
+    def restart_thread(self, thread_name, combo_box):
+        """重启指定的线程，使用新的COM口"""
+        new_com = self.get_com(combo_box)
+        if not new_com:
+            return
+
+        print(f'重启线程 {thread_name}，使用COM口: {new_com}')
+
+        # 停止旧线程
+        self.stop_thread(thread_name)
+
+        # 启动新线程
+        self.start_single_thread(thread_name, new_com)
+
+    def start_single_thread(self, thread_name, com_port):
+        """启动单个数据采集线程"""
+        # 根据线程名称确定配置
+        configs = {
+            'thread1': (
+                "factory2_4_plc0",
+                (900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
+            ),
+            'thread2': (
+                "factory2_4_plc1",
+                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7"])
+            ),
+            'thread3': (
+                "factory2_4_plc2",
+                (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            )
+        }
+
+        if thread_name not in configs:
+            print(f'未知的线程名称: {thread_name}')
+            return
+
+        table_name, (start_addr, reg_count, fields) = configs[thread_name]
+
+        # 创建新线程和worker
+        thread = QThread()
+        worker = PlcDataWorker(
+            groups_config=[(table_name, [(start_addr, reg_count, fields)])],
+            com=com_port
+        )
+
+        # 设置线程连接
+        worker.moveToThread(thread)
+        thread.started.connect(worker.run)
+        worker.finished.connect(thread.quit)
+        worker.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+
+        # 保存线程引用
+        self.threads[thread_name] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+        print(f'线程 {thread_name} 已启动，COM口: {com_port}')
+
     def start_plc_threads(self):
         """启动三个PLC数据采集线程"""
+        # 启动线程1
+        self.start_single_thread('thread1', self.get_com(self.comboBox_1))
 
-        # 工厂2设备4产量数据采集 - 线程1
-        thread1 = QThread()
-        worker1 = PlcDataWorker(
-            groups_config=[(
-                "factory2_4_plc0", [
-                    (900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                               "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                               "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
-                ]
-            )],
-            com=self.get_com(self.comboBox_1)
-        )
-        worker1.moveToThread(thread1)
-        thread1.started.connect(worker1.run)
-        worker1.finished.connect(thread1.quit)
-        worker1.finished.connect(worker1.deleteLater)
-        thread1.finished.connect(thread1.deleteLater)
-        self.threads['thread1'] = (thread1, worker1)
-        thread1.start()
+        # 启动线程2
+        self.start_single_thread('thread2', self.get_com(self.comboBox_2))
 
-        # 工厂2设备4产量数据采集 - 线程2
-        thread2 = QThread()
-        worker2 = PlcDataWorker(
-            groups_config=[(
-                "factory2_4_plc1", [
-                    (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                               "parameter6", "parameter7"])
-                ]
-            )],
-            com=self.get_com(self.comboBox_2)
-        )
-        worker2.moveToThread(thread2)
-        thread2.started.connect(worker2.run)
-        worker2.finished.connect(thread2.quit)
-        worker2.finished.connect(worker2.deleteLater)
-        thread2.finished.connect(thread2.deleteLater)
-        self.threads['thread2'] = (thread2, worker2)
-        thread2.start()
+        # 启动线程3
+        self.start_single_thread('thread3', self.get_com(self.comboBox_3))
 
-        # 工厂2设备4产量数据采集 - 线程3
-        thread3 = QThread()
-        worker3 = PlcDataWorker(
-            groups_config=[(
-                "factory2_4_plc2", [
-                    (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                                "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                                "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-                ]
-            )],
-            com=self.get_com(self.comboBox_3)
-        )
-        worker3.moveToThread(thread3)
-        thread3.started.connect(worker3.run)
-        worker3.finished.connect(thread3.quit)
-        worker3.finished.connect(worker3.deleteLater)
-        thread3.finished.connect(thread3.deleteLater)
-        self.threads['thread3'] = (thread3, worker3)
-        thread3.start()
+    def closeEvent(self, event):
+        """窗口关闭时清理所有线程"""
+        print('正在关闭所有线程...')
+        for thread_name in list(self.threads.keys()):
+            self.stop_thread(thread_name)
+        event.accept()
 
 
 
