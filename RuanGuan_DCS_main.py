@@ -27,8 +27,10 @@ from Ui_pop_historical_parameter_factory2_3 import Ui_Dialog_Pop_Historical_Para
 from Ui_pop_historical_parameter_factory2_4 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device4
 from Ui_pop_alarm import Ui_Dialog_alarm
 from Data_Manager import data_manager, inserter,historical_data_manager,get_plc_data_manager, get_plc_historical_data_manager
-from Ruanguan_Curve import RealTimeCurvePlotter, RealTimeJcjCurvePlotter,RealTimeMainWindowCurve1
-from Ruanguan_Historical import HistoricalCurvePlotter
+from Ruanguan_Curve import RealTimeMainWindowCurve1
+# from Ruanguan_Historical import HistoricalCurvePlotter
+from RealtimeCurve import RealTimeCurvePlotter
+from HistoricalCurve import HistoricalCurvePlotter
 from NEWFX3GA import plc_data_manager
 
 
@@ -90,7 +92,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -141,7 +143,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory1_1_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory1_1_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_1_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_1_set_data_jcj": self._update_jcj_set,
@@ -298,11 +300,11 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -397,7 +399,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -449,7 +451,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_2_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory1_2_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory1_2_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_2_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_2_set_data_jcj": self._update_jcj_set,
@@ -606,11 +608,11 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -704,7 +706,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -756,7 +758,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_3_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory1_3_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory1_3_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_3_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_3_set_data_jcj": self._update_jcj_set,
@@ -913,11 +915,11 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1011,7 +1013,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -1064,7 +1066,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory1_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory1_4_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_4_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_4_set_data_jcj": self._update_jcj_set,
@@ -1221,11 +1223,11 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1319,7 +1321,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -1371,7 +1373,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_1_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory2_1_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory2_1_realtime_data_fjj": self._update_fjj_realtime,
             "factory2_1_realtime_data_zdj": self._update_zdj_realtime,
             "factory2_1_set_data_jcj": self._update_jcj_set,
@@ -1528,11 +1530,11 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1626,7 +1628,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -1678,7 +1680,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_2_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory2_2_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory2_2_realtime_data_fjj": self._update_fjj_realtime,
             "factory2_2_realtime_data_zdj": self._update_zdj_realtime,
             "factory2_2_set_data_jcj": self._update_jcj_set,
@@ -1835,11 +1837,11 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
@@ -1933,7 +1935,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -1985,7 +1987,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_3_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory2_3_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory2_3_realtime_data_fjj": self._update_fjj_realtime,
             "factory2_3_realtime_data_zdj": self._update_zdj_realtime,
             "factory2_3_set_data_jcj": self._update_jcj_set,
@@ -2142,11 +2144,11 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动2_3数据更新线程")
@@ -2240,7 +2242,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         )
 
         # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeJcjCurvePlotter(
+        self.curve_jcj = RealTimeCurvePlotter(
             parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
             params_config={
                 'curve1': 'temperature1',
@@ -2293,7 +2295,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_jcj_plot],
+            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
             "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
             "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
             "factory2_4_set_data_jcj": self._update_jcj_set,
@@ -2450,11 +2452,11 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        # 清空曲线数据
-        if hasattr(self, 'curve_plotter'):
-            self.curve_plotter.clear_data()
-        if hasattr(self, 'curve_jcj'):
-            self.curve_jcj.clear_data()
+        # # 清空曲线数据
+        # if hasattr(self, 'curve_plotter'):
+        #     self.curve_plotter.clear_data()
+        # if hasattr(self, 'curve_jcj'):
+        #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
         print("启动数据更新线程")
