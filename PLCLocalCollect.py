@@ -352,7 +352,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """启动三个PLC数据采集线程"""
         # 启动线程1
         self.start_single_thread('thread1', self.get_com(self.comboBox_1))
-
+        # self.start_single_thread('thread1', 'COM5') #可以设定
         # 启动线程2
         self.start_single_thread('thread2', self.get_com(self.comboBox_2))
 
