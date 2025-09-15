@@ -186,11 +186,9 @@
        <pointsize>11</pointsize>
       </font>
      </property>
-     <item>
-      <property name="text">
-       <string>COM1</string>
-      </property>
-     </item>
+     <property name="currentText">
+      <string>COM2</string>
+     </property>
      <item>
       <property name="text">
        <string>COM2</string>
@@ -301,16 +299,9 @@
        <pointsize>11</pointsize>
       </font>
      </property>
-     <item>
-      <property name="text">
-       <string>COM1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>COM2</string>
-      </property>
-     </item>
+     <property name="currentText">
+      <string>COM3</string>
+     </property>
      <item>
       <property name="text">
        <string>COM3</string>
@@ -416,21 +407,9 @@
        <pointsize>11</pointsize>
       </font>
      </property>
-     <item>
-      <property name="text">
-       <string>COM1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>COM2</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>COM3</string>
-      </property>
-     </item>
+     <property name="currentText">
+      <string>COM4</string>
+     </property>
      <item>
       <property name="text">
        <string>COM4</string>
