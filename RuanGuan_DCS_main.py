@@ -5588,29 +5588,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ],
             ip="192.168.156.22"
         )
-        # 工厂2设备4产量数据采集
-        self._start_plc_insert_thread(
-            groups_config=[("factory2_4_plc0", [(900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
-                            ])
-                           ],
-            com = 'COM22')
-        self._start_plc_insert_thread(
-            groups_config=[("factory2_4_plc1", [
-                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                           "parameter6", "parameter7"])
-            ])
-                           ],
-            com = 'COM21')
-        self._start_plc_insert_thread(
-            groups_config=[("factory2_4_plc2", [
-                (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-            ])
-                           ],
-            com = 'COM20')
+        # # 工厂2设备4产量数据采集
+        # self._start_plc_insert_thread(
+        #     groups_config=[("factory2_4_plc0", [(900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+        #                    "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+        #                    "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
+        #                     ])
+        #                    ],
+        #     com = 'COM22')
+        # self._start_plc_insert_thread(
+        #     groups_config=[("factory2_4_plc1", [
+        #         (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+        #                    "parameter6", "parameter7"])
+        #     ])
+        #                    ],
+        #     com = 'COM21')
+        # self._start_plc_insert_thread(
+        #     groups_config=[("factory2_4_plc2", [
+        #         (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+        #                     "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+        #                     "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+        #     ])
+        #                    ],
+        #     com = 'COM20')
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
