@@ -7,7 +7,7 @@ from DataManager import historical_data_manager  # 自定义数据管理模块
 import datetime
 
 class HistoricalCurvePlotter(QWidget):
-    def __init__(self, parent_widget, table_name, params_config, y_limits=(-1, 1)):
+    def __init__(self, parent_widget, table_name, params_config, colors, y_limits=(-1, 1)):
         """历史单Y轴曲线构造器
         Args:
             parent_widget: 父级容器控件 - 用于承载本组件的父级GUI容器
@@ -33,13 +33,7 @@ class HistoricalCurvePlotter(QWidget):
         self.curve_objects = {f'curve{i}': None for i in range(1, 31)}
 
         # 定义30种对比鲜明的颜色（适配黑色背景）
-        self.curve_colors = [
-            '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500',
-            '#800080', '#008000', '#000080', '#808000', '#800000', '#008080', '#C0C0C0',
-            '#FFC0CB', '#87CEEB', '#98FB98', '#FFD700', '#FF6347', '#4682B4', '#2E8B57',
-            '#DAA520', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#F08080', '#4169E1',
-            '#FF69B4', '#8A2BE2'
-        ]
+        self.curve_colors = colors
 
     def _init_plot_style(self):
         """初始化PyQtGraph绘图样式（参照RealtimeCurve.py）"""

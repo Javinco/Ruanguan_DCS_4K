@@ -150,7 +150,7 @@ class CurveDataProcessor(QObject):
 
 
 class RealTimeCurvePlotter(QWidget):
-    def __init__(self, parent_widget, params_config, y_limits=(-1, 1)):
+    def __init__(self, parent_widget, params_config, colors, y_limits=(-1, 1)):
         # 调用父类QWidget的初始化方法
         super().__init__()
         # 存储父容器窗口引用（用于界面布局）
@@ -175,13 +175,7 @@ class RealTimeCurvePlotter(QWidget):
         # 初始化曲线对象字典，存储所有曲线的PlotDataItem对象
         self.curve_objects = {f'curve{i}': None for i in range(1, 31)}
         # 定义30种对比鲜明的颜色（适配黑色背景）
-        self.curve_colors = [
-            '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500',
-            '#800080', '#008000', '#000080', '#808000', '#800000', '#008080', '#C0C0C0',
-            '#FFC0CB', '#87CEEB', '#98FB98', '#FFD700', '#FF6347', '#4682B4', '#2E8B57',
-            '#DAA520', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#F08080', '#4169E1',
-            '#FF69B4', '#8A2BE2'
-        ]
+        self.curve_colors = colors
         # 新增：尾段图层/状态缓存与刷新策略
         self.curve_tail_objects = {f'curve{i}': None for i in range(1, 31)}  # 尾段曲线（高频少点）
         self.curve_last_len = {f'curve{i}':  0 for i in range(1, 31)}         # 已绘制的累计点数

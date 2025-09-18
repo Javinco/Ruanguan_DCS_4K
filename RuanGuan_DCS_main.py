@@ -33,7 +33,18 @@ from RealtimeCurve import RealTimeCurvePlotter
 from HistoricalCurve import HistoricalCurvePlotter
 from NEWFX3GA import plc_data_manager
 
-
+CLASS_COLORS1 = ['#FF0000', '#FFFF00', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000', '#FFA500',
+                 '#800080', '#008000', '#000080', '#808000', '#800000', '#008080', '#C0C0C0',
+                 '#FFC0CB', '#87CEEB', '#98FB98', '#FFD700', '#FF6347', '#4682B4', '#2E8B57',
+                 '#DAA520', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#F08080', '#4169E1',
+                 '#FF69B4', '#8A2BE2'
+                 ]
+CLASS_COLORS2 = ['#FF0000', '#FFFF00', '#00FFFF', '#00FF00', '#FFAA00', '#FF55FF', '#FFA500',
+                 '#800080', '#008000', '#000080', '#808000', '#800000', '#008080', '#C0C0C0',
+                 '#FFC0CB', '#87CEEB', '#98FB98', '#FFD700', '#FF6347', '#4682B4', '#2E8B57',
+                 '#DAA520', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#F08080', '#4169E1',
+                 '#FF69B4', '#8A2BE2'
+                 ]
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
 class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
     def __init__(self):
@@ -88,6 +99,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -102,6 +114,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
     # ------------------------- 数据更新线程启动方法 -------------------------
@@ -395,6 +408,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -409,6 +423,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -702,6 +717,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -716,6 +732,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -1009,6 +1026,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -1023,6 +1041,7 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -1317,6 +1336,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -1331,6 +1351,7 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -1624,6 +1645,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -1638,6 +1660,7 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -1931,6 +1954,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -1945,6 +1969,7 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -2238,6 +2263,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
+            colors = CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -2252,6 +2278,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
+            colors = CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -2531,30 +2558,35 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory1_1_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_1_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -2811,30 +2843,35 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory1_2_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_2_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory1_2_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_2_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -3092,30 +3129,35 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory1_3_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_3_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory1_3_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_3_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -3374,30 +3416,35 @@ class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory1_4_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_4_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory1_4_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_4_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -3656,30 +3703,35 @@ class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory2_1_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory2_1_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory2_1_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory2_1_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -3939,30 +3991,35 @@ class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory2_2_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory2_2_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory2_2_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory2_2_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -4221,30 +4278,35 @@ class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory2_3_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory2_3_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory2_3_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory2_3_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -4503,30 +4565,35 @@ class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            "factory2_4_set_data_curve",  # 对应的数据库表名
-            {'curve1': {'field': 'upper_limit_alarm', 'color': '#FF0000'},
-            'curve2': {'field': 'upper_limit_warning', 'color': '#FFFF00'},
-            'curve3': {'field': 'diameter_difference', 'color': '#00FFFF'},
-            'curve4': {'field': 'tension_percentage', 'color': '#00FF00'},
-            'curve5': {'field': 'lower_limit_warning', 'color': '#FFFF00'},
-            'curve6': {'field': 'lower_limit_alarm', 'color': '#FF0000'}
-             },  # 曲线参数映射配置
-            (-1, 1)  # Y轴显示范围
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory2_4_set_data_curve",  # 对应的数据库表名
+            params_config = {
+                'curve1': 'upper_limit_alarm',
+                'curve2': 'upper_limit_warning',
+                'curve3': 'diameter_difference',
+                'curve4': 'tension_percentage',
+                'curve5': 'lower_limit_warning',
+                'curve6': 'lower_limit_alarm'
+            },
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            "factory2_4_realtime_data_jcj",  # 挤出机实时数据表
-            {'curve1': {'field': 'temperature1', 'color': '#FF0000'},
-             'curve2': {'field': 'temperature2', 'color': '#FFFF00'},
-             'curve3': {'field': 'temperature3', 'color': '#00FFFF'},
-             'curve4': {'field': 'temperature4', 'color': '#00FF00'},
-             'curve5': {'field': 'extruder_rpm', 'color': '#FFAA00'},
-             'curve6': {'field': 'inverter_current', 'color': '#FF55FF'}
-             },  # 参数映射关系
-            (0, 200)  # Y轴最大范围200
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory2_4_realtime_data_jcj",  # 挤出机实时数据表
+            params_config={
+                'curve1': 'temperature1',
+                'curve2': 'temperature2',
+                'curve3': 'temperature3',
+                'curve4': 'temperature4',
+                'curve5': 'extruder_rpm',
+                'curve6': 'inverter_current'
+            },
+            # 参数映射关系
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
