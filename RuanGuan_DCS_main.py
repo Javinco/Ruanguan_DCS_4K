@@ -70,11 +70,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
 
         # 创建线程管理器字典
         self.threads = {}
@@ -339,23 +334,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device2):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -380,11 +358,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -648,23 +621,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device3):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -689,11 +645,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -957,23 +908,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device4):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -998,11 +932,6 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -1267,23 +1196,6 @@ class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device1):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -1308,11 +1220,6 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -1576,23 +1483,6 @@ class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device2):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -1617,11 +1507,6 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -1885,23 +1770,6 @@ class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device3):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -1926,11 +1794,6 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -2194,23 +2057,6 @@ class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
-
 class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device4):
     def __init__(self):
         # 调用QDialog父类构造方法
@@ -2235,11 +2081,6 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-        # 初始化时间功能
-        self.timer = QTimer(self)  # 创建定时器对象
-        self.timer.timeout.connect(self.update_time)  # type: ignore[attr-defined] # 连接定时信号
-        self.timer.start(1000)  # 启动定时器（1秒间隔）
-        self.update_time()  # 立即更新时间显示
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -2282,7 +2123,6 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
             y_limits=(0, 200)
         )
 
-
     # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
@@ -2308,7 +2148,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
         # 存储线程引用
-        self.threads['data_update4'] = (thread, worker)
+        self.threads['data_update8'] = (thread, worker)
 
         # 启动线程
         thread.start()
@@ -2486,7 +2326,7 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
         #     self.curve_jcj.clear_data()
         super().show()  # 调用父类 show 方法
         self._start_data_update_thread(self.tables_to_monitor)
-        print("启动数据更新线程")
+        print("启动2_4数据更新线程")
 
     # 参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
@@ -2504,22 +2344,6 @@ class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-    @staticmethod  # 静态方法，不依赖实例对象
-    def get_localtime():
-        """获取本地时间的静态方法"""
-        from datetime import datetime , timedelta
-        now = datetime.now()  # 获取当前时间对象
-        start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
-        # 返回格式化后的日期和时间字符串
-        return start_time.strftime("%H:%M:%S"), now.strftime("%H:%M:%S")
-
-    def update_time(self):
-        """更新时间显示的方法"""
-        time_start_str, time_end_str = self.get_localtime()  # 解包日期时间
-        self.label_106.setText(time_start_str)  # 更新日期标签
-        self.label_107.setText(time_end_str)  # 更新时间标签
-        self.label_112.setText(time_start_str)  # 更新日期标签
-        self.label_113.setText(time_end_str)  # 更新时间标签
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
     def __init__(self):
@@ -5978,6 +5802,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable9_32.setText(start_time)  # 更新5#曲线起始时间标签
         self.curve1_lable9_36.setText(start_time)  # 更新6#曲线起始时间标签
         self.curve1_lable9_39.setText(start_time)  # 更新7#曲线起始时间标签
+        self.curve1_lable9_44.setText(start_time)  # 更新8#曲线起始时间标签
         self.curve1_lable9_15.setText(time_str)  # 更新1#曲线截止时间标签
         self.curve1_lable9_21.setText(time_str)  # 更新2#曲线截止时间标签
         self.curve1_lable9_25.setText(time_str)  # 更新3#曲线截止时间标签
@@ -5985,6 +5810,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable9_33.setText(time_str)  # 更新5#曲线截止时间标签
         self.curve1_lable9_37.setText(time_str)  # 更新6#曲线截止时间标签
         self.curve1_lable9_38.setText(time_str)  # 更新7#曲线截止时间标签
+        self.curve1_lable9_45.setText(time_str)  # 更新8#曲线截止时间标签
 
     def show_pop_parameter(self, event):
         """显示参数弹窗的槽函数"""
@@ -6615,7 +6441,7 @@ class PLCDataUpdateWorker(QObject):
         """初始化数据管理器连接（在run方法中调用）"""
         if not self.data_manager:
             try:
-                self.data_manager = get_plc_data_manager()
+                self.data_manager = get_plc_data_manager
                 if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
                     print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
                     self.data_manager = None
@@ -6694,7 +6520,7 @@ class PLCHistoricalDataQueryWorker(QObject):
         """初始化历史数据管理器连接（在run方法中调用）"""
         if not self.hist_data_manager:
             try:
-                self.hist_data_manager = get_plc_historical_data_manager()
+                self.hist_data_manager = get_plc_historical_data_manager
                 if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
                     print("警告：历史数据管理器连接不可用")
                     self.hist_data_manager = None
