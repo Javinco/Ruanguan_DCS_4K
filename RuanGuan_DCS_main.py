@@ -6441,7 +6441,7 @@ class PLCDataUpdateWorker(QObject):
         """初始化数据管理器连接（在run方法中调用）"""
         if not self.data_manager:
             try:
-                self.data_manager = get_plc_data_manager
+                self.data_manager = get_plc_data_manager()
                 if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
                     print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
                     self.data_manager = None
@@ -6520,7 +6520,7 @@ class PLCHistoricalDataQueryWorker(QObject):
         """初始化历史数据管理器连接（在run方法中调用）"""
         if not self.hist_data_manager:
             try:
-                self.hist_data_manager = get_plc_historical_data_manager
+                self.hist_data_manager = get_plc_historical_data_manager()
                 if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
                     print("警告：历史数据管理器连接不可用")
                     self.hist_data_manager = None
