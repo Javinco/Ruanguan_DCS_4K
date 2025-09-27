@@ -869,6 +869,10 @@ class PLCDataManager:
 
     def get_data_versions(self):
         """获取各表数据版本号（实际查询数据库）"""
+        # 新增：连接可用性守卫
+        if not self.connection_available or not self.connection_pool:
+            print("版本查询跳过：DataManager连接不可用")
+            return {}
         versions = {}
         try:
             # 使用连接池获取连接
