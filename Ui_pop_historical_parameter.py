@@ -15,43 +15,43 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
     def setupUi(self, Dialog_Pop_Historical_Parameter):
         Dialog_Pop_Historical_Parameter.setObjectName("Dialog_Pop_Historical_Parameter")
         Dialog_Pop_Historical_Parameter.setWindowModality(QtCore.Qt.NonModal)
-        Dialog_Pop_Historical_Parameter.resize(1457, 900)
+        Dialog_Pop_Historical_Parameter.resize(2900, 1800)
         Dialog_Pop_Historical_Parameter.setStyleSheet("")
         self.widget_historical_main = QtWidgets.QWidget(Dialog_Pop_Historical_Parameter)
-        self.widget_historical_main.setGeometry(QtCore.QRect(0, 0, 1450, 900))
+        self.widget_historical_main.setGeometry(QtCore.QRect(0, 0, 2900, 1800))
         self.widget_historical_main.setStyleSheet("#widget_historical_main{\n"
 "background-color: rgb(192, 192, 192);\n"
 "border-radius:15px;\n"
 "}")
         self.widget_historical_main.setObjectName("widget_historical_main")
         self.frame_historical_parameter = QtWidgets.QFrame(self.widget_historical_main)
-        self.frame_historical_parameter.setGeometry(QtCore.QRect(820, 100, 600, 770))
+        self.frame_historical_parameter.setGeometry(QtCore.QRect(1640, 200, 1200, 1540))
         self.frame_historical_parameter.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_historical_parameter.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_historical_parameter.setObjectName("frame_historical_parameter")
-        self.label = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label.setGeometry(QtCore.QRect(0, 0, 80, 35))
+        self.label_1 = QtWidgets.QLabel(self.frame_historical_parameter)
+        self.label_1.setGeometry(QtCore.QRect(0, 0, 160, 70))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.label_1.sizePolicy().hasHeightForWidth())
+        self.label_1.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
-        font.setPointSize(20)
-        self.label.setFont(font)
-        self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label.setStyleSheet("background-color: rgb(128, 128, 255);\n"
+        font.setPointSize(40)
+        self.label_1.setFont(font)
+        self.label_1.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.label_1.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
 "border-top: 1px solid  rgb(0, 0, 0);\n"
 "border-bottom: 0.5px solid  rgb(0, 0, 0);\n"
 "background-color: rgb(128, 128, 255);")
-        self.label.setLineWidth(2)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
+        self.label_1.setLineWidth(2)
+        self.label_1.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_1.setObjectName("label_1")
         self.label_2 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_2.setGeometry(QtCore.QRect(0, 35, 80, 385))
+        self.label_2.setGeometry(QtCore.QRect(0, 70, 160, 770))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_2.setFont(font)
         self.label_2.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -62,9 +62,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_3.setGeometry(QtCore.QRect(80, 0, 50, 35))
+        self.label_3.setGeometry(QtCore.QRect(160, 0, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_3.setFont(font)
         self.label_3.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-top: 1px solid rgb(0, 0, 0);\n"
@@ -76,9 +76,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_4.setGeometry(QtCore.QRect(130, 0, 130, 35))
+        self.label_4.setGeometry(QtCore.QRect(260, 0, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_4.setFont(font)
         self.label_4.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-top: 1px solid rgb(0, 0, 0);\n"
@@ -90,9 +90,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_4.setObjectName("label_4")
         self.label_5 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_5.setGeometry(QtCore.QRect(260, 0, 130, 35))
+        self.label_5.setGeometry(QtCore.QRect(520, 0, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_5.setFont(font)
         self.label_5.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-top: 1px solid rgb(0, 0, 0);\n"
@@ -104,9 +104,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
         self.label_6 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_6.setGeometry(QtCore.QRect(390, 0, 130, 35))
+        self.label_6.setGeometry(QtCore.QRect(780, 0, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_6.setFont(font)
         self.label_6.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-bottom: 1px solid rgb(0, 0, 0);\n"
@@ -118,9 +118,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
         self.label_7 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_7.setGeometry(QtCore.QRect(520, 0, 80, 35))
+        self.label_7.setGeometry(QtCore.QRect(1040, 0, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_7.setFont(font)
         self.label_7.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-top: 1px solid rgb(0, 0, 0);\n"
@@ -133,9 +133,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_7.setAlignment(QtCore.Qt.AlignCenter)
         self.label_7.setObjectName("label_7")
         self.label_8 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_8.setGeometry(QtCore.QRect(80, 35, 50, 35))
+        self.label_8.setGeometry(QtCore.QRect(160, 70, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_8.setFont(font)
         self.label_8.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -146,9 +146,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_8.setAlignment(QtCore.Qt.AlignCenter)
         self.label_8.setObjectName("label_8")
         self.label_9 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_9.setGeometry(QtCore.QRect(130, 35, 130, 35))
+        self.label_9.setGeometry(QtCore.QRect(260, 70, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_9.setFont(font)
         self.label_9.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -159,9 +159,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_9.setAlignment(QtCore.Qt.AlignCenter)
         self.label_9.setObjectName("label_9")
         self.label_10 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_10.setGeometry(QtCore.QRect(260, 35, 130, 35))
+        self.label_10.setGeometry(QtCore.QRect(520, 70, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_10.setFont(font)
         self.label_10.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -173,9 +173,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_10.setAlignment(QtCore.Qt.AlignCenter)
         self.label_10.setObjectName("label_10")
         self.label_11 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_11.setGeometry(QtCore.QRect(520, 35, 80, 35))
+        self.label_11.setGeometry(QtCore.QRect(1040, 70, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_11.setFont(font)
         self.label_11.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -187,9 +187,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_11.setAlignment(QtCore.Qt.AlignCenter)
         self.label_11.setObjectName("label_11")
         self.label_12 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_12.setGeometry(QtCore.QRect(130, 70, 130, 35))
+        self.label_12.setGeometry(QtCore.QRect(260, 140, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_12.setFont(font)
         self.label_12.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -200,9 +200,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_12.setAlignment(QtCore.Qt.AlignCenter)
         self.label_12.setObjectName("label_12")
         self.label_13 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_13.setGeometry(QtCore.QRect(80, 70, 50, 35))
+        self.label_13.setGeometry(QtCore.QRect(160, 140, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_13.setFont(font)
         self.label_13.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -213,9 +213,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_13.setAlignment(QtCore.Qt.AlignCenter)
         self.label_13.setObjectName("label_13")
         self.label_14 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_14.setGeometry(QtCore.QRect(260, 70, 130, 35))
+        self.label_14.setGeometry(QtCore.QRect(520, 140, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_14.setFont(font)
         self.label_14.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -227,9 +227,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_14.setAlignment(QtCore.Qt.AlignCenter)
         self.label_14.setObjectName("label_14")
         self.label_15 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_15.setGeometry(QtCore.QRect(520, 70, 80, 35))
+        self.label_15.setGeometry(QtCore.QRect(1040, 140, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_15.setFont(font)
         self.label_15.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -241,9 +241,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_15.setAlignment(QtCore.Qt.AlignCenter)
         self.label_15.setObjectName("label_15")
         self.label_16 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_16.setGeometry(QtCore.QRect(130, 105, 130, 35))
+        self.label_16.setGeometry(QtCore.QRect(260, 210, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_16.setFont(font)
         self.label_16.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -254,9 +254,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_16.setAlignment(QtCore.Qt.AlignCenter)
         self.label_16.setObjectName("label_16")
         self.label_17 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_17.setGeometry(QtCore.QRect(80, 105, 50, 35))
+        self.label_17.setGeometry(QtCore.QRect(160, 210, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_17.setFont(font)
         self.label_17.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -267,9 +267,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_17.setAlignment(QtCore.Qt.AlignCenter)
         self.label_17.setObjectName("label_17")
         self.label_18 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_18.setGeometry(QtCore.QRect(260, 105, 130, 35))
+        self.label_18.setGeometry(QtCore.QRect(520, 210, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_18.setFont(font)
         self.label_18.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -281,9 +281,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_18.setAlignment(QtCore.Qt.AlignCenter)
         self.label_18.setObjectName("label_18")
         self.label_19 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_19.setGeometry(QtCore.QRect(520, 105, 80, 35))
+        self.label_19.setGeometry(QtCore.QRect(1040, 210, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_19.setFont(font)
         self.label_19.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -295,9 +295,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_19.setAlignment(QtCore.Qt.AlignCenter)
         self.label_19.setObjectName("label_19")
         self.label_20 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_20.setGeometry(QtCore.QRect(130, 140, 130, 35))
+        self.label_20.setGeometry(QtCore.QRect(260, 280, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_20.setFont(font)
         self.label_20.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -308,9 +308,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_20.setAlignment(QtCore.Qt.AlignCenter)
         self.label_20.setObjectName("label_20")
         self.label_21 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_21.setGeometry(QtCore.QRect(80, 140, 50, 35))
+        self.label_21.setGeometry(QtCore.QRect(160, 280, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_21.setFont(font)
         self.label_21.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -321,9 +321,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_21.setAlignment(QtCore.Qt.AlignCenter)
         self.label_21.setObjectName("label_21")
         self.label_22 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_22.setGeometry(QtCore.QRect(260, 140, 130, 35))
+        self.label_22.setGeometry(QtCore.QRect(520, 280, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_22.setFont(font)
         self.label_22.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -335,9 +335,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_22.setAlignment(QtCore.Qt.AlignCenter)
         self.label_22.setObjectName("label_22")
         self.label_23 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_23.setGeometry(QtCore.QRect(520, 140, 80, 35))
+        self.label_23.setGeometry(QtCore.QRect(1040, 280, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_23.setFont(font)
         self.label_23.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -349,9 +349,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_23.setAlignment(QtCore.Qt.AlignCenter)
         self.label_23.setObjectName("label_23")
         self.label_24 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_24.setGeometry(QtCore.QRect(130, 175, 130, 35))
+        self.label_24.setGeometry(QtCore.QRect(260, 350, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_24.setFont(font)
         self.label_24.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -362,9 +362,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_24.setAlignment(QtCore.Qt.AlignCenter)
         self.label_24.setObjectName("label_24")
         self.label_25 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_25.setGeometry(QtCore.QRect(80, 175, 50, 35))
+        self.label_25.setGeometry(QtCore.QRect(160, 350, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_25.setFont(font)
         self.label_25.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -375,9 +375,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_25.setAlignment(QtCore.Qt.AlignCenter)
         self.label_25.setObjectName("label_25")
         self.label_26 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_26.setGeometry(QtCore.QRect(260, 175, 130, 35))
+        self.label_26.setGeometry(QtCore.QRect(520, 350, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_26.setFont(font)
         self.label_26.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -389,9 +389,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_26.setAlignment(QtCore.Qt.AlignCenter)
         self.label_26.setObjectName("label_26")
         self.label_27 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_27.setGeometry(QtCore.QRect(520, 175, 80, 35))
+        self.label_27.setGeometry(QtCore.QRect(1040, 350, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_27.setFont(font)
         self.label_27.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -403,9 +403,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_27.setAlignment(QtCore.Qt.AlignCenter)
         self.label_27.setObjectName("label_27")
         self.label_28 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_28.setGeometry(QtCore.QRect(130, 210, 130, 35))
+        self.label_28.setGeometry(QtCore.QRect(260, 420, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_28.setFont(font)
         self.label_28.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -416,9 +416,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_28.setAlignment(QtCore.Qt.AlignCenter)
         self.label_28.setObjectName("label_28")
         self.label_29 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_29.setGeometry(QtCore.QRect(80, 210, 50, 35))
+        self.label_29.setGeometry(QtCore.QRect(160, 420, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_29.setFont(font)
         self.label_29.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -429,9 +429,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_29.setAlignment(QtCore.Qt.AlignCenter)
         self.label_29.setObjectName("label_29")
         self.label_30 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_30.setGeometry(QtCore.QRect(260, 210, 130, 35))
+        self.label_30.setGeometry(QtCore.QRect(520, 420, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_30.setFont(font)
         self.label_30.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -443,9 +443,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_30.setAlignment(QtCore.Qt.AlignCenter)
         self.label_30.setObjectName("label_30")
         self.label_31 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_31.setGeometry(QtCore.QRect(520, 210, 80, 35))
+        self.label_31.setGeometry(QtCore.QRect(1040, 420, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_31.setFont(font)
         self.label_31.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -457,9 +457,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_31.setAlignment(QtCore.Qt.AlignCenter)
         self.label_31.setObjectName("label_31")
         self.label_32 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_32.setGeometry(QtCore.QRect(130, 245, 130, 35))
+        self.label_32.setGeometry(QtCore.QRect(260, 490, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_32.setFont(font)
         self.label_32.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -470,9 +470,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_32.setAlignment(QtCore.Qt.AlignCenter)
         self.label_32.setObjectName("label_32")
         self.label_33 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_33.setGeometry(QtCore.QRect(80, 245, 50, 35))
+        self.label_33.setGeometry(QtCore.QRect(160, 490, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_33.setFont(font)
         self.label_33.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -483,9 +483,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_33.setAlignment(QtCore.Qt.AlignCenter)
         self.label_33.setObjectName("label_33")
         self.label_34 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_34.setGeometry(QtCore.QRect(260, 245, 130, 35))
+        self.label_34.setGeometry(QtCore.QRect(520, 490, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_34.setFont(font)
         self.label_34.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -497,9 +497,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_34.setAlignment(QtCore.Qt.AlignCenter)
         self.label_34.setObjectName("label_34")
         self.label_35 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_35.setGeometry(QtCore.QRect(520, 245, 80, 35))
+        self.label_35.setGeometry(QtCore.QRect(1040, 490, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_35.setFont(font)
         self.label_35.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -511,9 +511,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_35.setAlignment(QtCore.Qt.AlignCenter)
         self.label_35.setObjectName("label_35")
         self.label_36 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_36.setGeometry(QtCore.QRect(130, 280, 130, 35))
+        self.label_36.setGeometry(QtCore.QRect(260, 560, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_36.setFont(font)
         self.label_36.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -524,9 +524,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_36.setAlignment(QtCore.Qt.AlignCenter)
         self.label_36.setObjectName("label_36")
         self.label_37 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_37.setGeometry(QtCore.QRect(80, 280, 50, 35))
+        self.label_37.setGeometry(QtCore.QRect(160, 560, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_37.setFont(font)
         self.label_37.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -537,9 +537,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_37.setAlignment(QtCore.Qt.AlignCenter)
         self.label_37.setObjectName("label_37")
         self.label_38 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_38.setGeometry(QtCore.QRect(260, 280, 130, 35))
+        self.label_38.setGeometry(QtCore.QRect(520, 560, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_38.setFont(font)
         self.label_38.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -551,9 +551,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_38.setAlignment(QtCore.Qt.AlignCenter)
         self.label_38.setObjectName("label_38")
         self.label_39 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_39.setGeometry(QtCore.QRect(520, 280, 80, 35))
+        self.label_39.setGeometry(QtCore.QRect(1040, 560, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_39.setFont(font)
         self.label_39.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -565,9 +565,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_39.setAlignment(QtCore.Qt.AlignCenter)
         self.label_39.setObjectName("label_39")
         self.label_40 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_40.setGeometry(QtCore.QRect(130, 315, 130, 35))
+        self.label_40.setGeometry(QtCore.QRect(260, 630, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_40.setFont(font)
         self.label_40.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -578,9 +578,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_40.setAlignment(QtCore.Qt.AlignCenter)
         self.label_40.setObjectName("label_40")
         self.label_41 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_41.setGeometry(QtCore.QRect(80, 315, 50, 35))
+        self.label_41.setGeometry(QtCore.QRect(160, 630, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_41.setFont(font)
         self.label_41.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -591,9 +591,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_41.setAlignment(QtCore.Qt.AlignCenter)
         self.label_41.setObjectName("label_41")
         self.label_42 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_42.setGeometry(QtCore.QRect(260, 315, 130, 35))
+        self.label_42.setGeometry(QtCore.QRect(520, 630, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_42.setFont(font)
         self.label_42.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -605,9 +605,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_42.setAlignment(QtCore.Qt.AlignCenter)
         self.label_42.setObjectName("label_42")
         self.label_43 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_43.setGeometry(QtCore.QRect(520, 315, 80, 35))
+        self.label_43.setGeometry(QtCore.QRect(1040, 630, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_43.setFont(font)
         self.label_43.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -619,9 +619,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_43.setAlignment(QtCore.Qt.AlignCenter)
         self.label_43.setObjectName("label_43")
         self.label_44 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_44.setGeometry(QtCore.QRect(130, 350, 130, 35))
+        self.label_44.setGeometry(QtCore.QRect(260, 700, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_44.setFont(font)
         self.label_44.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -632,9 +632,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_44.setAlignment(QtCore.Qt.AlignCenter)
         self.label_44.setObjectName("label_44")
         self.label_45 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_45.setGeometry(QtCore.QRect(80, 350, 50, 35))
+        self.label_45.setGeometry(QtCore.QRect(160, 700, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_45.setFont(font)
         self.label_45.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -645,9 +645,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_45.setAlignment(QtCore.Qt.AlignCenter)
         self.label_45.setObjectName("label_45")
         self.label_46 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_46.setGeometry(QtCore.QRect(260, 350, 130, 35))
+        self.label_46.setGeometry(QtCore.QRect(520, 700, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_46.setFont(font)
         self.label_46.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -659,9 +659,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_46.setAlignment(QtCore.Qt.AlignCenter)
         self.label_46.setObjectName("label_46")
         self.label_47 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_47.setGeometry(QtCore.QRect(520, 350, 80, 35))
+        self.label_47.setGeometry(QtCore.QRect(1040, 700, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_47.setFont(font)
         self.label_47.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -673,9 +673,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_47.setAlignment(QtCore.Qt.AlignCenter)
         self.label_47.setObjectName("label_47")
         self.label_48 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_48.setGeometry(QtCore.QRect(130, 385, 130, 35))
+        self.label_48.setGeometry(QtCore.QRect(260, 770, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_48.setFont(font)
         self.label_48.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -686,9 +686,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_48.setAlignment(QtCore.Qt.AlignCenter)
         self.label_48.setObjectName("label_48")
         self.label_49 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_49.setGeometry(QtCore.QRect(80, 385, 50, 35))
+        self.label_49.setGeometry(QtCore.QRect(160, 770, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_49.setFont(font)
         self.label_49.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -699,9 +699,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_49.setAlignment(QtCore.Qt.AlignCenter)
         self.label_49.setObjectName("label_49")
         self.label_50 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_50.setGeometry(QtCore.QRect(260, 385, 130, 35))
+        self.label_50.setGeometry(QtCore.QRect(520, 770, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_50.setFont(font)
         self.label_50.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -713,9 +713,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_50.setAlignment(QtCore.Qt.AlignCenter)
         self.label_50.setObjectName("label_50")
         self.label_51 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_51.setGeometry(QtCore.QRect(520, 385, 80, 35))
+        self.label_51.setGeometry(QtCore.QRect(1040, 770, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_51.setFont(font)
         self.label_51.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -727,9 +727,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_51.setAlignment(QtCore.Qt.AlignCenter)
         self.label_51.setObjectName("label_51")
         self.label_52 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_52.setGeometry(QtCore.QRect(0, 420, 80, 140))
+        self.label_52.setGeometry(QtCore.QRect(0, 840, 160, 280))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_52.setFont(font)
         self.label_52.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -740,9 +740,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_52.setAlignment(QtCore.Qt.AlignCenter)
         self.label_52.setObjectName("label_52")
         self.label_53 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_53.setGeometry(QtCore.QRect(260, 420, 130, 35))
+        self.label_53.setGeometry(QtCore.QRect(520, 840, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_53.setFont(font)
         self.label_53.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -754,9 +754,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_53.setAlignment(QtCore.Qt.AlignCenter)
         self.label_53.setObjectName("label_53")
         self.label_54 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_54.setGeometry(QtCore.QRect(520, 420, 80, 35))
+        self.label_54.setGeometry(QtCore.QRect(1040, 840, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_54.setFont(font)
         self.label_54.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -768,9 +768,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_54.setAlignment(QtCore.Qt.AlignCenter)
         self.label_54.setObjectName("label_54")
         self.label_55 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_55.setGeometry(QtCore.QRect(130, 420, 130, 35))
+        self.label_55.setGeometry(QtCore.QRect(260, 840, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_55.setFont(font)
         self.label_55.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -781,9 +781,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_55.setAlignment(QtCore.Qt.AlignCenter)
         self.label_55.setObjectName("label_55")
         self.label_56 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_56.setGeometry(QtCore.QRect(80, 420, 50, 35))
+        self.label_56.setGeometry(QtCore.QRect(160, 840, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_56.setFont(font)
         self.label_56.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -794,9 +794,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_56.setAlignment(QtCore.Qt.AlignCenter)
         self.label_56.setObjectName("label_56")
         self.label_57 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_57.setGeometry(QtCore.QRect(260, 455, 130, 35))
+        self.label_57.setGeometry(QtCore.QRect(520, 910, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_57.setFont(font)
         self.label_57.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -808,9 +808,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_57.setAlignment(QtCore.Qt.AlignCenter)
         self.label_57.setObjectName("label_57")
         self.label_58 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_58.setGeometry(QtCore.QRect(520, 455, 80, 35))
+        self.label_58.setGeometry(QtCore.QRect(1040, 910, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_58.setFont(font)
         self.label_58.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -822,9 +822,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_58.setAlignment(QtCore.Qt.AlignCenter)
         self.label_58.setObjectName("label_58")
         self.label_59 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_59.setGeometry(QtCore.QRect(130, 455, 130, 35))
+        self.label_59.setGeometry(QtCore.QRect(260, 910, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_59.setFont(font)
         self.label_59.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -835,9 +835,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_59.setAlignment(QtCore.Qt.AlignCenter)
         self.label_59.setObjectName("label_59")
         self.label_60 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_60.setGeometry(QtCore.QRect(80, 455, 50, 35))
+        self.label_60.setGeometry(QtCore.QRect(160, 910, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_60.setFont(font)
         self.label_60.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -848,9 +848,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_60.setAlignment(QtCore.Qt.AlignCenter)
         self.label_60.setObjectName("label_60")
         self.label_61 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_61.setGeometry(QtCore.QRect(260, 490, 130, 35))
+        self.label_61.setGeometry(QtCore.QRect(520, 980, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_61.setFont(font)
         self.label_61.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -862,9 +862,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_61.setAlignment(QtCore.Qt.AlignCenter)
         self.label_61.setObjectName("label_61")
         self.label_62 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_62.setGeometry(QtCore.QRect(520, 490, 80, 35))
+        self.label_62.setGeometry(QtCore.QRect(1040, 980, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_62.setFont(font)
         self.label_62.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -876,9 +876,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_62.setAlignment(QtCore.Qt.AlignCenter)
         self.label_62.setObjectName("label_62")
         self.label_63 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_63.setGeometry(QtCore.QRect(130, 490, 130, 35))
+        self.label_63.setGeometry(QtCore.QRect(260, 980, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_63.setFont(font)
         self.label_63.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -889,9 +889,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_63.setAlignment(QtCore.Qt.AlignCenter)
         self.label_63.setObjectName("label_63")
         self.label_64 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_64.setGeometry(QtCore.QRect(80, 490, 50, 35))
+        self.label_64.setGeometry(QtCore.QRect(160, 980, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_64.setFont(font)
         self.label_64.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -902,9 +902,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_64.setAlignment(QtCore.Qt.AlignCenter)
         self.label_64.setObjectName("label_64")
         self.label_65 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_65.setGeometry(QtCore.QRect(260, 525, 130, 35))
+        self.label_65.setGeometry(QtCore.QRect(520, 1050, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_65.setFont(font)
         self.label_65.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -916,9 +916,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_65.setAlignment(QtCore.Qt.AlignCenter)
         self.label_65.setObjectName("label_65")
         self.label_66 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_66.setGeometry(QtCore.QRect(520, 525, 80, 35))
+        self.label_66.setGeometry(QtCore.QRect(1040, 1050, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_66.setFont(font)
         self.label_66.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -930,9 +930,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_66.setAlignment(QtCore.Qt.AlignCenter)
         self.label_66.setObjectName("label_66")
         self.label_67 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_67.setGeometry(QtCore.QRect(130, 525, 130, 35))
+        self.label_67.setGeometry(QtCore.QRect(260, 1050, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_67.setFont(font)
         self.label_67.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -943,9 +943,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_67.setAlignment(QtCore.Qt.AlignCenter)
         self.label_67.setObjectName("label_67")
         self.label_68 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_68.setGeometry(QtCore.QRect(80, 525, 50, 35))
+        self.label_68.setGeometry(QtCore.QRect(160, 1050, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_68.setFont(font)
         self.label_68.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -956,9 +956,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_68.setAlignment(QtCore.Qt.AlignCenter)
         self.label_68.setObjectName("label_68")
         self.label_69 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_69.setGeometry(QtCore.QRect(0, 560, 80, 210))
+        self.label_69.setGeometry(QtCore.QRect(0, 1120, 160, 420))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_69.setFont(font)
         self.label_69.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -969,9 +969,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_69.setAlignment(QtCore.Qt.AlignCenter)
         self.label_69.setObjectName("label_69")
         self.label_70 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_70.setGeometry(QtCore.QRect(80, 560, 50, 35))
+        self.label_70.setGeometry(QtCore.QRect(160, 1120, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_70.setFont(font)
         self.label_70.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -982,9 +982,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_70.setAlignment(QtCore.Qt.AlignCenter)
         self.label_70.setObjectName("label_70")
         self.label_71 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_71.setGeometry(QtCore.QRect(130, 560, 130, 35))
+        self.label_71.setGeometry(QtCore.QRect(260, 1120, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_71.setFont(font)
         self.label_71.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -995,9 +995,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_71.setAlignment(QtCore.Qt.AlignCenter)
         self.label_71.setObjectName("label_71")
         self.label_72 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_72.setGeometry(QtCore.QRect(520, 560, 80, 35))
+        self.label_72.setGeometry(QtCore.QRect(1040, 1120, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_72.setFont(font)
         self.label_72.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -1009,9 +1009,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_72.setAlignment(QtCore.Qt.AlignCenter)
         self.label_72.setObjectName("label_72")
         self.label_73 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_73.setGeometry(QtCore.QRect(260, 560, 130, 35))
+        self.label_73.setGeometry(QtCore.QRect(520, 1120, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_73.setFont(font)
         self.label_73.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -1023,9 +1023,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_73.setAlignment(QtCore.Qt.AlignCenter)
         self.label_73.setObjectName("label_73")
         self.label_74 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_74.setGeometry(QtCore.QRect(80, 595, 50, 35))
+        self.label_74.setGeometry(QtCore.QRect(160, 1190, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_74.setFont(font)
         self.label_74.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1036,9 +1036,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_74.setAlignment(QtCore.Qt.AlignCenter)
         self.label_74.setObjectName("label_74")
         self.label_75 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_75.setGeometry(QtCore.QRect(130, 595, 130, 35))
+        self.label_75.setGeometry(QtCore.QRect(260, 1190, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_75.setFont(font)
         self.label_75.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1049,9 +1049,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_75.setAlignment(QtCore.Qt.AlignCenter)
         self.label_75.setObjectName("label_75")
         self.label_76 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_76.setGeometry(QtCore.QRect(520, 595, 80, 35))
+        self.label_76.setGeometry(QtCore.QRect(1040, 1190, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_76.setFont(font)
         self.label_76.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -1063,9 +1063,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_76.setAlignment(QtCore.Qt.AlignCenter)
         self.label_76.setObjectName("label_76")
         self.label_77 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_77.setGeometry(QtCore.QRect(260, 595, 130, 35))
+        self.label_77.setGeometry(QtCore.QRect(520, 1190, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_77.setFont(font)
         self.label_77.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -1077,9 +1077,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_77.setAlignment(QtCore.Qt.AlignCenter)
         self.label_77.setObjectName("label_77")
         self.label_78 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_78.setGeometry(QtCore.QRect(80, 630, 50, 35))
+        self.label_78.setGeometry(QtCore.QRect(160, 1260, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_78.setFont(font)
         self.label_78.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1090,9 +1090,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_78.setAlignment(QtCore.Qt.AlignCenter)
         self.label_78.setObjectName("label_78")
         self.label_79 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_79.setGeometry(QtCore.QRect(130, 630, 130, 35))
+        self.label_79.setGeometry(QtCore.QRect(260, 1260, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_79.setFont(font)
         self.label_79.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1103,9 +1103,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_79.setAlignment(QtCore.Qt.AlignCenter)
         self.label_79.setObjectName("label_79")
         self.label_80 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_80.setGeometry(QtCore.QRect(520, 630, 80, 35))
+        self.label_80.setGeometry(QtCore.QRect(1040, 1260, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_80.setFont(font)
         self.label_80.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -1117,9 +1117,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_80.setAlignment(QtCore.Qt.AlignCenter)
         self.label_80.setObjectName("label_80")
         self.label_81 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_81.setGeometry(QtCore.QRect(260, 630, 130, 35))
+        self.label_81.setGeometry(QtCore.QRect(520, 1260, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_81.setFont(font)
         self.label_81.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -1131,9 +1131,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_81.setAlignment(QtCore.Qt.AlignCenter)
         self.label_81.setObjectName("label_81")
         self.label_82 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_82.setGeometry(QtCore.QRect(80, 665, 50, 35))
+        self.label_82.setGeometry(QtCore.QRect(160, 1330, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_82.setFont(font)
         self.label_82.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1144,9 +1144,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_82.setAlignment(QtCore.Qt.AlignCenter)
         self.label_82.setObjectName("label_82")
         self.label_83 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_83.setGeometry(QtCore.QRect(130, 665, 130, 35))
+        self.label_83.setGeometry(QtCore.QRect(260, 1330, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_83.setFont(font)
         self.label_83.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1157,9 +1157,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_83.setAlignment(QtCore.Qt.AlignCenter)
         self.label_83.setObjectName("label_83")
         self.label_84 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_84.setGeometry(QtCore.QRect(520, 665, 80, 35))
+        self.label_84.setGeometry(QtCore.QRect(1040, 1330, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_84.setFont(font)
         self.label_84.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -1171,9 +1171,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_84.setAlignment(QtCore.Qt.AlignCenter)
         self.label_84.setObjectName("label_84")
         self.label_85 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_85.setGeometry(QtCore.QRect(260, 665, 130, 35))
+        self.label_85.setGeometry(QtCore.QRect(520, 1330, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_85.setFont(font)
         self.label_85.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -1185,9 +1185,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_85.setAlignment(QtCore.Qt.AlignCenter)
         self.label_85.setObjectName("label_85")
         self.label_86 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_86.setGeometry(QtCore.QRect(80, 700, 50, 35))
+        self.label_86.setGeometry(QtCore.QRect(160, 1400, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_86.setFont(font)
         self.label_86.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1198,9 +1198,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_86.setAlignment(QtCore.Qt.AlignCenter)
         self.label_86.setObjectName("label_86")
         self.label_87 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_87.setGeometry(QtCore.QRect(130, 700, 130, 35))
+        self.label_87.setGeometry(QtCore.QRect(260, 1400, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_87.setFont(font)
         self.label_87.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1211,9 +1211,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_87.setAlignment(QtCore.Qt.AlignCenter)
         self.label_87.setObjectName("label_87")
         self.label_88 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_88.setGeometry(QtCore.QRect(520, 700, 80, 35))
+        self.label_88.setGeometry(QtCore.QRect(1040, 1400, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_88.setFont(font)
         self.label_88.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -1225,9 +1225,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_88.setAlignment(QtCore.Qt.AlignCenter)
         self.label_88.setObjectName("label_88")
         self.label_89 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_89.setGeometry(QtCore.QRect(260, 700, 130, 35))
+        self.label_89.setGeometry(QtCore.QRect(520, 1400, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_89.setFont(font)
         self.label_89.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -1239,9 +1239,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_89.setAlignment(QtCore.Qt.AlignCenter)
         self.label_89.setObjectName("label_89")
         self.label_90 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_90.setGeometry(QtCore.QRect(80, 735, 50, 35))
+        self.label_90.setGeometry(QtCore.QRect(160, 1470, 100, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_90.setFont(font)
         self.label_90.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1252,9 +1252,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_90.setAlignment(QtCore.Qt.AlignCenter)
         self.label_90.setObjectName("label_90")
         self.label_91 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_91.setGeometry(QtCore.QRect(130, 735, 130, 35))
+        self.label_91.setGeometry(QtCore.QRect(260, 1470, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_91.setFont(font)
         self.label_91.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 1px solid rgb(0, 0, 0);\n"
@@ -1265,9 +1265,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_91.setAlignment(QtCore.Qt.AlignCenter)
         self.label_91.setObjectName("label_91")
         self.label_92 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_92.setGeometry(QtCore.QRect(520, 735, 80, 35))
+        self.label_92.setGeometry(QtCore.QRect(1040, 1470, 160, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_92.setFont(font)
         self.label_92.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "border-left: 0.5px solid rgb(0, 0, 0);\n"
@@ -1279,9 +1279,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_92.setAlignment(QtCore.Qt.AlignCenter)
         self.label_92.setObjectName("label_92")
         self.label_93 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_93.setGeometry(QtCore.QRect(260, 735, 130, 35))
+        self.label_93.setGeometry(QtCore.QRect(520, 1470, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_93.setFont(font)
         self.label_93.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(0, 0, 255);\n"
@@ -1293,9 +1293,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_93.setAlignment(QtCore.Qt.AlignCenter)
         self.label_93.setObjectName("label_93")
         self.label_96 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_96.setGeometry(QtCore.QRect(390, 70, 130, 35))
+        self.label_96.setGeometry(QtCore.QRect(780, 140, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_96.setFont(font)
         self.label_96.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1307,9 +1307,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_96.setAlignment(QtCore.Qt.AlignCenter)
         self.label_96.setObjectName("label_96")
         self.label_97 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_97.setGeometry(QtCore.QRect(390, 35, 130, 35))
+        self.label_97.setGeometry(QtCore.QRect(780, 70, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_97.setFont(font)
         self.label_97.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1321,9 +1321,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_97.setAlignment(QtCore.Qt.AlignCenter)
         self.label_97.setObjectName("label_97")
         self.label_98 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_98.setGeometry(QtCore.QRect(390, 280, 130, 35))
+        self.label_98.setGeometry(QtCore.QRect(780, 560, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_98.setFont(font)
         self.label_98.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1335,9 +1335,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_98.setAlignment(QtCore.Qt.AlignCenter)
         self.label_98.setObjectName("label_98")
         self.label_99 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_99.setGeometry(QtCore.QRect(390, 350, 130, 35))
+        self.label_99.setGeometry(QtCore.QRect(780, 700, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_99.setFont(font)
         self.label_99.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1349,9 +1349,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_99.setAlignment(QtCore.Qt.AlignCenter)
         self.label_99.setObjectName("label_99")
         self.label_100 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_100.setGeometry(QtCore.QRect(390, 385, 130, 35))
+        self.label_100.setGeometry(QtCore.QRect(780, 770, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_100.setFont(font)
         self.label_100.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1363,9 +1363,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_100.setAlignment(QtCore.Qt.AlignCenter)
         self.label_100.setObjectName("label_100")
         self.label_101 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_101.setGeometry(QtCore.QRect(390, 490, 130, 35))
+        self.label_101.setGeometry(QtCore.QRect(780, 980, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_101.setFont(font)
         self.label_101.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1377,9 +1377,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_101.setAlignment(QtCore.Qt.AlignCenter)
         self.label_101.setObjectName("label_101")
         self.label_102 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_102.setGeometry(QtCore.QRect(390, 700, 130, 35))
+        self.label_102.setGeometry(QtCore.QRect(780, 1400, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_102.setFont(font)
         self.label_102.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1391,9 +1391,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_102.setAlignment(QtCore.Qt.AlignCenter)
         self.label_102.setObjectName("label_102")
         self.label_103 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_103.setGeometry(QtCore.QRect(390, 735, 130, 35))
+        self.label_103.setGeometry(QtCore.QRect(780, 1470, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_103.setFont(font)
         self.label_103.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1405,9 +1405,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_103.setAlignment(QtCore.Qt.AlignCenter)
         self.label_103.setObjectName("label_103")
         self.label_104 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_104.setGeometry(QtCore.QRect(390, 105, 130, 35))
+        self.label_104.setGeometry(QtCore.QRect(780, 210, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_104.setFont(font)
         self.label_104.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1419,9 +1419,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_104.setAlignment(QtCore.Qt.AlignCenter)
         self.label_104.setObjectName("label_104")
         self.label_105 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_105.setGeometry(QtCore.QRect(390, 140, 130, 35))
+        self.label_105.setGeometry(QtCore.QRect(780, 280, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_105.setFont(font)
         self.label_105.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1433,9 +1433,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_105.setAlignment(QtCore.Qt.AlignCenter)
         self.label_105.setObjectName("label_105")
         self.label_106 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_106.setGeometry(QtCore.QRect(390, 175, 130, 35))
+        self.label_106.setGeometry(QtCore.QRect(780, 350, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_106.setFont(font)
         self.label_106.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1447,9 +1447,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_106.setAlignment(QtCore.Qt.AlignCenter)
         self.label_106.setObjectName("label_106")
         self.label_107 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_107.setGeometry(QtCore.QRect(390, 210, 130, 35))
+        self.label_107.setGeometry(QtCore.QRect(780, 420, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_107.setFont(font)
         self.label_107.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1461,9 +1461,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_107.setAlignment(QtCore.Qt.AlignCenter)
         self.label_107.setObjectName("label_107")
         self.label_108 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_108.setGeometry(QtCore.QRect(390, 245, 130, 35))
+        self.label_108.setGeometry(QtCore.QRect(780, 490, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_108.setFont(font)
         self.label_108.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1475,9 +1475,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_108.setAlignment(QtCore.Qt.AlignCenter)
         self.label_108.setObjectName("label_108")
         self.label_109 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_109.setGeometry(QtCore.QRect(390, 420, 130, 35))
+        self.label_109.setGeometry(QtCore.QRect(780, 840, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_109.setFont(font)
         self.label_109.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1489,9 +1489,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_109.setAlignment(QtCore.Qt.AlignCenter)
         self.label_109.setObjectName("label_109")
         self.label_110 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_110.setGeometry(QtCore.QRect(390, 455, 130, 35))
+        self.label_110.setGeometry(QtCore.QRect(780, 910, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_110.setFont(font)
         self.label_110.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1503,9 +1503,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_110.setAlignment(QtCore.Qt.AlignCenter)
         self.label_110.setObjectName("label_110")
         self.label_111 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_111.setGeometry(QtCore.QRect(390, 525, 130, 35))
+        self.label_111.setGeometry(QtCore.QRect(780, 1050, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_111.setFont(font)
         self.label_111.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1517,9 +1517,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_111.setAlignment(QtCore.Qt.AlignCenter)
         self.label_111.setObjectName("label_111")
         self.label_112 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_112.setGeometry(QtCore.QRect(390, 560, 130, 35))
+        self.label_112.setGeometry(QtCore.QRect(780, 1120, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_112.setFont(font)
         self.label_112.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1531,9 +1531,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_112.setAlignment(QtCore.Qt.AlignCenter)
         self.label_112.setObjectName("label_112")
         self.label_113 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_113.setGeometry(QtCore.QRect(390, 595, 130, 35))
+        self.label_113.setGeometry(QtCore.QRect(780, 1190, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_113.setFont(font)
         self.label_113.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1545,9 +1545,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_113.setAlignment(QtCore.Qt.AlignCenter)
         self.label_113.setObjectName("label_113")
         self.label_114 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_114.setGeometry(QtCore.QRect(390, 630, 130, 35))
+        self.label_114.setGeometry(QtCore.QRect(780, 1260, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_114.setFont(font)
         self.label_114.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1559,9 +1559,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_114.setAlignment(QtCore.Qt.AlignCenter)
         self.label_114.setObjectName("label_114")
         self.label_115 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_115.setGeometry(QtCore.QRect(390, 315, 130, 35))
+        self.label_115.setGeometry(QtCore.QRect(780, 630, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_115.setFont(font)
         self.label_115.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1573,9 +1573,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_115.setAlignment(QtCore.Qt.AlignCenter)
         self.label_115.setObjectName("label_115")
         self.label_116 = QtWidgets.QLabel(self.frame_historical_parameter)
-        self.label_116.setGeometry(QtCore.QRect(390, 665, 130, 35))
+        self.label_116.setGeometry(QtCore.QRect(780, 1330, 260, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.label_116.setFont(font)
         self.label_116.setStyleSheet("background-color: rgb(128, 128, 255);\n"
 "color: rgb(255, 255, 255);\n"
@@ -1587,50 +1587,56 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_116.setAlignment(QtCore.Qt.AlignCenter)
         self.label_116.setObjectName("label_116")
         self.widget_historical_title = QtWidgets.QWidget(self.widget_historical_main)
-        self.widget_historical_title.setGeometry(QtCore.QRect(2, 0, 1446, 70))
+        self.widget_historical_title.setGeometry(QtCore.QRect(0, 0, 2912, 140))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.widget_historical_title.sizePolicy().hasHeightForWidth())
         self.widget_historical_title.setSizePolicy(sizePolicy)
         self.widget_historical_title.setStyleSheet("#widget_historical_title{\n"
-"border-top-left-radius: 10px;   /* 设置左上角的圆角半径 */\n"
-"border-top-right-radius: 10px;  /* 设置右上角的圆角半径 */\n"
+"border-top-left-radius: 20px;   /* 设置左上角的圆角半径 */\n"
+"border-top-right-radius: 20px;  /* 设置右上角的圆角半径 */\n"
 "border-bottom-left-radius: 0px; /* 保持左下角的圆角半径为 0 */\n"
 "border-bottom-right-radius: 0px;/* 保持右下角的圆角半径为 0 */\n"
 "background-color: rgb(170, 170, 255);\n"
 "}")
         self.widget_historical_title.setObjectName("widget_historical_title")
         self.label_factory_num = QtWidgets.QLabel(self.widget_historical_title)
-        self.label_factory_num.setGeometry(QtCore.QRect(10, 15, 140, 40))
+        self.label_factory_num.setGeometry(QtCore.QRect(20, 30, 280, 80))
         font = QtGui.QFont()
         font.setFamily("华文中宋")
-        font.setPointSize(22)
+        font.setPointSize(44)
         font.setBold(True)
         font.setWeight(75)
         self.label_factory_num.setFont(font)
         self.label_factory_num.setObjectName("label_factory_num")
         self.pushButton_realtime = QtWidgets.QPushButton(self.widget_historical_title)
-        self.pushButton_realtime.setGeometry(QtCore.QRect(220, 15, 130, 40))
+        self.pushButton_realtime.setGeometry(QtCore.QRect(440, 30, 260, 80))
         font = QtGui.QFont()
         font.setFamily("华文仿宋")
-        font.setPointSize(20)
+        font.setPointSize(40)
         font.setBold(True)
         font.setWeight(75)
         self.pushButton_realtime.setFont(font)
         self.pushButton_realtime.setObjectName("pushButton_realtime")
         self.pushButton_minisize = QtWidgets.QPushButton(self.widget_historical_title)
-        self.pushButton_minisize.setGeometry(QtCore.QRect(1340, 20, 20, 20))
+        self.pushButton_minisize.setGeometry(QtCore.QRect(2670, 40, 40, 40))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.pushButton_minisize.setFont(font)
         self.pushButton_minisize.setStyleSheet("border-image: url(:/logo/minisize.png);")
         self.pushButton_minisize.setText("")
         self.pushButton_minisize.setObjectName("pushButton_minisize")
         self.pushButton_close = QtWidgets.QPushButton(self.widget_historical_title)
-        self.pushButton_close.setGeometry(QtCore.QRect(1380, 20, 20, 20))
+        self.pushButton_close.setGeometry(QtCore.QRect(2770, 40, 40, 40))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.pushButton_close.setFont(font)
         self.pushButton_close.setStyleSheet("border-image: url(:/logo/close.png);")
         self.pushButton_close.setText("")
         self.pushButton_close.setObjectName("pushButton_close")
         self.dateTimeEdit = QtWidgets.QDateTimeEdit(self.widget_historical_title)
-        self.dateTimeEdit.setGeometry(QtCore.QRect(520, 15, 200, 40))
+        self.dateTimeEdit.setGeometry(QtCore.QRect(1040, 30, 400, 80))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -1642,42 +1648,42 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         font.setWeight(75)
         self.dateTimeEdit.setFont(font)
         self.dateTimeEdit.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.dateTimeEdit.setStyleSheet("font-size: 20px;  /* 根据需求调整像素值 */\n"
+        self.dateTimeEdit.setStyleSheet("font-size: 40px;  /* 根据需求调整像素值 */\n"
 "font-weight: bold;\n"
 "")
         self.dateTimeEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.dateTimeEdit.setObjectName("dateTimeEdit")
         self.pushButton_historical_query = QtWidgets.QPushButton(self.widget_historical_title)
-        self.pushButton_historical_query.setGeometry(QtCore.QRect(370, 15, 130, 40))
+        self.pushButton_historical_query.setGeometry(QtCore.QRect(740, 30, 260, 80))
         font = QtGui.QFont()
         font.setFamily("华文仿宋")
-        font.setPointSize(20)
+        font.setPointSize(40)
         font.setBold(True)
         font.setWeight(75)
         self.pushButton_historical_query.setFont(font)
         self.pushButton_historical_query.setObjectName("pushButton_historical_query")
         self.label_factory_num_3 = QtWidgets.QLabel(self.widget_historical_title)
-        self.label_factory_num_3.setGeometry(QtCore.QRect(1000, 15, 40, 40))
+        self.label_factory_num_3.setGeometry(QtCore.QRect(2000, 30, 90, 80))
         font = QtGui.QFont()
         font.setFamily("华文中宋")
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_factory_num_3.setFont(font)
         self.label_factory_num_3.setObjectName("label_factory_num_3")
         self.label_factory_num_2 = QtWidgets.QLabel(self.widget_historical_title)
-        self.label_factory_num_2.setGeometry(QtCore.QRect(740, 15, 110, 40))
+        self.label_factory_num_2.setGeometry(QtCore.QRect(1480, 30, 220, 80))
         font = QtGui.QFont()
         font.setFamily("华文中宋")
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_factory_num_2.setFont(font)
         self.label_factory_num_2.setObjectName("label_factory_num_2")
         self.lineEdit_SetTime = QtWidgets.QLineEdit(self.widget_historical_title)
-        self.lineEdit_SetTime.setGeometry(QtCore.QRect(860, 15, 130, 40))
+        self.lineEdit_SetTime.setGeometry(QtCore.QRect(1720, 30, 260, 80))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(40)
         self.lineEdit_SetTime.setFont(font)
         self.lineEdit_SetTime.setStyleSheet("padding: 0;\n"
 "background-color: rgb(255, 255, 255);\n"
@@ -1685,13 +1691,13 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.lineEdit_SetTime.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_SetTime.setObjectName("lineEdit_SetTime")
         self.widget_pop_historical_parameter_curve1 = QtWidgets.QWidget(self.widget_historical_main)
-        self.widget_pop_historical_parameter_curve1.setGeometry(QtCore.QRect(60, 100, 720, 280))
+        self.widget_pop_historical_parameter_curve1.setGeometry(QtCore.QRect(120, 200, 1440, 560))
         self.widget_pop_historical_parameter_curve1.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.widget_pop_historical_parameter_curve1.setObjectName("widget_pop_historical_parameter_curve1")
         self.label_94 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_94.setGeometry(QtCore.QRect(65, 395, 110, 35))
+        self.label_94.setGeometry(QtCore.QRect(130, 790, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_94.setFont(font)
@@ -1702,9 +1708,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_94.setAlignment(QtCore.Qt.AlignCenter)
         self.label_94.setObjectName("label_94")
         self.label_191 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_191.setGeometry(QtCore.QRect(185, 395, 110, 35))
+        self.label_191.setGeometry(QtCore.QRect(370, 790, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_191.setFont(font)
@@ -1715,9 +1721,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_191.setAlignment(QtCore.Qt.AlignCenter)
         self.label_191.setObjectName("label_191")
         self.label_192 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_192.setGeometry(QtCore.QRect(305, 395, 110, 35))
+        self.label_192.setGeometry(QtCore.QRect(610, 790, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_192.setFont(font)
@@ -1728,9 +1734,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_192.setAlignment(QtCore.Qt.AlignCenter)
         self.label_192.setObjectName("label_192")
         self.label_193 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_193.setGeometry(QtCore.QRect(425, 395, 110, 35))
+        self.label_193.setGeometry(QtCore.QRect(850, 790, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_193.setFont(font)
@@ -1741,9 +1747,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_193.setAlignment(QtCore.Qt.AlignCenter)
         self.label_193.setObjectName("label_193")
         self.label_194 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_194.setGeometry(QtCore.QRect(545, 395, 110, 35))
+        self.label_194.setGeometry(QtCore.QRect(1090, 790, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_194.setFont(font)
@@ -1754,9 +1760,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_194.setAlignment(QtCore.Qt.AlignCenter)
         self.label_194.setObjectName("label_194")
         self.label_195 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_195.setGeometry(QtCore.QRect(665, 395, 110, 35))
+        self.label_195.setGeometry(QtCore.QRect(1330, 790, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_195.setFont(font)
@@ -1767,9 +1773,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_195.setAlignment(QtCore.Qt.AlignCenter)
         self.label_195.setObjectName("label_195")
         self.label_95 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_95.setGeometry(QtCore.QRect(70, 795, 110, 35))
+        self.label_95.setGeometry(QtCore.QRect(140, 1590, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_95.setFont(font)
@@ -1780,9 +1786,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_95.setAlignment(QtCore.Qt.AlignCenter)
         self.label_95.setObjectName("label_95")
         self.label_196 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_196.setGeometry(QtCore.QRect(190, 795, 110, 35))
+        self.label_196.setGeometry(QtCore.QRect(380, 1590, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_196.setFont(font)
@@ -1793,9 +1799,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_196.setAlignment(QtCore.Qt.AlignCenter)
         self.label_196.setObjectName("label_196")
         self.label_197 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_197.setGeometry(QtCore.QRect(430, 795, 110, 35))
+        self.label_197.setGeometry(QtCore.QRect(860, 1590, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_197.setFont(font)
@@ -1806,9 +1812,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_197.setAlignment(QtCore.Qt.AlignCenter)
         self.label_197.setObjectName("label_197")
         self.label_198 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_198.setGeometry(QtCore.QRect(550, 795, 110, 35))
+        self.label_198.setGeometry(QtCore.QRect(1100, 1590, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_198.setFont(font)
@@ -1818,9 +1824,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_198.setAlignment(QtCore.Qt.AlignCenter)
         self.label_198.setObjectName("label_198")
         self.label_199 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_199.setGeometry(QtCore.QRect(310, 795, 110, 35))
+        self.label_199.setGeometry(QtCore.QRect(620, 1590, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_199.setFont(font)
@@ -1831,13 +1837,13 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_199.setAlignment(QtCore.Qt.AlignCenter)
         self.label_199.setObjectName("label_199")
         self.widget_pop_historical_parameter_curve2 = QtWidgets.QWidget(self.widget_historical_main)
-        self.widget_pop_historical_parameter_curve2.setGeometry(QtCore.QRect(65, 500, 720, 280))
+        self.widget_pop_historical_parameter_curve2.setGeometry(QtCore.QRect(130, 1000, 1440, 560))
         self.widget_pop_historical_parameter_curve2.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.widget_pop_historical_parameter_curve2.setObjectName("widget_pop_historical_parameter_curve2")
         self.label_200 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_200.setGeometry(QtCore.QRect(670, 795, 110, 35))
+        self.label_200.setGeometry(QtCore.QRect(1340, 1590, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(32)
         font.setBold(False)
         font.setWeight(50)
         self.label_200.setFont(font)
@@ -1846,9 +1852,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_200.setAlignment(QtCore.Qt.AlignCenter)
         self.label_200.setObjectName("label_200")
         self.label_117 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_117.setGeometry(QtCore.QRect(65, 440, 110, 35))
+        self.label_117.setGeometry(QtCore.QRect(130, 880, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_117.setFont(font)
         self.label_117.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1861,9 +1867,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_117.setAlignment(QtCore.Qt.AlignCenter)
         self.label_117.setObjectName("label_117")
         self.label_118 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_118.setGeometry(QtCore.QRect(185, 440, 110, 35))
+        self.label_118.setGeometry(QtCore.QRect(370, 880, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_118.setFont(font)
         self.label_118.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1876,9 +1882,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_118.setAlignment(QtCore.Qt.AlignCenter)
         self.label_118.setObjectName("label_118")
         self.label_119 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_119.setGeometry(QtCore.QRect(305, 440, 110, 35))
+        self.label_119.setGeometry(QtCore.QRect(610, 880, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_119.setFont(font)
         self.label_119.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1891,9 +1897,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_119.setAlignment(QtCore.Qt.AlignCenter)
         self.label_119.setObjectName("label_119")
         self.label_120 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_120.setGeometry(QtCore.QRect(425, 440, 110, 35))
+        self.label_120.setGeometry(QtCore.QRect(850, 880, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_120.setFont(font)
         self.label_120.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1906,9 +1912,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_120.setAlignment(QtCore.Qt.AlignCenter)
         self.label_120.setObjectName("label_120")
         self.label_121 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_121.setGeometry(QtCore.QRect(545, 440, 110, 35))
+        self.label_121.setGeometry(QtCore.QRect(1090, 880, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_121.setFont(font)
         self.label_121.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1921,9 +1927,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_121.setAlignment(QtCore.Qt.AlignCenter)
         self.label_121.setObjectName("label_121")
         self.label_122 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_122.setGeometry(QtCore.QRect(665, 440, 110, 35))
+        self.label_122.setGeometry(QtCore.QRect(1330, 880, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_122.setFont(font)
         self.label_122.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1936,9 +1942,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_122.setAlignment(QtCore.Qt.AlignCenter)
         self.label_122.setObjectName("label_122")
         self.label_123 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_123.setGeometry(QtCore.QRect(70, 840, 110, 35))
+        self.label_123.setGeometry(QtCore.QRect(140, 1680, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_123.setFont(font)
         self.label_123.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1951,9 +1957,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_123.setAlignment(QtCore.Qt.AlignCenter)
         self.label_123.setObjectName("label_123")
         self.label_124 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_124.setGeometry(QtCore.QRect(670, 840, 110, 35))
+        self.label_124.setGeometry(QtCore.QRect(1340, 1680, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_124.setFont(font)
         self.label_124.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1966,9 +1972,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_124.setAlignment(QtCore.Qt.AlignCenter)
         self.label_124.setObjectName("label_124")
         self.label_125 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_125.setGeometry(QtCore.QRect(310, 840, 110, 35))
+        self.label_125.setGeometry(QtCore.QRect(620, 1680, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_125.setFont(font)
         self.label_125.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1981,9 +1987,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_125.setAlignment(QtCore.Qt.AlignCenter)
         self.label_125.setObjectName("label_125")
         self.label_126 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_126.setGeometry(QtCore.QRect(430, 840, 110, 35))
+        self.label_126.setGeometry(QtCore.QRect(860, 1680, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_126.setFont(font)
         self.label_126.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -1996,9 +2002,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_126.setAlignment(QtCore.Qt.AlignCenter)
         self.label_126.setObjectName("label_126")
         self.label_127 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_127.setGeometry(QtCore.QRect(190, 840, 110, 35))
+        self.label_127.setGeometry(QtCore.QRect(380, 1680, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_127.setFont(font)
         self.label_127.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -2011,9 +2017,9 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_127.setAlignment(QtCore.Qt.AlignCenter)
         self.label_127.setObjectName("label_127")
         self.label_128 = QtWidgets.QLabel(self.widget_historical_main)
-        self.label_128.setGeometry(QtCore.QRect(550, 840, 110, 35))
+        self.label_128.setGeometry(QtCore.QRect(1100, 1680, 220, 70))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(32)
         self.label_128.setFont(font)
         self.label_128.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);\n"
@@ -2062,7 +2068,7 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
     def retranslateUi(self, Dialog_Pop_Historical_Parameter):
         _translate = QtCore.QCoreApplication.translate
         Dialog_Pop_Historical_Parameter.setWindowTitle(_translate("Dialog_Pop_Historical_Parameter", "Dialog"))
-        self.label.setText(_translate("Dialog_Pop_Historical_Parameter", "机组"))
+        self.label_1.setText(_translate("Dialog_Pop_Historical_Parameter", "机组"))
         self.label_2.setText(_translate("Dialog_Pop_Historical_Parameter", "挤\n"
 "出\n"
 "机"))
@@ -2182,7 +2188,7 @@ class Ui_Dialog_Pop_Historical_Parameter(object):
         self.label_114.setText(_translate("Dialog_Pop_Historical_Parameter", "0.00"))
         self.label_115.setText(_translate("Dialog_Pop_Historical_Parameter", "0.00"))
         self.label_116.setText(_translate("Dialog_Pop_Historical_Parameter", "0.00"))
-        self.label_factory_num.setText(_translate("Dialog_Pop_Historical_Parameter", "工厂一 1#"))
+        self.label_factory_num.setText(_translate("Dialog_Pop_Historical_Parameter", " 1# PVC"))
         self.pushButton_realtime.setText(_translate("Dialog_Pop_Historical_Parameter", "实时"))
         self.pushButton_historical_query.setText(_translate("Dialog_Pop_Historical_Parameter", "查询"))
         self.label_factory_num_3.setText(_translate("Dialog_Pop_Historical_Parameter", "分钟"))

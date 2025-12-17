@@ -12,21 +12,11 @@ from Ui_MainWindow import Ui_MainWindow
 from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
 from Ui_pop_parameter_factory1_2 import Ui_Dialog_Pop_Parameter_Factory1Device2
 from Ui_pop_parameter_factory1_3 import Ui_Dialog_Pop_Parameter_Factory1Device3
-from Ui_pop_parameter_factory1_4 import Ui_Dialog_Pop_Parameter_Factory1Device4
-from Ui_pop_parameter_factory2_1 import Ui_Dialog_Pop_Parameter_Factory2Device1
-from Ui_pop_parameter_factory2_2 import Ui_Dialog_Pop_Parameter_Factory2Device2
-from Ui_pop_parameter_factory2_3 import Ui_Dialog_Pop_Parameter_Factory2Device3
-from Ui_pop_parameter_factory2_4 import Ui_Dialog_Pop_Parameter_Factory2Device4
 from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_historical_parameter_factory1_2 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device2
 from Ui_pop_historical_parameter_factory1_3 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device3
-from Ui_pop_historical_parameter_factory1_4 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device4
-from Ui_pop_historical_parameter_factory2_1 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device1
-from Ui_pop_historical_parameter_factory2_2 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device2
-from Ui_pop_historical_parameter_factory2_3 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device3
-from Ui_pop_historical_parameter_factory2_4 import Ui_Dialog_Pop_Historical_Parameter_Factory2Device4
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import data_manager, inserter,historical_data_manager,get_plc_data_manager, get_plc_historical_data_manager
+from Data_Manager import data_manager, inserter, historical_data_manager, get_plc_data_manager, get_plc_historical_data_manager
 from Ruanguan_Curve import RealTimeMainWindowCurve1
 # from Ruanguan_Historical import HistoricalCurvePlotter
 from RealtimeCurve import RealTimeCurvePlotter
@@ -45,8 +35,80 @@ CLASS_COLORS2 = ['#FF0000', '#FFFF00', '#00FFFF', '#00FF00', '#FFAA00', '#FF55FF
                  '#DAA520', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#F08080', '#4169E1',
                  '#FF69B4', '#8A2BE2'
                  ]
+
+
+class PublicDataUpdate:
+    # 分解原有的大更新方法为多个私有方法
+    def _update_jcj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_10.setText(str(data.get('preheating_stage', '')))
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_116.setText(str(data.get('temperature1', '')))
+        self.label_117.setText(str(data.get('temperature2', '')))
+        self.label_118.setText(str(data.get('temperature3', '')))
+        self.label_119.setText(str(data.get('temperature4', '')))
+        self.label_104.setText(str(data.get('extruder_rpm', '')))
+        self.label_105.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
+
+    def _update_fjj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
+
+    def _update_zdj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
+
+    def _update_jcj_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_106.setText(str(data.get('temperature1_set', '')))
+        self.label_107.setText(str(data.get('temperature2_set', '')))
+        self.label_108.setText(str(data.get('temperature3_set', '')))
+        self.label_109.setText(str(data.get('temperature4_set', '')))
+        self.label_110.setText(str(data.get('exhaust_temperature_set', '')))
+        self.label_111.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
+
+    def _update_fjj_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_112.setText(str(data.get('wire_tension_set', '')))
+        self.label_113.setText(str(data.get('linear_velocity_set', '')))
+        self.label_124.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
+
+    def _update_zdj_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_125.setText(str(data.get('rpm_set', '')))
+        self.label_126.setText(str(data.get('traction_speed_set', '')))
+        self.label_127.setText(str(data.get('pipe_diameter_set', '')))
+        self.label_128.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
+
+    def _update_curve_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_120.setText(str(data.get('upper_limit_alarm', '')))
+        self.label_121.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.label_122.setText(str(data.get('lower_limit_warning', '')))
+        self.label_123.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+
+
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
-class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
+class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
     def __init__(self):
         # 调用QDialog父类构造方法
         super().__init__()
@@ -94,7 +156,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
-            colors = CLASS_COLORS1,
+            colors=CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -109,9 +171,10 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
-            colors = CLASS_COLORS2,
+            colors=CLASS_COLORS2,
             y_limits=(0, 200)
         )
+
     # ------------------------- 数据更新线程启动方法 -------------------------
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
@@ -131,10 +194,10 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
         worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
         worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater) # type: ignore[attr-defined] # 线程退出后销毁线程对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined] # 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+        worker.data_updated.connect(self._handle_data_update)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['data_update1'] = (thread, worker)
@@ -151,83 +214,23 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
+            "factory1_1_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
             "factory1_1_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_1_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_1_set_data_jcj": self._update_jcj_set,
             "factory1_1_set_data_fjj": self._update_fjj_set,
             "factory1_1_set_data_zdj": self._update_zdj_set,
-            "factory1_1_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
+            "factory1_1_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
             if isinstance(strategy, list):  # 处理多个方法的情况
                 for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
+                    method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))     # 使用get方法提供默认值
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
+
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -334,7 +337,8 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter):
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device2):
+
+class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device2, PublicDataUpdate):
     def __init__(self):
         # 调用QDialog父类构造方法
         super().__init__()
@@ -381,7 +385,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
-            colors = CLASS_COLORS1,
+            colors=CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -396,7 +400,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
-            colors = CLASS_COLORS2,
+            colors=CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -422,7 +426,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+        worker.data_updated.connect(self._handle_data_update)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['data_update2'] = (thread, worker)
@@ -439,83 +443,23 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_2_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
+            "factory1_2_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
             "factory1_2_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_2_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_2_set_data_jcj": self._update_jcj_set,
             "factory1_2_set_data_fjj": self._update_fjj_set,
             "factory1_2_set_data_zdj": self._update_zdj_set,
-            "factory1_2_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
+            "factory1_2_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
             if isinstance(strategy, list):  # 处理多个方法的情况
                 for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
+                    method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
+
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -621,7 +565,8 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device3):
+
+class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device3, PublicDataUpdate):
     def __init__(self):
         # 调用QDialog父类构造方法
         super().__init__()
@@ -668,7 +613,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve2': 'upper_limit_warning',
                 'curve5': 'lower_limit_warning'
             },
-            colors = CLASS_COLORS1,
+            colors=CLASS_COLORS1,
             y_limits=(-1, 1)
         )
 
@@ -683,7 +628,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                 'curve5': 'extruder_rpm',
                 'curve6': 'inverter_current'
             },
-            colors = CLASS_COLORS2,
+            colors=CLASS_COLORS2,
             y_limits=(0, 200)
         )
 
@@ -703,13 +648,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         worker.moveToThread(thread)
 
         # 信号连接
-        thread.started.connect(worker.run) # type: ignore[attr-defined] # 线程启动时执行run方法
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]    # 工作完成时退出线程
+        thread.started.connect(worker.run)  # type: ignore[attr-defined] # 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]    # 工作完成时退出线程
         worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]   # 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)     # type: ignore[attr-defined]    # 线程退出后销毁线程对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]    # 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+        worker.data_updated.connect(self._handle_data_update)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['data_update3'] = (thread, worker)
@@ -726,83 +671,23 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_3_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
+            "factory1_3_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
             "factory1_3_realtime_data_fjj": self._update_fjj_realtime,
             "factory1_3_realtime_data_zdj": self._update_zdj_realtime,
             "factory1_3_set_data_jcj": self._update_jcj_set,
             "factory1_3_set_data_fjj": self._update_fjj_set,
             "factory1_3_set_data_zdj": self._update_zdj_set,
-            "factory1_3_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
+            "factory1_3_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
             if isinstance(strategy, list):  # 处理多个方法的情况
                 for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
+                    method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
+
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -908,1441 +793,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
         super().closeEvent(event)  # 调用父类的关闭事件处理
 
-class ParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory1Device4):
-    def __init__(self):
-        # 调用QDialog父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)  # 调用 UI 设计的 setupUi 方法
-
-        self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        # 创建线程管理器字典
-        self.threads = {}
-        # 需要监控的表名列表
-        self.tables_to_monitor = [
-            "factory1_4_realtime_data_jcj",
-            "factory1_4_realtime_data_fjj",
-            "factory1_4_realtime_data_zdj",
-            "factory1_4_set_data_jcj",
-            "factory1_4_set_data_fjj",
-            "factory1_4_set_data_zdj",
-            "factory1_4_set_data_curve"
-        ]
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            colors = CLASS_COLORS1,
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            colors = CLASS_COLORS2,
-            y_limits=(0, 200)
-        )
-
-
-    # ------------------------- 数据更新线程启动方法 -------------------------
-    # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update4'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    # 添加新方法：处理数据更新
-    def _handle_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory1_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
-            "factory1_4_realtime_data_fjj": self._update_fjj_realtime,
-            "factory1_4_realtime_data_zdj": self._update_zdj_realtime,
-            "factory1_4_set_data_jcj": self._update_jcj_set,
-            "factory1_4_set_data_fjj": self._update_fjj_set,
-            "factory1_4_set_data_zdj": self._update_zdj_set,
-            "factory1_4_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况
-                for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 重写 show 函数,讲数据更新线程启动放在show函数中
-    def show(self):
-        # # 清空曲线数据
-        # if hasattr(self, 'curve_plotter'):
-        #     self.curve_plotter.clear_data()
-        # if hasattr(self, 'curve_jcj'):
-        #     self.curve_jcj.clear_data()
-        super().show()  # 调用父类 show 方法
-        self._start_data_update_thread(self.tables_to_monitor)
-        print("启动数据更新线程")
-
-    # 参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
-        # 停止数据更新线程
-        if hasattr(self, 'threads'):
-            for key, (thread, worker) in self.threads.items():
-                if hasattr(worker, 'stop'):
-                    worker.stop()
-
-        # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:
-            self.dialog_historical.close()
-
-        super().closeEvent(event)  # 调用父类的关闭事件处理
-
-class ParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device1):
-    def __init__(self):
-        # 调用QDialog父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)  # 调用 UI 设计的 setupUi 方法
-
-        self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        # 创建线程管理器字典
-        self.threads = {}
-        # 需要监控的表名列表
-        self.tables_to_monitor = [
-            "factory2_1_realtime_data_jcj",
-            "factory2_1_realtime_data_fjj",
-            "factory2_1_realtime_data_zdj",
-            "factory2_1_set_data_jcj",
-            "factory2_1_set_data_fjj",
-            "factory2_1_set_data_zdj",
-            "factory2_1_set_data_curve"
-        ]
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            colors = CLASS_COLORS1,
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            colors = CLASS_COLORS2,
-            y_limits=(0, 200)
-        )
-
-    # ------------------------- 数据更新线程启动方法 ------------------------
-    # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update5'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    # 添加新方法：处理数据更新
-    def _handle_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory2_1_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
-            "factory2_1_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_1_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_1_set_data_jcj": self._update_jcj_set,
-            "factory2_1_set_data_fjj": self._update_fjj_set,
-            "factory2_1_set_data_zdj": self._update_zdj_set,
-            "factory2_1_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况
-                for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 重写 show 函数,讲数据更新线程启动放在show函数中
-    def show(self):
-        # # 清空曲线数据
-        # if hasattr(self, 'curve_plotter'):
-        #     self.curve_plotter.clear_data()
-        # if hasattr(self, 'curve_jcj'):
-        #     self.curve_jcj.clear_data()
-        super().show()  # 调用父类 show 方法
-        self._start_data_update_thread(self.tables_to_monitor)
-        print("启动数据更新线程")
-
-    # 参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
-        # 停止数据更新线程
-        if hasattr(self, 'threads'):
-            for key, (thread, worker) in self.threads.items():
-                if hasattr(worker, 'stop'):
-                    worker.stop()
-
-        # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:
-            self.dialog_historical.close()
-
-        super().closeEvent(event)  # 调用父类的关闭事件处理
-
-class ParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device2):
-    def __init__(self):
-        # 调用QDialog父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)  # 调用 UI 设计的 setupUi 方法
-
-        self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        # 创建线程管理器字典
-        self.threads = {}
-        # 需要监控的表名列表
-        self.tables_to_monitor = [
-            "factory2_2_realtime_data_jcj",
-            "factory2_2_realtime_data_fjj",
-            "factory2_2_realtime_data_zdj",
-            "factory2_2_set_data_jcj",
-            "factory2_2_set_data_fjj",
-            "factory2_2_set_data_zdj",
-            "factory2_2_set_data_curve"
-        ]
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            colors = CLASS_COLORS1,
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            colors = CLASS_COLORS2,
-            y_limits=(0, 200)
-        )
-
-    # ------------------------- 数据更新线程启动方法 -------------------------
-    # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update6'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    # 添加新方法：处理数据更新
-    def _handle_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory2_2_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
-            "factory2_2_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_2_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_2_set_data_jcj": self._update_jcj_set,
-            "factory2_2_set_data_fjj": self._update_fjj_set,
-            "factory2_2_set_data_zdj": self._update_zdj_set,
-            "factory2_2_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况
-                for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 重写 show 函数,讲数据更新线程启动放在show函数中
-    def show(self):
-        # # 清空曲线数据
-        # if hasattr(self, 'curve_plotter'):
-        #     self.curve_plotter.clear_data()
-        # if hasattr(self, 'curve_jcj'):
-        #     self.curve_jcj.clear_data()
-        super().show()  # 调用父类 show 方法
-        self._start_data_update_thread(self.tables_to_monitor)
-        print("启动数据更新线程")
-
-    # 参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
-        # 停止数据更新线程
-        if hasattr(self, 'threads'):
-            for key, (thread, worker) in self.threads.items():
-                if hasattr(worker, 'stop'):
-                    worker.stop()
-
-        # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:
-            self.dialog_historical.close()
-
-        super().closeEvent(event)  # 调用父类的关闭事件处理
-
-class ParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device3):
-    def __init__(self):
-        # 调用QDialog父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)  # 调用 UI 设计的 setupUi 方法
-
-        self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        # 创建线程管理器字典
-        self.threads = {}
-        # 需要监控的表名列表
-        self.tables_to_monitor = [
-            "factory2_3_realtime_data_jcj",
-            "factory2_3_realtime_data_fjj",
-            "factory2_3_realtime_data_zdj",
-            "factory2_3_set_data_jcj",
-            "factory2_3_set_data_fjj",
-            "factory2_3_set_data_zdj",
-            "factory2_3_set_data_curve"
-        ]
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            colors = CLASS_COLORS1,
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            colors = CLASS_COLORS2,
-            y_limits=(0, 200)
-        )
-
-    # ------------------------- 数据更新线程启动方法 -------------------------
-    # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)# type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update7'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    # 添加新方法：处理数据更新
-    def _handle_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory2_3_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
-            "factory2_3_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_3_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_3_set_data_jcj": self._update_jcj_set,
-            "factory2_3_set_data_fjj": self._update_fjj_set,
-            "factory2_3_set_data_zdj": self._update_zdj_set,
-            "factory2_3_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况
-                for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 重写 show 函数,讲数据更新线程启动放在show函数中
-    def show(self):
-        # # 清空曲线数据
-        # if hasattr(self, 'curve_plotter'):
-        #     self.curve_plotter.clear_data()
-        # if hasattr(self, 'curve_jcj'):
-        #     self.curve_jcj.clear_data()
-        super().show()  # 调用父类 show 方法
-        self._start_data_update_thread(self.tables_to_monitor)
-        print("启动2_3数据更新线程")
-
-    # 参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
-        # 停止数据更新线程
-        if hasattr(self, 'threads'):
-            for key, (thread, worker) in self.threads.items():
-                if hasattr(worker, 'stop'):
-                    worker.stop()
-
-        # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:
-            self.dialog_historical.close()
-
-        super().closeEvent(event)  # 调用父类的关闭事件处理
-
-class ParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Parameter_Factory2Device4):
-    def __init__(self):
-        # 调用QDialog父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)  # 调用 UI 设计的 setupUi 方法
-
-        self.dialog_historical = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_historical_curve.clicked.connect(self.show_dialog_pop_historical_parameter)  # 连接按钮点击信号
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        # 创建线程管理器字典
-        self.threads = {}
-        # 需要监控的表名列表
-        self.tables_to_monitor = [
-            "factory2_4_realtime_data_jcj",
-            "factory2_4_realtime_data_fjj",
-            "factory2_4_realtime_data_zdj",
-            "factory2_4_set_data_jcj",
-            "factory2_4_set_data_fjj",
-            "factory2_4_set_data_zdj",
-            "factory2_4_set_data_curve"
-        ]
-        # 添加管径实时曲线（示例配置）
-        self.curve_plotter = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve1,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            colors = CLASS_COLORS1,
-            y_limits=(-1, 1)
-        )
-
-        # 添加挤出机参数实时曲线（示例配置）
-        self.curve_jcj = RealTimeCurvePlotter(
-            parent_widget=self.widget_pop_parameter_curve2,  # 对应UI中的曲线容器
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            colors = CLASS_COLORS2,
-            y_limits=(0, 200)
-        )
-
-    # ------------------------- 数据更新线程启动方法 -------------------------
-    # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = PLCDataUpdateWorker(tables_to_monitor)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update8'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    # 添加新方法：处理数据更新
-    def _handle_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime,self.curve_jcj.update_plot],
-            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_jcj_set,
-            "factory2_4_set_data_fjj": self._update_fjj_set,
-            "factory2_4_set_data_zdj": self._update_zdj_set,
-            "factory2_4_set_data_curve": [self._update_curve_set,self.curve_plotter.update_plot]
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况
-                for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-    # 分解原有的大更新方法为多个私有方法
-    def _update_jcj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_10.setText(str(data.get('preheating_stage', '')))
-        self.label_14.setText(str(data.get('preheating_timer', '')))
-        self.label_18.setText(str(data.get('temperature1', '')))
-        self.label_22.setText(str(data.get('temperature2', '')))
-        self.label_26.setText(str(data.get('temperature3', '')))
-        self.label_30.setText(str(data.get('temperature4', '')))
-        self.label_34.setText(str(data.get('exhaust_temperature', '')))
-        self.label_38.setText(str(data.get('cabinet_temperature', '')))
-        self.label_42.setText(str(data.get('extruder_rpm', '')))
-        self.label_46.setText(str(data.get('inverter_current', '')))
-        self.label_50.setText(str(data.get('inverter_error', '')))
-        self.label_116.setText(str(data.get('temperature1', '')))
-        self.label_117.setText(str(data.get('temperature2', '')))
-        self.label_118.setText(str(data.get('temperature3', '')))
-        self.label_119.setText(str(data.get('temperature4', '')))
-        self.label_104.setText(str(data.get('extruder_rpm', '')))
-        self.label_105.setText(str(data.get('inverter_current', '')))    # 使用get方法提供默认值
-    def _update_fjj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_53.setText(str(data.get('wire_tension', '')))
-        self.label_57.setText(str(data.get('unwinding_speed', '')))
-        self.label_61.setText(str(data.get('linear_velocity', '')))
-        self.label_65.setText(str(data.get('ribs_usage', '')))
-    def _update_zdj_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.label_73.setText(str(data.get('rpm', '')))
-        self.label_77.setText(str(data.get('traction_speed', '')))
-        self.label_81.setText(str(data.get('pipe_diameter', '')))
-        self.label_85.setText(str(data.get('current_production', '')))
-        self.label_89.setText(str(data.get('equipment_production', '')))
-        self.label_93.setText(str(data.get('pass_rate', '')))       # 使用get方法提供默认值
-    def _update_jcj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_4.setText(str(data.get('temperature1_set', '')))
-        self.lineEdit_5.setText(str(data.get('temperature2_set', '')))
-        self.lineEdit_6.setText(str(data.get('temperature3_set', '')))
-        self.lineEdit_7.setText(str(data.get('temperature4_set', '')))
-        self.lineEdit_8.setText(str(data.get('exhaust_temperature_set', '')))
-        self.lineEdit_10.setText(str(data.get('cabinet_temperature_set', '')))   # 使用get方法提供默认值
-    def _update_fjj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_13.setText(str(data.get('wire_tension_set', '')))
-        self.lineEdit_14.setText(str(data.get('linear_velocity_set', '')))
-        self.lineEdit_16.setText(str(data.get('ribs_usage_set', '')))   # 使用get方法提供默认值
-    def _update_zdj_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_17.setText(str(data.get('rpm_set', '')))
-        self.lineEdit_18.setText(str(data.get('traction_speed_set', '')))
-        self.lineEdit_19.setText(str(data.get('pipe_diameter_set', '')))
-        self.lineEdit_20.setText(str(data.get('planned_production', '')))   # 使用get方法提供默认值
-    def _update_curve_set(self, data):
-        """更新挤出机实时数据"""
-        self.lineEdit_23.setText(str(data.get('upper_limit_alarm', '')))
-        self.lineEdit_48.setText(str(data.get('upper_limit_warning', '')))
-        self.label_114.setText(str(data.get('diameter_difference', '')))
-        self.label_115.setText(str(data.get('tension_percentage', '')))
-        self.lineEdit_51.setText(str(data.get('lower_limit_warning', '')))
-        self.lineEdit_52.setText(str(data.get('lower_limit_alarm', '')))   # 使用get方法提供默认值
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 重写 show 函数,讲数据更新线程启动放在show函数中
-    def show(self):
-        # # 清空曲线数据
-        # if hasattr(self, 'curve_plotter'):
-        #     self.curve_plotter.clear_data()
-        # if hasattr(self, 'curve_jcj'):
-        #     self.curve_jcj.clear_data()
-        super().show()  # 调用父类 show 方法
-        self._start_data_update_thread(self.tables_to_monitor)
-        print("启动2_4数据更新线程")
-
-    # 参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的历史参数弹窗和停止所有线程"""
-        # 停止数据更新线程
-        if hasattr(self, 'threads'):
-            for key, (thread, worker) in self.threads.items():
-                if hasattr(worker, 'stop'):
-                    worker.stop()
-
-        # 检查是否存在历史参数弹窗实例
-        if self.dialog_historical:
-            self.dialog_historical.close()
-
-        super().closeEvent(event)  # 调用父类的关闭事件处理
 
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
@@ -2382,9 +832,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_1_set_data_curve",  # 对应的数据库表名
-            params_config = {
+            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name="factory1_1_set_data_curve",  # 对应的数据库表名
+            params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -2392,14 +842,14 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
+            colors=CLASS_COLORS1,  #曲线颜色配置
+            y_limits=(-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name="factory1_1_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -2409,8 +859,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2,  #曲线颜色配置
+            y_limits=(0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -2434,9 +884,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
 
         # 更新参数显示（精确到秒的查询）
         self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
+            query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time,
+            end_time)
 
     def _update_parameters(self, exact_time, start_time, end_time):
         """更新指定时间点的参数显示
@@ -2444,7 +894,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
+        tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj", "factory1_1_set_data_curve",
                   "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
 
         # 创建线程对象
@@ -2457,18 +907,19 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['historical_query'] = (thread, worker)
 
         # 启动线程
         thread.start()
+
     def _handle_historical_data(self, result_data):
         """处理从子线程接收到的历史数据
         Args:
@@ -2480,6 +931,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
                 self._update_ui_labels(table_name, data)
+
     def _update_ui_labels(self, table_name, data):
         """根据数据表名更新对应的UI标签
         Args:
@@ -2545,6 +997,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             self.label_115.setText(str(data.get('tension_percentage', '')))
             self.label_121.setText(str(data.get('lower_limit_warning', '')))
             self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -2630,6 +1083,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
             self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
+
 class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device2):
     def __init__(self):
         # 调用父类构造方法
@@ -2667,9 +1121,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_2_set_data_curve",  # 对应的数据库表名
-            params_config = {
+            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name="factory1_2_set_data_curve",  # 对应的数据库表名
+            params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -2677,14 +1131,14 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
+            colors=CLASS_COLORS1,  #曲线颜色配置
+            y_limits=(-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_2_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name="factory1_2_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -2694,8 +1148,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2,  #曲线颜色配置
+            y_limits=(0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -2719,9 +1173,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
 
         # 更新参数显示（精确到秒的查询）
         self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
+            query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time,
+            end_time)
 
     def _update_parameters(self, exact_time, start_time, end_time):
         """更新指定时间点的参数显示
@@ -2729,7 +1183,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
+        tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj", "factory1_2_set_data_curve",
                   "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
 
         # 创建线程对象
@@ -2742,18 +1196,19 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['historical_query'] = (thread, worker)
 
         # 启动线程
         thread.start()
+
     def _handle_historical_data(self, result_data):
         """处理从子线程接收到的历史数据
         Args:
@@ -2831,6 +1286,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             self.label_115.setText(str(data.get('tension_percentage', '')))
             self.label_121.setText(str(data.get('lower_limit_warning', '')))
             self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -2916,6 +1372,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
+
 class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device3):
     def __init__(self):
         # 调用父类构造方法
@@ -2953,9 +1410,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_3_set_data_curve",  # 对应的数据库表名
-            params_config = {
+            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name="factory1_3_set_data_curve",  # 对应的数据库表名
+            params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -2963,14 +1420,14 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
+            colors=CLASS_COLORS1,  #曲线颜色配置
+            y_limits=(-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_3_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name="factory1_3_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -2980,8 +1437,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2,  #曲线颜色配置
+            y_limits=(0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -3005,9 +1462,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
 
         # 更新参数显示（精确到秒的查询）
         self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
+            query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time,
+            end_time)
 
     def _update_parameters(self, exact_time, start_time, end_time):
         """更新指定时间点的参数显示
@@ -3015,7 +1472,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
+        tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj", "factory1_3_set_data_curve",
                   "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
 
         # 创建线程对象
@@ -3118,6 +1575,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             self.label_115.setText(str(data.get('tension_percentage', '')))
             self.label_121.setText(str(data.get('lower_limit_warning', '')))
             self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -3203,1441 +1661,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
-class HistoricalParameterDialogFactory1Device4(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device4):
-    def __init__(self):
-        # 调用父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.threads = {}
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)
 
-        self.dialog_realtime = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_realtime.clicked.connect(self.show_dialog_pop_parameter)  # 连接按钮点击信号
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        self.dateTimeEdit.setDateTime(datetime.now())
-        # 连接查询按钮
-        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-        # 添加时间间隔属性，默认为10分钟
-        self.time_interval_minutes = 10
-        # 初始化历史曲线
-        self._init_historical_curves()
-
-    def _init_historical_curves(self):
-        """初始化历史曲线组件"""
-        # 管径历史曲线 (创建历史曲线绘制组件)
-        self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_4_set_data_curve",  # 对应的数据库表名
-            params_config = {
-                'curve1': 'upper_limit_alarm',
-                'curve2': 'upper_limit_warning',
-                'curve3': 'diameter_difference',
-                'curve4': 'tension_percentage',
-                'curve5': 'lower_limit_warning',
-                'curve6': 'lower_limit_alarm'
-            },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
-        )
-
-        # 挤出机历史曲线 (第二组历史曲线)
-        self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_4_realtime_data_jcj",  # 挤出机实时数据表
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
-        )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
-        # 定义需要查询的数据表列表
-        tables = ["factory1_4_realtime_data_jcj", "factory1_4_realtime_data_fjj", "factory1_4_realtime_data_zdj" , "factory1_4_set_data_curve",
-                  "factory1_4_set_data_jcj", "factory1_4_set_data_fjj", "factory1_4_set_data_zdj"]
-
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
-
-    def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
-        """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory1_4_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory1_4_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory1_4_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_4_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_4_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_4_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_4_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'hist_curve1'):
-                        self.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 历史参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的实时参数弹窗"""
-        # 检查是否存在实时参数弹窗实例
-        if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
-            self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
-
-class HistoricalParameterDialogFactory2Device1(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory2Device1):
-    def __init__(self):
-        # 调用父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.threads = {}
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)
-
-        self.dialog_realtime = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_realtime.clicked.connect(self.show_dialog_pop_parameter)  # 连接按钮点击信号
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        self.dateTimeEdit.setDateTime(datetime.now())
-        # 连接查询按钮
-        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-        # 添加时间间隔属性，默认为10分钟
-        self.time_interval_minutes = 10
-        # 初始化历史曲线
-        self._init_historical_curves()
-
-    def _init_historical_curves(self):
-        """初始化历史曲线组件"""
-        # 管径历史曲线 (创建历史曲线绘制组件)
-        self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory2_1_set_data_curve",  # 对应的数据库表名
-            params_config = {
-                'curve1': 'upper_limit_alarm',
-                'curve2': 'upper_limit_warning',
-                'curve3': 'diameter_difference',
-                'curve4': 'tension_percentage',
-                'curve5': 'lower_limit_warning',
-                'curve6': 'lower_limit_alarm'
-            },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
-        )
-
-        # 挤出机历史曲线 (第二组历史曲线)
-        self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory2_1_realtime_data_jcj",  # 挤出机实时数据表
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
-        )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
-        # 定义需要查询的数据表列表
-        tables = ["factory2_1_realtime_data_jcj", "factory2_1_realtime_data_fjj", "factory2_1_realtime_data_zdj" , "factory2_1_set_data_curve",
-                  "factory2_1_set_data_jcj", "factory2_1_set_data_fjj", "factory2_1_set_data_zdj"]
-
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
-
-    def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
-        """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory2_1_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory2_1_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory2_1_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_1_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_1_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_1_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_1_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'hist_curve1'):
-                        self.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 历史参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的实时参数弹窗"""
-        # 检查是否存在实时参数弹窗实例
-        if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
-            self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
-
-class HistoricalParameterDialogFactory2Device2(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory2Device2):
-    def __init__(self):
-        # 调用父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.threads = {}
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)
-
-        self.dialog_realtime = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_realtime.clicked.connect(self.show_dialog_pop_parameter)  # 连接按钮点击信号
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        self.dateTimeEdit.setDateTime(datetime.now())
-        # 连接查询按钮
-        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-        # 添加时间间隔属性，默认为10分钟
-        self.time_interval_minutes = 10
-        # 初始化历史曲线
-        self._init_historical_curves()
-
-    def _init_historical_curves(self):
-        """初始化历史曲线组件"""
-        # 管径历史曲线 (创建历史曲线绘制组件)
-        self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory2_2_set_data_curve",  # 对应的数据库表名
-            params_config = {
-                'curve1': 'upper_limit_alarm',
-                'curve2': 'upper_limit_warning',
-                'curve3': 'diameter_difference',
-                'curve4': 'tension_percentage',
-                'curve5': 'lower_limit_warning',
-                'curve6': 'lower_limit_alarm'
-            },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
-        )
-
-        # 挤出机历史曲线 (第二组历史曲线)
-        self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory2_2_realtime_data_jcj",  # 挤出机实时数据表
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
-        )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
-        # 定义需要查询的数据表列表
-        tables = ["factory2_2_realtime_data_jcj", "factory2_2_realtime_data_fjj", "factory2_2_realtime_data_zdj" , "factory2_2_set_data_curve",
-                  "factory2_2_set_data_jcj", "factory2_2_set_data_fjj", "factory2_2_set_data_zdj"]
-
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
-
-    def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
-        """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory2_2_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory2_2_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory2_2_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_2_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_2_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_2_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_2_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'hist_curve1'):
-                        self.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 历史参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的实时参数弹窗"""
-        # 检查是否存在实时参数弹窗实例
-        if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
-            self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
-
-class HistoricalParameterDialogFactory2Device3(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory2Device3):
-    def __init__(self):
-        # 调用父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.threads = {}
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)
-
-        self.dialog_realtime = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_realtime.clicked.connect(self.show_dialog_pop_parameter)  # 连接按钮点击信号
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        self.dateTimeEdit.setDateTime(datetime.now())
-        # 连接查询按钮
-        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-        # 添加时间间隔属性，默认为10分钟
-        self.time_interval_minutes = 10
-        # 初始化历史曲线
-        self._init_historical_curves()
-
-    def _init_historical_curves(self):
-        """初始化历史曲线组件"""
-        # 管径历史曲线 (创建历史曲线绘制组件)
-        self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory2_3_set_data_curve",  # 对应的数据库表名
-            params_config = {
-                'curve1': 'upper_limit_alarm',
-                'curve2': 'upper_limit_warning',
-                'curve3': 'diameter_difference',
-                'curve4': 'tension_percentage',
-                'curve5': 'lower_limit_warning',
-                'curve6': 'lower_limit_alarm'
-            },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
-        )
-
-        # 挤出机历史曲线 (第二组历史曲线)
-        self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory2_3_realtime_data_jcj",  # 挤出机实时数据表
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
-        )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
-        # 定义需要查询的数据表列表
-        tables = ["factory2_3_realtime_data_jcj", "factory2_3_realtime_data_fjj", "factory2_3_realtime_data_zdj" , "factory2_3_set_data_curve",
-                  "factory2_3_set_data_jcj", "factory2_3_set_data_fjj", "factory2_3_set_data_zdj"]
-
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
-
-    def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
-        """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory2_3_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory2_3_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory2_3_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_3_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_3_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_3_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_3_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'hist_curve1'):
-                        self.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 历史参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的实时参数弹窗"""
-        # 检查是否存在实时参数弹窗实例
-        if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
-            self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
-
-class HistoricalParameterDialogFactory2Device4(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory2Device4):
-    def __init__(self):
-        # 调用父类构造方法
-        super().__init__()
-        # 初始化UI界面
-        self.threads = {}
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 设置无边框窗口样式（隐藏标题栏和边框）
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 启用透明背景属性（实现半透明/异形窗口效果）
-        self.setupUi(self)
-
-        self.dialog_realtime = None  # 定义创建用于存储历史数据曲线弹窗的实例
-        self.pushButton_realtime.clicked.connect(self.show_dialog_pop_parameter)  # 连接按钮点击信号
-
-        # 初始化位置记录变量
-        self.dialog_original_pos = None  # 窗口原始位置
-        self.drag_start_pos = None  # 鼠标拖动起始位置
-        # 绑定鼠标事件到自身方法
-        self.mousePressEvent = self.dialog_mouse_press  # 按下事件处理
-        self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
-        # 设置窗口居中属性
-        self.center_dialog()  # 初始居中显示
-        self.dateTimeEdit.setDateTime(datetime.now())
-        # 连接查询按钮
-        self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
-        # 连接时间设置输入框的信号
-        self.lineEdit_SetTime.textChanged.connect(self.on_time_interval_changed)
-        # 设置默认值
-        self.lineEdit_SetTime.setText("10")
-        # 添加时间间隔属性，默认为10分钟
-        self.time_interval_minutes = 10
-        # 初始化历史曲线
-        self._init_historical_curves()
-
-    def _init_historical_curves(self):
-        """初始化历史曲线组件"""
-        # 管径历史曲线 (创建历史曲线绘制组件)
-        self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory2_4_set_data_curve",  # 对应的数据库表名
-            params_config = {
-                'curve1': 'upper_limit_alarm',
-                'curve2': 'upper_limit_warning',
-                'curve3': 'diameter_difference',
-                'curve4': 'tension_percentage',
-                'curve5': 'lower_limit_warning',
-                'curve6': 'lower_limit_alarm'
-            },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
-        )
-
-        # 挤出机历史曲线 (第二组历史曲线)
-        self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory2_4_realtime_data_jcj",  # 挤出机实时数据表
-            params_config={
-                'curve1': 'temperature1',
-                'curve2': 'temperature2',
-                'curve3': 'temperature3',
-                'curve4': 'temperature4',
-                'curve5': 'extruder_rpm',
-                'curve6': 'inverter_current'
-            },
-            # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
-        )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
-        # 定义需要查询的数据表列表
-        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj" , "factory2_4_set_data_curve",
-                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
-
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = PLCHistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
-
-    def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
-        """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory2_4_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory2_4_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory2_4_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_4_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_4_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_4_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory2_4_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'hist_curve1'):
-                        self.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
-    # 历史参数弹窗类新增关闭事件处理
-    # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
-    def closeEvent(self, event):
-        """处理关闭事件：关闭关联的实时参数弹窗"""
-        # 检查是否存在实时参数弹窗实例
-        if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
-            self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
-        super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
 class AlarmDialog(QDialog, Ui_Dialog_alarm):
     def __init__(self):
@@ -4702,13 +1726,14 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         thread.finished.connect(thread.deleteLater)  #type: ignore[arg-type]# 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_alarm_update)#type: ignore[arg-type]
+        worker.data_updated.connect(self._handle_alarm_update)  #type: ignore[arg-type]
 
         # 存储线程引用
         self.threads['data_update_alarm'] = (thread, worker)
 
         # 启动线程
         thread.start()
+
     # 添加新方法：处理报警数据更新
     def _handle_alarm_update(self, table_name, data):
         """处理从子线程接收到的报警数据更新
@@ -4722,7 +1747,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             return
 
         # 获取报警值
-        alarm_value = data.get('alarm','')
+        alarm_value = data.get('alarm', '')
 
         # 检查报警值是否有变化
         if table_name in self.last_alarm_values and self.last_alarm_values[table_name] == alarm_value:
@@ -4770,7 +1795,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 如果已有9条报警，移除最早的一条
         if len(rows) >= 9:
-            rows.pop(0) #type: ignore[arg-type]
+            rows.pop(0)  #type: ignore[arg-type]
 
         # 添加新报警到列表末尾
         rows.append(alarm_text)
@@ -4787,6 +1812,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.tableWidget_realtime_alarm.scrollToBottom()
 
         print(f"新报警: {factory} {device} - {alarm_content}")
+
     def right_down_dialog(self):
         """将弹窗居中显示的方法"""
         # 获取主屏幕尺寸
@@ -4796,6 +1822,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         y = (screen.height() - self.height())
         # 移动窗口到计算位置
         self.move(x, y)
+
     @staticmethod
     def _get_alarm_content(alarm_code):
         """根据报警代码获取报警内容描述"""
@@ -4840,18 +1867,19 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater) # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater) # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_alarm_history)   # type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_alarm_history)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['alarm_history_query'] = (thread, worker)
 
         # 启动线程
         thread.start()
+
     def _handle_alarm_history(self, all_alarms):
         """处理从子线程接收到的历史报警数据
         Args:
@@ -4895,6 +1923,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
     #                 worker.stop()
     #     super().closeEvent(event)
 
+
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -4909,22 +1938,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pop_dialog = ParameterDialog()
         self.pop_dialog_factory1_2 = ParameterDialogFactory1Device2()
         self.pop_dialog_factory1_3 = ParameterDialogFactory1Device3()
-        self.pop_dialog_factory1_4 = ParameterDialogFactory1Device4()
-        self.pop_dialog_factory2_1 = ParameterDialogFactory2Device1()
-        self.pop_dialog_factory2_2 = ParameterDialogFactory2Device2()
-        self.pop_dialog_factory2_3 = ParameterDialogFactory2Device3()
-        self.pop_dialog_factory2_4 = ParameterDialogFactory2Device4()
-
 
         # 初始化历史弹窗（使用自定义弹窗类）
         self.dialog_historical = HistoricalParameterDialog()
         self.dialog_historical_factory1_2 = HistoricalParameterDialogFactory1Device2()
         self.dialog_historical_factory1_3 = HistoricalParameterDialogFactory1Device3()
-        self.dialog_historical_factory1_4 = HistoricalParameterDialogFactory1Device4()
-        self.dialog_historical_factory2_1 = HistoricalParameterDialogFactory2Device1()
-        self.dialog_historical_factory2_2 = HistoricalParameterDialogFactory2Device2()
-        self.dialog_historical_factory2_3 = HistoricalParameterDialogFactory2Device3()
-        self.dialog_historical_factory2_4 = HistoricalParameterDialogFactory2Device4()
 
         # 建立实例关联
         self.pop_dialog.dialog_historical = self.dialog_historical
@@ -4934,16 +1952,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dialog_historical_factory1_2.dialog_realtime = self.pop_dialog_factory1_2
         self.pop_dialog_factory1_3.dialog_historical = self.dialog_historical_factory1_3
         self.dialog_historical_factory1_3.dialog_realtime = self.pop_dialog_factory1_3
-        self.pop_dialog_factory1_4.dialog_historical = self.dialog_historical_factory1_4
-        self.dialog_historical_factory1_4.dialog_realtime = self.pop_dialog_factory1_4
-        self.pop_dialog_factory2_1.dialog_historical = self.dialog_historical_factory2_1
-        self.dialog_historical_factory2_1.dialog_realtime = self.pop_dialog_factory2_1
-        self.pop_dialog_factory2_2.dialog_historical = self.dialog_historical_factory2_2
-        self.dialog_historical_factory2_2.dialog_realtime = self.pop_dialog_factory2_2
-        self.pop_dialog_factory2_3.dialog_historical = self.dialog_historical_factory2_3
-        self.dialog_historical_factory2_3.dialog_realtime = self.pop_dialog_factory2_3
-        self.pop_dialog_factory2_4.dialog_historical = self.dialog_historical_factory2_4
-        self.dialog_historical_factory2_4.dialog_realtime = self.pop_dialog_factory2_4
         # 初始化报警弹窗（使用自定义弹窗类）
         self.pop_alarm_dialog = AlarmDialog()
 
@@ -4951,15 +1959,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1.mousePressEvent = self.show_pop_parameter
         self.curve2.mousePressEvent = self.show_pop_parameter_factory1_2
         self.curve3.mousePressEvent = self.show_pop_parameter_factory1_3
-        self.curve4.mousePressEvent = self.show_pop_parameter_factory1_4
-        self.curve5.mousePressEvent = self.show_pop_parameter_factory2_1
-        self.curve6.mousePressEvent = self.show_pop_parameter_factory2_2
-        self.curve7.mousePressEvent = self.show_pop_parameter_factory2_3
-        self.curve8.mousePressEvent = self.show_pop_parameter_factory2_4
+
         # 绑定曲线控件的鼠标点击事件
         self.pushButton_alarm.mousePressEvent = self.show_pop_alarm
-        # 绑定关闭按钮：点击时关闭所有窗口
-        self.Button_close.clicked.connect(self.close_all_windows)
+        # # 绑定关闭按钮：点击时关闭所有窗口
+        # self.Button_close.clicked.connect(self.close_all_windows)
         # 绑定最小化按钮：点击时最小化所有窗口
         self.Button_minimize.clicked.connect(self.minimize_all_windows)
         # 初始化时间功能
@@ -5026,75 +2030,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             },
             y_limits=(-1, 1)
         )
-        self.curve_plotter4 = RealTimeMainWindowCurve1(
-            parent_widget=self.curve4,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            y_limits=(-1, 1)
-        )
-        self.curve_plotter5 = RealTimeMainWindowCurve1(
-            parent_widget=self.curve5,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            y_limits=(-1, 1)
-        )
-        self.curve_plotter6 = RealTimeMainWindowCurve1(
-            parent_widget=self.curve6,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            y_limits=(-1, 1)
-        )
-        self.curve_plotter7 = RealTimeMainWindowCurve1(
-            parent_widget=self.curve7,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            y_limits=(-1, 1)
-        )
-        self.curve_plotter8 = RealTimeMainWindowCurve1(
-            parent_widget=self.curve8,  # 对应UI中的曲线容器
-            params_config={
-                'curve3': 'diameter_difference',
-                'curve1': 'upper_limit_alarm',
-                'curve6': 'lower_limit_alarm',
-                'curve4': 'tension_percentage',
-                'curve2': 'upper_limit_warning',
-                'curve5': 'lower_limit_warning'
-            },
-            y_limits=(-1, 1)
-        )
         # 在初始化曲线后添加事件穿透设置
         self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        self.curve_plotter4.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        self.curve_plotter5.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        self.curve_plotter6.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        self.curve_plotter7.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
-        self.curve_plotter8.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+
         # 添加首页面采集子线程
         self._start_insert_threads()
         self._start_data_update_thread(self.tables_to_monitor)
@@ -5106,7 +2046,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory1_1_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5160,7 +2100,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory1_2_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5214,7 +2154,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory1_3_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5268,7 +2208,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory1_4_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5322,7 +2262,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory2_1_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5376,7 +2316,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory2_2_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5430,7 +2370,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             groups=[
                 ("factory2_3_realtime_data_jcj", [
                     (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4","exhaust_temperature","cabinet_temperature"]),
+                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
                     (1, 2, ["extruder_rpm"]),
                     (5, 2, ["inverter_current"]),
                     (7, 2, ["inverter_error"])
@@ -5502,6 +2442,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #     ])
         #                    ],
         #     com = 'COM20')
+
     # ------------------------- 线程启动方法 -------------------------
     def _start_insert_thread(self, groups, ip):
         """启动异步插入线程的方法（工厂方法）"""
@@ -5530,7 +2471,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
+        self.threads[key] = (thread, worker)  # 使用字符串作为键
         # 启动线程（开始执行事件循环）
         thread.start()
 
@@ -5544,13 +2485,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         worker.moveToThread(thread)
 
         # 信号连接
-        thread.started.connect(worker.run) #type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)#type: ignore[attr-defined] # 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)#type: ignore[attr-defined]  # 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)#type: ignore[attr-defined]  # 线程退出后销毁线程对象
+        thread.started.connect(worker.run)  #type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  #type: ignore[attr-defined] # 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  #type: ignore[attr-defined]  # 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  #type: ignore[attr-defined]  # 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   #type: ignore[attr-defined] # 处理数据更新的方法
+        worker.data_updated.connect(self._handle_data_update)  #type: ignore[attr-defined] # 处理数据更新的方法
         thread_key = f'plc_data_{com}'
         # 存储线程引用
         self.threads[thread_key] = (thread, worker)
@@ -5579,7 +2520,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+        worker.data_updated.connect(self._handle_data_update)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['data_update'] = (thread, worker)
@@ -5596,31 +2537,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_set_data_curve":  self.curve_plotter1.update_plot,
-            "factory1_2_set_data_curve":  self.curve_plotter2.update_plot,
-            "factory1_3_set_data_curve":  self.curve_plotter3.update_plot,
-            "factory1_4_set_data_curve":  self.curve_plotter4.update_plot,
-            "factory2_1_set_data_curve":  self.curve_plotter5.update_plot,
-            "factory2_2_set_data_curve":  self.curve_plotter6.update_plot,
-            "factory2_3_set_data_curve":  self.curve_plotter7.update_plot,
-            "factory2_4_set_data_curve":  self.curve_plotter8.update_plot,
+            "factory1_1_set_data_curve": self.curve_plotter1.update_plot,
+            "factory1_2_set_data_curve": self.curve_plotter2.update_plot,
+            "factory1_3_set_data_curve": self.curve_plotter3.update_plot,
             "factory1_1_production_data": self._update_curve1_realtime,
             "factory1_2_production_data": self._update_curve2_realtime,
-            "factory1_3_production_data": self._update_curve3_realtime,
-            "factory1_4_production_data": self._update_curve4_realtime,
-            "factory2_1_production_data": self._update_curve5_realtime,
-            "factory2_2_production_data": self._update_curve6_realtime,
-            "factory2_3_production_data": self._update_curve7_realtime,
-            "factory2_4_production_data": self._update_curve8_realtime
+            "factory1_3_production_data": self._update_curve3_realtime
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
             if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
                 for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
+                    method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
+
     # 分解原有的大更新方法为多个私有方法
     def _update_curve1_realtime(self, data):
         """更新挤出机实时数据"""
@@ -5628,56 +2560,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1_lable4.setText(str(data.get('planned_production', '')))
         self.curve1_lable6.setText(str(data.get('qualified_products', '')))
         self.curve1_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve1_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
+        self.curve1_lable10.setText(str(data.get('extruder_rpm', '')))  # 使用get方法提供默认值
+
     def _update_curve2_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve2_lable2.setText(str(data.get('current_production', '')))
         self.curve2_lable4.setText(str(data.get('planned_production', '')))
         self.curve2_lable6.setText(str(data.get('qualified_products', '')))
         self.curve2_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve2_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
+        self.curve2_lable10.setText(str(data.get('extruder_rpm', '')))  # 使用get方法提供默认值
+
     def _update_curve3_realtime(self, data):
         """更新挤出机实时数据"""
         self.curve3_lable2.setText(str(data.get('current_production', '')))
         self.curve3_lable4.setText(str(data.get('planned_production', '')))
         self.curve3_lable6.setText(str(data.get('qualified_products', '')))
         self.curve3_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve3_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
-    def _update_curve4_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.curve4_lable2.setText(str(data.get('current_production', '')))
-        self.curve4_lable4.setText(str(data.get('planned_production', '')))
-        self.curve4_lable6.setText(str(data.get('qualified_products', '')))
-        self.curve4_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve4_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
-    def _update_curve5_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.curve5_lable2.setText(str(data.get('current_production', '')))
-        self.curve5_lable4.setText(str(data.get('planned_production', '')))
-        self.curve5_lable6.setText(str(data.get('qualified_products', '')))
-        self.curve5_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve5_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
-    def _update_curve6_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.curve6_lable2.setText(str(data.get('current_production', '')))
-        self.curve6_lable4.setText(str(data.get('planned_production', '')))
-        self.curve6_lable6.setText(str(data.get('qualified_products', '')))
-        self.curve6_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve6_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
-    def _update_curve7_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.curve7_lable2.setText(str(data.get('current_production', '')))
-        self.curve7_lable4.setText(str(data.get('planned_production', '')))
-        self.curve7_lable6.setText(str(data.get('qualified_products', '')))
-        self.curve7_lable8.setText(str(data.get('pass_rate', '')))
-        self.curve7_lable10.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
-    def _update_curve8_realtime(self, data):
-        """更新挤出机实时数据"""
-        self.curve1_lable2_5.setText(str(data.get('current_production', '')))
-        self.curve1_lable4_5.setText(str(data.get('planned_production', '')))
-        self.curve1_lable6_5.setText(str(data.get('qualified_products', '')))
-        self.curve1_lable8_5.setText(str(data.get('pass_rate', '')))
-        self.curve1_lable10_5.setText(str(data.get('extruder_rpm', '')))    # 使用get方法提供默认值
+        self.curve3_lable10.setText(str(data.get('extruder_rpm', '')))  # 使用get方法提供默认值
 
     def minimize_all_windows(self):
         """最小化所有窗口的方法"""
@@ -5689,16 +2588,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory1_2.hide()
         if hasattr(self, 'pop_dialog_factory1_3') and self.pop_dialog_factory1_3.isVisible():
             self.pop_dialog_factory1_3.hide()
-        if hasattr(self, 'pop_dialog_factory1_4') and self.pop_dialog_factory1_4.isVisible():
-            self.pop_dialog_factory1_4.hide()
-        if hasattr(self, 'pop_dialog_factory2_1') and self.pop_dialog_factory2_1.isVisible():
-            self.pop_dialog_factory2_1.hide()
-        if hasattr(self, 'pop_dialog_factory2_2') and self.pop_dialog_factory2_2.isVisible():
-            self.pop_dialog_factory2_2.hide()
-        if hasattr(self, 'pop_dialog_factory2_3') and self.pop_dialog_factory2_3.isVisible():
-            self.pop_dialog_factory2_3.hide()
-        if hasattr(self, 'pop_dialog_factory2_4') and self.pop_dialog_factory2_4.isVisible():
-            self.pop_dialog_factory2_4.hide()
 
         # 隐藏历史参数弹窗
         if hasattr(self, 'dialog_historical') and self.dialog_historical.isVisible():
@@ -5707,16 +2596,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dialog_historical_factory1_2.hide()
         if hasattr(self, 'dialog_historical_factory1_3') and self.dialog_historical_factory1_3.isVisible():
             self.dialog_historical_factory1_3.hide()
-        if hasattr(self, 'dialog_historical_factory1_4') and self.dialog_historical_factory1_4.isVisible():
-            self.dialog_historical_factory1_4.hide()
-        if hasattr(self, 'dialog_historical_factory2_1') and self.dialog_historical_factory2_1.isVisible():
-            self.dialog_historical_factory2_1.hide()
-        if hasattr(self, 'dialog_historical_factory2_2') and self.dialog_historical_factory2_2.isVisible():
-            self.dialog_historical_factory2_2.hide()
-        if hasattr(self, 'dialog_historical_factory2_3') and self.dialog_historical_factory2_3.isVisible():
-            self.dialog_historical_factory2_3.hide()
-        if hasattr(self, 'dialog_historical_factory2_4') and self.dialog_historical_factory2_4.isVisible():
-            self.dialog_historical_factory2_4.hide()
 
         # 隐藏报警弹窗
         if hasattr(self, 'pop_alarm_dialog') and self.pop_alarm_dialog.isVisible():
@@ -5745,16 +2624,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory1_2.close()
         if hasattr(self, 'pop_dialog_factory1_3'):
             self.pop_dialog_factory1_3.close()
-        if hasattr(self, 'pop_dialog_factory1_4'):
-            self.pop_dialog_factory1_4.close()
-        if hasattr(self, 'pop_dialog_factory2_1'):
-            self.pop_dialog_factory2_1.close()
-        if hasattr(self, 'pop_dialog_factory2_2'):
-            self.pop_dialog_factory2_2.close()
-        if hasattr(self, 'pop_dialog_factory2_3'):
-            self.pop_dialog_factory2_3.close()
-        if hasattr(self, 'pop_dialog_factory2_4'):
-            self.pop_dialog_factory2_4.close()
 
         # 关闭所有历史参数弹窗
         if hasattr(self, 'dialog_historical'):
@@ -5763,16 +2632,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dialog_historical_factory1_2.close()
         if hasattr(self, 'dialog_historical_factory1_3'):
             self.dialog_historical_factory1_3.close()
-        if hasattr(self, 'dialog_historical_factory1_4'):
-            self.dialog_historical_factory1_4.close()
-        if hasattr(self, 'dialog_historical_factory2_1'):
-            self.dialog_historical_factory2_1.close()
-        if hasattr(self, 'dialog_historical_factory2_2'):
-            self.dialog_historical_factory2_2.close()
-        if hasattr(self, 'dialog_historical_factory2_3'):
-            self.dialog_historical_factory2_3.close()
-        if hasattr(self, 'dialog_historical_factory2_4'):
-            self.dialog_historical_factory2_4.close()
 
         # 关闭报警弹窗
         if hasattr(self, 'pop_alarm_dialog'):
@@ -5788,29 +2647,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         now = datetime.now()  # 获取当前时间对象
         start_time = now - timedelta(minutes=10)  # 计算起始时间（当前时间向前10分钟）
         # 返回格式化后的日期和时间字符串
-        return now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"),start_time.strftime("%H:%M:%S")
+        return now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"), start_time.strftime("%H:%M:%S")
 
     def update_time(self):
         """更新时间显示的方法"""
-        date_str, time_str , start_time= self.get_localtime()  # 解包日期时间
+        date_str, time_str, start_time = self.get_localtime()  # 解包日期时间
         self.title_DATA.setText(date_str)  # 更新日期标签
         self.title_time.setText(time_str)  # 更新时间标签
         self.curve1_lable9_14.setText(start_time)  # 更新1#曲线起始时间标签
         self.curve1_lable9_20.setText(start_time)  # 更新2#曲线起始时间标签
         self.curve1_lable9_24.setText(start_time)  # 更新3#曲线起始时间标签
-        self.curve1_lable9_28.setText(start_time)  # 更新4#曲线起始时间标签
-        self.curve1_lable9_32.setText(start_time)  # 更新5#曲线起始时间标签
-        self.curve1_lable9_36.setText(start_time)  # 更新6#曲线起始时间标签
-        self.curve1_lable9_39.setText(start_time)  # 更新7#曲线起始时间标签
-        self.curve1_lable9_44.setText(start_time)  # 更新8#曲线起始时间标签
         self.curve1_lable9_15.setText(time_str)  # 更新1#曲线截止时间标签
         self.curve1_lable9_21.setText(time_str)  # 更新2#曲线截止时间标签
         self.curve1_lable9_25.setText(time_str)  # 更新3#曲线截止时间标签
-        self.curve1_lable9_29.setText(time_str)  # 更新4#曲线截止时间标签
-        self.curve1_lable9_33.setText(time_str)  # 更新5#曲线截止时间标签
-        self.curve1_lable9_37.setText(time_str)  # 更新6#曲线截止时间标签
-        self.curve1_lable9_38.setText(time_str)  # 更新7#曲线截止时间标签
-        self.curve1_lable9_45.setText(time_str)  # 更新8#曲线截止时间标签
 
     def show_pop_parameter(self, event):
         """显示参数弹窗的槽函数"""
@@ -5825,6 +2674,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog.activateWindow()  # 激活窗口（置于前台）
             self.pop_dialog.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
+
     def show_pop_parameter_factory1_2(self, event):
         """显示参数弹窗的槽函数"""
         # 检查弹窗是否已存在
@@ -5838,6 +2688,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory1_2.activateWindow()  # 激活窗口（置于前台）
             self.pop_dialog_factory1_2.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
+
     def show_pop_parameter_factory1_3(self, event):
         """显示参数弹窗的槽函数"""
         # 检查弹窗是否已存在
@@ -5851,71 +2702,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory1_3.activateWindow()  # 激活窗口（置于前台）
             self.pop_dialog_factory1_3.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
-    def show_pop_parameter_factory1_4(self, event):
-        """显示参数弹窗的槽函数"""
-        # 检查弹窗是否已存在
-        if self.pop_dialog_factory1_4:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.pop_dialog_factory1_4.isMinimized():
-                self.pop_dialog_factory1_4.showNormal()  # 从最小化状态恢复
-            elif not self.pop_dialog_factory1_4.isVisible():
-                self.pop_dialog_factory1_4.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.pop_dialog_factory1_4.activateWindow()  # 激活窗口（置于前台）
-            self.pop_dialog_factory1_4.raise_()  # 提升窗口层级
-        event.accept()  # 接受事件，阻止进一步传播
-    def show_pop_parameter_factory2_1(self, event):
-        """显示参数弹窗的槽函数"""
-        # 检查弹窗是否已存在
-        if self.pop_dialog_factory2_1:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.pop_dialog_factory2_1.isMinimized():
-                self.pop_dialog_factory2_1.showNormal()  # 从最小化状态恢复
-            elif not self.pop_dialog_factory2_1.isVisible():
-                self.pop_dialog_factory2_1.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.pop_dialog_factory2_1.activateWindow()  # 激活窗口（置于前台）
-            self.pop_dialog_factory2_1.raise_()  # 提升窗口层级
-        event.accept()  # 接受事件，阻止进一步传播
-    def show_pop_parameter_factory2_2(self, event):
-        """显示参数弹窗的槽函数"""
-        # 检查弹窗是否已存在
-        if self.pop_dialog_factory2_2:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.pop_dialog_factory2_2.isMinimized():
-                self.pop_dialog_factory2_2.showNormal()  # 从最小化状态恢复
-            elif not self.pop_dialog_factory2_2.isVisible():
-                self.pop_dialog_factory2_2.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.pop_dialog_factory2_2.activateWindow()  # 激活窗口（置于前台）
-            self.pop_dialog_factory2_2.raise_()  # 提升窗口层级
-        event.accept()  # 接受事件，阻止进一步传播
-    def show_pop_parameter_factory2_3(self, event):
-        """显示参数弹窗的槽函数"""
-        # 检查弹窗是否已存在
-        if self.pop_dialog_factory2_3:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.pop_dialog_factory2_3.isMinimized():
-                self.pop_dialog_factory2_3.showNormal()  # 从最小化状态恢复
-            elif not self.pop_dialog_factory2_3.isVisible():
-                self.pop_dialog_factory2_3.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.pop_dialog_factory2_3.activateWindow()  # 激活窗口（置于前台）
-            self.pop_dialog_factory2_3.raise_()  # 提升窗口层级
-        event.accept()  # 接受事件，阻止进一步传播
-    def show_pop_parameter_factory2_4(self, event):
-        """显示参数弹窗的槽函数"""
-        # 检查弹窗是否已存在
-        if self.pop_dialog_factory2_4:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.pop_dialog_factory2_4.isMinimized():
-                self.pop_dialog_factory2_4.showNormal()  # 从最小化状态恢复
-            elif not self.pop_dialog_factory2_4.isVisible():
-                self.pop_dialog_factory2_4.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.pop_dialog_factory2_4.activateWindow()  # 激活窗口（置于前台）
-            self.pop_dialog_factory2_4.raise_()  # 提升窗口层级
-        event.accept()  # 接受事件，阻止进一步传播
+
     def show_pop_alarm(self, event):
         """显示报警弹窗的槽函数"""
         # 检查弹窗是否已存在
@@ -5952,16 +2739,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_dialog_factory1_2.close()
         if hasattr(self, 'pop_dialog_factory1_3'):
             self.pop_dialog_factory1_3.close()
-        if hasattr(self, 'pop_dialog_factory1_4'):
-            self.pop_dialog_factory1_4.close()
-        if hasattr(self, 'pop_dialog_factory2_1'):
-            self.pop_dialog_factory2_1.close()
-        if hasattr(self, 'pop_dialog_factory2_2'):
-            self.pop_dialog_factory2_2.close()
-        if hasattr(self, 'pop_dialog_factory2_3'):
-            self.pop_dialog_factory2_3.close()
-        if hasattr(self, 'pop_dialog_factory2_4'):
-            self.pop_dialog_factory2_4.close()
 
         # 关闭所有历史参数弹窗
         if hasattr(self, 'dialog_historical'):
@@ -5970,16 +2747,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dialog_historical_factory1_2.close()
         if hasattr(self, 'dialog_historical_factory1_3'):
             self.dialog_historical_factory1_3.close()
-        if hasattr(self, 'dialog_historical_factory1_4'):
-            self.dialog_historical_factory1_4.close()
-        if hasattr(self, 'dialog_historical_factory2_1'):
-            self.dialog_historical_factory2_1.close()
-        if hasattr(self, 'dialog_historical_factory2_2'):
-            self.dialog_historical_factory2_2.close()
-        if hasattr(self, 'dialog_historical_factory2_3'):
-            self.dialog_historical_factory2_3.close()
-        if hasattr(self, 'dialog_historical_factory2_4'):
-            self.dialog_historical_factory2_4.close()
 
         # 关闭报警弹窗
         if hasattr(self, 'pop_alarm_dialog'):
@@ -5987,6 +2754,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 调用父类的关闭事件处理
         super().closeEvent(event)
+
 
 # ---------------------------------数据更新工作线程类---------------------------------
 class DataUpdateWorker(QObject):
@@ -6021,7 +2789,7 @@ class DataUpdateWorker(QObject):
                     data = self.data_manager.get_realtime_data(table_name)
                     if data:  # 确保数据有效
                         # 发送信号，将表名和数据传递给主线程
-                        self.data_updated.emit(table_name, data)    # type: ignore[attr-defined]
+                        self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
                     # 更新本地版本号
                     self.data_versions[table_name] = current_versions[table_name]
 
@@ -6031,7 +2799,9 @@ class DataUpdateWorker(QObject):
     def stop(self):
         """停止线程运行"""
         self.running = False
-        self.finished.emit()    # type: ignore[attr-defined]
+        self.finished.emit()  # type: ignore[attr-defined]
+
+
 # ---------------------------------数据库异步，工作线程类---------------------------------
 class InsertWorker(QObject):
     """执行实际插入操作的工作类（必须在主线程外运行）"""
@@ -6050,7 +2820,6 @@ class InsertWorker(QObject):
         self.inserter = inserter
         self.int_inserter = inserter
 
-
     # 新增连接初始化方法
     def init_connection(self):
         if not self.sock:
@@ -6066,20 +2835,21 @@ class InsertWorker(QObject):
                 self.sock = None
                 return False
         return True
-    def run(self):# 定义线程运行方法(处理整数数据)
+
+    def run(self):  # 定义线程运行方法(处理整数数据)
         # 导入sleep函数用于线程休眠
         from time import sleep
         # 开始异常捕获(最外层)
         try:
-            while self.keep_running:    # 主循环，当keep_running为True时持续运行
-                try:    # 中层异常捕获(连接和数据采集)
+            while self.keep_running:  # 主循环，当keep_running为True时持续运行
+                try:  # 中层异常捕获(连接和数据采集)
                     if not self.init_connection():  # 尝试初始化连接
                         sleep(1)  # 连接失败则休眠1秒
                         continue  # 跳过本次循环，重新尝试
 
                     # 新调用方式（一次处理所有表）
                     success = self.inserter.insert_multiple_tables_data(
-                        table_groups=self.groups,   # 寄存器组配置
+                        table_groups=self.groups,  # 寄存器组配置
                         sock=self.sock  # 已建立的socket连接
                     )
                     # sleep(0.1)
@@ -6097,9 +2867,10 @@ class InsertWorker(QObject):
                     print(f"运行时异常: {str(e)}")
                     sleep(1)
 
-        finally:    # 无论是否发生异常都会执行的代码块
+        finally:  # 无论是否发生异常都会执行的代码块
             self.cleanup()  # 清理socket连接等资源
-            self.finished.emit()    # type: ignore[attr-defined]# 发射完成信号通知主线程
+            self.finished.emit()  # type: ignore[attr-defined]# 发射完成信号通知主线程
+
     # def run_int(self):  # 定义线程运行方法(处理整数数据)
     #     from time import sleep  # 导入sleep函数用于线程休眠
     #
@@ -6170,6 +2941,7 @@ class InsertWorker(QObject):
         self.keep_running = False
         self.cleanup()
 
+
 # ---------------------------------参数弹窗历史数据查询工作线程类---------------------------------
 class HistoricalDataQueryWorker(QObject):
     """执行历史数据查询的工作线程类"""
@@ -6181,9 +2953,9 @@ class HistoricalDataQueryWorker(QObject):
     def __init__(self, tables, exact_time, start_time, end_time):
         """初始化历史数据查询工作线程
         Args:
-            tables: 要查询的表名列表
+            tables: 要查询的表名列表3
             exact_time: 精确时间点
-            start_time: 查询开始时间
+            start_time: 查询开始时间·
             end_time: 查询结束时间
         """
         super().__init__()
@@ -6213,13 +2985,14 @@ class HistoricalDataQueryWorker(QObject):
                 result_data[table] = data
 
             # 发送查询结果信号
-            self.data_ready.emit(result_data) # type: ignore[attr-defined]
+            self.data_ready.emit(result_data)  # type: ignore[attr-defined]
         except Exception as e:
             print(f"历史数据查询异常: {str(e)}")
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
             # 发送完成信号
-            self.finished.emit()    # type: ignore[attr-defined]
+            self.finished.emit()  # type: ignore[attr-defined]
+
 
 # ---------------------------------报警历史查询工作线程类---------------------------------
 class AlarmHistoryQueryWorker(QObject):
@@ -6291,13 +3064,13 @@ class AlarmHistoryQueryWorker(QObject):
             all_alarms.sort(key=lambda x: x[0], reverse=True)
 
             # 发送查询结果信号
-            self.data_ready.emit(all_alarms)    # type: ignore[attr-defined]
+            self.data_ready.emit(all_alarms)  # type: ignore[attr-defined]
         except Exception as e:
             print(f"报警历史数据查询异常: {str(e)}")
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
             # 发送完成信号
-            self.finished.emit()    # type: ignore[attr-defined]
+            self.finished.emit()  # type: ignore[attr-defined]
 
     @staticmethod
     def _get_alarm_content(alarm_code):
@@ -6314,6 +3087,7 @@ class AlarmHistoryQueryWorker(QObject):
 
         # 返回对应的报警内容，如果没有对应的内容则返回默认文本
         return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
+
 
 # ---------------------------------PLC数据工作线程类---------------------------------
 class PlcDataWorker(QObject):
@@ -6341,7 +3115,7 @@ class PlcDataWorker(QObject):
             try:
                 # 如果没有提供串口对象或串口未打开，则创建新的串口连接
                 self.serial_port = serial.Serial(
-                    port= self.com,  # 串口号
+                    port=self.com,  # 串口号
                     baudrate=9600,  # 波特率
                     bytesize=serial.SEVENBITS,  # 数据位7
                     parity=serial.PARITY_EVEN,  # 偶验位
@@ -6374,7 +3148,7 @@ class PlcDataWorker(QObject):
                             values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)
                             print(f'values:{values}---reg_count:{reg_count}')
                             # 添加数据有效性检查
-                            if len(values) < reg_count/2:
+                            if len(values) < reg_count / 2:
                                 raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
 
                             # 使用字典推导式映射字段
@@ -6416,6 +3190,7 @@ class PlcDataWorker(QObject):
     def stop(self):
         """停止线程运行"""
         self.keep_running = False
+
 
 # ---------------------------------PLC数据更新工作线程类---------------------------------
 class PLCDataUpdateWorker(QObject):
@@ -6476,7 +3251,7 @@ class PLCDataUpdateWorker(QObject):
                         data = self.data_manager.get_realtime_data(table_name)
                         if data:  # 确保数据有效
                             # 发送信号，将表名和数据传递给主线程
-                            self.data_updated.emit(table_name, data)    # type: ignore[attr-defined]
+                            self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
                         # 更新本地版本号
                         self.data_versions[table_name] = current_versions[table_name]
 
@@ -6491,7 +3266,8 @@ class PLCDataUpdateWorker(QObject):
     def stop(self):
         """停止线程运行"""
         self.running = False
-        self.finished.emit()    # type: ignore[attr-defined]
+        self.finished.emit()  # type: ignore[attr-defined]
+
 
 # ---------------------------------PLC参数弹窗历史数据查询工作线程类---------------------------------
 class PLCHistoricalDataQueryWorker(QObject):
@@ -6537,11 +3313,11 @@ class PLCHistoricalDataQueryWorker(QObject):
         try:
             # 延迟初始化历史数据管理器
             if not self.init_hist_data_manager():
-                self.error.emit("历史数据管理器连接不可用，请检查数据库连接") # type: ignore[attr-defined]
+                self.error.emit("历史数据管理器连接不可用，请检查数据库连接")  # type: ignore[attr-defined]
                 return
             # 检查历史数据管理器是否可用
             if not self.hist_data_manager:
-                self.error.emit("历史数据管理器连接不可用，请检查数据库连接") # type: ignore[attr-defined]
+                self.error.emit("历史数据管理器连接不可用，请检查数据库连接")  # type: ignore[attr-defined]
                 return
             # 存储所有查询结果的字典
             result_data = {}
@@ -6559,13 +3335,15 @@ class PLCHistoricalDataQueryWorker(QObject):
                 result_data[table] = data
 
             # 发送查询结果信号
-            self.data_ready.emit(result_data) # type: ignore[attr-defined]
+            self.data_ready.emit(result_data)  # type: ignore[attr-defined]
         except Exception as e:
             print(f"历史数据查询异常: {str(e)}")
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
             # 发送完成信号
-            self.finished.emit()    # type: ignore[attr-defined]
+            self.finished.emit()  # type: ignore[attr-defined]
+
+
 # ---------------------------------程序入口---------------------------------
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # 创建应用实例

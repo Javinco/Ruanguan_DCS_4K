@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1457</width>
-    <height>900</height>
+    <width>2900</width>
+    <height>1800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,8 +24,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1450</width>
-     <height>900</height>
+     <width>2900</width>
+     <height>1800</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -37,10 +37,10 @@ border-radius:15px;
    <widget class="QFrame" name="frame_historical_parameter">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>100</y>
-      <width>600</width>
-      <height>770</height>
+      <x>1640</x>
+      <y>200</y>
+      <width>1200</width>
+      <height>1540</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -49,13 +49,13 @@ border-radius:15px;
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_1">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>80</width>
-       <height>35</height>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -66,7 +66,7 @@ border-radius:15px;
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="layoutDirection">
@@ -93,14 +93,14 @@ background-color: rgb(128, 128, 255);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>35</y>
-       <width>80</width>
-       <height>385</height>
+       <y>70</y>
+       <width>160</width>
+       <height>770</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -125,15 +125,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>160</x>
        <y>0</y>
-       <width>50</width>
-       <height>35</height>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -157,15 +157,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>260</x>
        <y>0</y>
-       <width>130</width>
-       <height>35</height>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -189,15 +189,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>520</x>
        <y>0</y>
-       <width>130</width>
-       <height>35</height>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -221,15 +221,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>780</x>
        <y>0</y>
-       <width>130</width>
-       <height>35</height>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -253,15 +253,15 @@ border-left: 1px solid rgb(0, 0, 0);
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>520</x>
+       <x>1040</x>
        <y>0</y>
-       <width>80</width>
-       <height>35</height>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -286,15 +286,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>35</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>70</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -317,15 +317,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_9">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>35</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>70</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -348,15 +348,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_10">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>35</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>70</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -380,15 +380,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>35</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>70</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -412,15 +412,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>70</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>140</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -443,15 +443,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_13">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>70</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>140</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -474,15 +474,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>70</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>140</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -506,15 +506,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_15">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>70</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>140</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -538,15 +538,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>105</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>210</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -569,15 +569,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>105</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>210</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -600,15 +600,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>105</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>210</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -632,15 +632,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_19">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>105</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>210</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -664,15 +664,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_20">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>140</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>280</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -695,15 +695,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_21">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>140</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>280</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -726,15 +726,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_22">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>140</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>280</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -758,15 +758,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_23">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>140</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>280</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -790,15 +790,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_24">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>175</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>350</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -821,15 +821,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_25">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>175</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>350</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -852,15 +852,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_26">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>175</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>350</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -884,15 +884,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_27">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>175</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>350</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -916,15 +916,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_28">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>210</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>420</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -947,15 +947,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_29">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>210</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>420</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -978,15 +978,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_30">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>210</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>420</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1010,15 +1010,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_31">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>210</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>420</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1042,15 +1042,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_32">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>245</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>490</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1073,15 +1073,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_33">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>245</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>490</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1104,15 +1104,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_34">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>245</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>490</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1136,15 +1136,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_35">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>245</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>490</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1168,15 +1168,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_36">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>280</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>560</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1199,15 +1199,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_37">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>280</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>560</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1230,15 +1230,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_38">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>280</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>560</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1262,15 +1262,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_39">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>280</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>560</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1294,15 +1294,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_40">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>315</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>630</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1325,15 +1325,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_41">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>315</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>630</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1356,15 +1356,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_42">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>315</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>630</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1388,15 +1388,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_43">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>315</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>630</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1420,15 +1420,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_44">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>350</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>700</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1451,15 +1451,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_45">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>350</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>700</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1482,15 +1482,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_46">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>350</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>700</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1514,15 +1514,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_47">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>350</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>700</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1546,15 +1546,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_48">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>385</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>770</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1577,15 +1577,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_49">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>385</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>770</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1608,15 +1608,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_50">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>385</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>770</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1640,15 +1640,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_51">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>385</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>770</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1673,14 +1673,14 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>420</y>
-       <width>80</width>
-       <height>140</height>
+       <y>840</y>
+       <width>160</width>
+       <height>280</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1705,15 +1705,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_53">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>420</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>840</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1737,15 +1737,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_54">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>420</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>840</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1769,15 +1769,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_55">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>420</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>840</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1800,15 +1800,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_56">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>420</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>840</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1831,15 +1831,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_57">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>455</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>910</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1863,15 +1863,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_58">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>455</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>910</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1895,15 +1895,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_59">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>455</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>910</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1926,15 +1926,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_60">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>455</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>910</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1957,15 +1957,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_61">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>490</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>980</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -1989,15 +1989,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_62">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>490</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>980</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2021,15 +2021,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_63">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>490</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>980</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2052,15 +2052,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_64">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>490</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>980</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2083,15 +2083,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_65">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>525</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1050</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2115,15 +2115,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_66">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>525</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1050</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2147,15 +2147,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_67">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>525</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1050</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2178,15 +2178,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_68">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>525</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1050</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2210,14 +2210,14 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>560</y>
-       <width>80</width>
-       <height>210</height>
+       <y>1120</y>
+       <width>160</width>
+       <height>420</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2242,15 +2242,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_70">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>560</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1120</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2273,15 +2273,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_71">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>560</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1120</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2304,15 +2304,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_72">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>560</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1120</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2336,15 +2336,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_73">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>560</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1120</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2368,15 +2368,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_74">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>595</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1190</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2399,15 +2399,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_75">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>595</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1190</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2430,15 +2430,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_76">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>595</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1190</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2462,15 +2462,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_77">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>595</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1190</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2494,15 +2494,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_78">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>630</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1260</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2525,15 +2525,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_79">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>630</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1260</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2556,15 +2556,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_80">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>630</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1260</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2588,15 +2588,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_81">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>630</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1260</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2620,15 +2620,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_82">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>665</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1330</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2651,15 +2651,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_83">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>665</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1330</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2682,15 +2682,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_84">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>665</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1330</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2714,15 +2714,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_85">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>665</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1330</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2746,15 +2746,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_86">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>700</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1400</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2777,15 +2777,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_87">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>700</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1400</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2808,15 +2808,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_88">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>700</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1400</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2840,15 +2840,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_89">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>700</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1400</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2872,15 +2872,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_90">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>735</y>
-       <width>50</width>
-       <height>35</height>
+       <x>160</x>
+       <y>1470</y>
+       <width>100</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2903,15 +2903,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_91">
      <property name="geometry">
       <rect>
-       <x>130</x>
-       <y>735</y>
-       <width>130</width>
-       <height>35</height>
+       <x>260</x>
+       <y>1470</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2934,15 +2934,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_92">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>735</y>
-       <width>80</width>
-       <height>35</height>
+       <x>1040</x>
+       <y>1470</y>
+       <width>160</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2966,15 +2966,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_93">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>735</y>
-       <width>130</width>
-       <height>35</height>
+       <x>520</x>
+       <y>1470</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -2998,15 +2998,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_96">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>70</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>140</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3030,15 +3030,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_97">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>35</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>70</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3062,15 +3062,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_98">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>280</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>560</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3094,15 +3094,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_99">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>350</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>700</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3126,15 +3126,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_100">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>385</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>770</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3158,15 +3158,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_101">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>490</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>980</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3190,15 +3190,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_102">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>700</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1400</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3222,15 +3222,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_103">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>735</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1470</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3254,15 +3254,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_104">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>105</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>210</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3286,15 +3286,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_105">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>140</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>280</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3318,15 +3318,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_106">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>175</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>350</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3350,15 +3350,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_107">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>210</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>420</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3382,15 +3382,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_108">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>245</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>490</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3414,15 +3414,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_109">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>420</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>840</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3446,15 +3446,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_110">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>455</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>910</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3478,15 +3478,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_111">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>525</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1050</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3510,15 +3510,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_112">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>560</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1120</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3542,15 +3542,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_113">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>595</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1190</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3574,15 +3574,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_114">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>630</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1260</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3606,15 +3606,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_115">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>315</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>630</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3638,15 +3638,15 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     <widget class="QLabel" name="label_116">
      <property name="geometry">
       <rect>
-       <x>390</x>
-       <y>665</y>
-       <width>130</width>
-       <height>35</height>
+       <x>780</x>
+       <y>1330</y>
+       <width>260</width>
+       <height>70</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3671,10 +3671,10 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
    <widget class="QWidget" name="widget_historical_title" native="true">
     <property name="geometry">
      <rect>
-      <x>2</x>
+      <x>0</x>
       <y>0</y>
-      <width>1446</width>
-      <height>70</height>
+      <width>2912</width>
+      <height>140</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -3685,8 +3685,8 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
     </property>
     <property name="styleSheet">
      <string notr="true">#widget_historical_title{
-border-top-left-radius: 10px;   /* 设置左上角的圆角半径 */
-border-top-right-radius: 10px;  /* 设置右上角的圆角半径 */
+border-top-left-radius: 20px;   /* 设置左上角的圆角半径 */
+border-top-right-radius: 20px;  /* 设置右上角的圆角半径 */
 border-bottom-left-radius: 0px; /* 保持左下角的圆角半径为 0 */
 border-bottom-right-radius: 0px;/* 保持右下角的圆角半径为 0 */
 background-color: rgb(170, 170, 255);
@@ -3695,37 +3695,37 @@ background-color: rgb(170, 170, 255);
     <widget class="QLabel" name="label_factory_num">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>15</y>
-       <width>140</width>
-       <height>40</height>
+       <x>20</x>
+       <y>30</y>
+       <width>280</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>华文中宋</family>
-       <pointsize>22</pointsize>
+       <pointsize>44</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="text">
-      <string>工厂一 1#</string>
+      <string> 1# PVC</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_realtime">
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>15</y>
-       <width>130</width>
-       <height>40</height>
+       <x>440</x>
+       <y>30</y>
+       <width>260</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>华文仿宋</family>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -3737,11 +3737,16 @@ background-color: rgb(170, 170, 255);
     <widget class="QPushButton" name="pushButton_minisize">
      <property name="geometry">
       <rect>
-       <x>1340</x>
-       <y>20</y>
-       <width>20</width>
-       <height>20</height>
+       <x>2670</x>
+       <y>40</y>
+       <width>40</width>
+       <height>40</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">border-image: url(:/logo/minisize.png);</string>
@@ -3753,11 +3758,16 @@ background-color: rgb(170, 170, 255);
     <widget class="QPushButton" name="pushButton_close">
      <property name="geometry">
       <rect>
-       <x>1380</x>
-       <y>20</y>
-       <width>20</width>
-       <height>20</height>
+       <x>2770</x>
+       <y>40</y>
+       <width>40</width>
+       <height>40</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">border-image: url(:/logo/close.png);</string>
@@ -3769,10 +3779,10 @@ background-color: rgb(170, 170, 255);
     <widget class="QDateTimeEdit" name="dateTimeEdit">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>15</y>
-       <width>200</width>
-       <height>40</height>
+       <x>1040</x>
+       <y>30</y>
+       <width>400</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -3792,7 +3802,7 @@ background-color: rgb(170, 170, 255);
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">font-size: 20px;  /* 根据需求调整像素值 */
+      <string notr="true">font-size: 40px;  /* 根据需求调整像素值 */
 font-weight: bold;
 </string>
      </property>
@@ -3803,16 +3813,16 @@ font-weight: bold;
     <widget class="QPushButton" name="pushButton_historical_query">
      <property name="geometry">
       <rect>
-       <x>370</x>
-       <y>15</y>
-       <width>130</width>
-       <height>40</height>
+       <x>740</x>
+       <y>30</y>
+       <width>260</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>华文仿宋</family>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -3824,16 +3834,16 @@ font-weight: bold;
     <widget class="QLabel" name="label_factory_num_3">
      <property name="geometry">
       <rect>
-       <x>1000</x>
-       <y>15</y>
-       <width>40</width>
-       <height>40</height>
+       <x>2000</x>
+       <y>30</y>
+       <width>90</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>华文中宋</family>
-       <pointsize>16</pointsize>
+       <pointsize>32</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -3845,16 +3855,16 @@ font-weight: bold;
     <widget class="QLabel" name="label_factory_num_2">
      <property name="geometry">
       <rect>
-       <x>740</x>
-       <y>15</y>
-       <width>110</width>
-       <height>40</height>
+       <x>1480</x>
+       <y>30</y>
+       <width>220</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>华文中宋</family>
-       <pointsize>16</pointsize>
+       <pointsize>32</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -3866,15 +3876,15 @@ font-weight: bold;
     <widget class="QLineEdit" name="lineEdit_SetTime">
      <property name="geometry">
       <rect>
-       <x>860</x>
-       <y>15</y>
-       <width>130</width>
-       <height>40</height>
+       <x>1720</x>
+       <y>30</y>
+       <width>260</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>40</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -3893,10 +3903,10 @@ color: rgb(0, 0, 0);</string>
    <widget class="QWidget" name="widget_pop_historical_parameter_curve1" native="true">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>100</y>
-      <width>720</width>
-      <height>280</height>
+      <x>120</x>
+      <y>200</y>
+      <width>1440</width>
+      <height>560</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -3906,15 +3916,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_94">
     <property name="geometry">
      <rect>
-      <x>65</x>
-      <y>395</y>
-      <width>110</width>
-      <height>35</height>
+      <x>130</x>
+      <y>790</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -3937,15 +3947,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_191">
     <property name="geometry">
      <rect>
-      <x>185</x>
-      <y>395</y>
-      <width>110</width>
-      <height>35</height>
+      <x>370</x>
+      <y>790</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -3968,15 +3978,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_192">
     <property name="geometry">
      <rect>
-      <x>305</x>
-      <y>395</y>
-      <width>110</width>
-      <height>35</height>
+      <x>610</x>
+      <y>790</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -3999,15 +4009,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_193">
     <property name="geometry">
      <rect>
-      <x>425</x>
-      <y>395</y>
-      <width>110</width>
-      <height>35</height>
+      <x>850</x>
+      <y>790</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4030,15 +4040,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_194">
     <property name="geometry">
      <rect>
-      <x>545</x>
-      <y>395</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1090</x>
+      <y>790</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4061,15 +4071,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_195">
     <property name="geometry">
      <rect>
-      <x>665</x>
-      <y>395</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1330</x>
+      <y>790</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4092,15 +4102,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_95">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>795</y>
-      <width>110</width>
-      <height>35</height>
+      <x>140</x>
+      <y>1590</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4123,15 +4133,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_196">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>795</y>
-      <width>110</width>
-      <height>35</height>
+      <x>380</x>
+      <y>1590</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4154,15 +4164,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_197">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>795</y>
-      <width>110</width>
-      <height>35</height>
+      <x>860</x>
+      <y>1590</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4185,15 +4195,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_198">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>795</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1100</x>
+      <y>1590</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4215,15 +4225,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_199">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>795</y>
-      <width>110</width>
-      <height>35</height>
+      <x>620</x>
+      <y>1590</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4246,10 +4256,10 @@ color: rgb(0, 0, 0);</string>
    <widget class="QWidget" name="widget_pop_historical_parameter_curve2" native="true">
     <property name="geometry">
      <rect>
-      <x>65</x>
-      <y>500</y>
-      <width>720</width>
-      <height>280</height>
+      <x>130</x>
+      <y>1000</y>
+      <width>1440</width>
+      <height>560</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -4259,15 +4269,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_200">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>795</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1340</x>
+      <y>1590</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>32</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -4288,15 +4298,15 @@ color: rgb(0, 0, 0);</string>
    <widget class="QLabel" name="label_117">
     <property name="geometry">
      <rect>
-      <x>65</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
+      <x>130</x>
+      <y>880</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4319,15 +4329,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_118">
     <property name="geometry">
      <rect>
-      <x>185</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
+      <x>370</x>
+      <y>880</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4350,15 +4360,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_119">
     <property name="geometry">
      <rect>
-      <x>305</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
+      <x>610</x>
+      <y>880</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4381,15 +4391,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_120">
     <property name="geometry">
      <rect>
-      <x>425</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
+      <x>850</x>
+      <y>880</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4412,15 +4422,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_121">
     <property name="geometry">
      <rect>
-      <x>545</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1090</x>
+      <y>880</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4443,15 +4453,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_122">
     <property name="geometry">
      <rect>
-      <x>665</x>
-      <y>440</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1330</x>
+      <y>880</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4474,15 +4484,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_123">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
+      <x>140</x>
+      <y>1680</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4505,15 +4515,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_124">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1340</x>
+      <y>1680</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4536,15 +4546,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_125">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
+      <x>620</x>
+      <y>1680</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4567,15 +4577,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_126">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
+      <x>860</x>
+      <y>1680</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4598,15 +4608,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_127">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
+      <x>380</x>
+      <y>1680</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4629,15 +4639,15 @@ border-right: 0.5px solid  rgb(0, 0, 0);
    <widget class="QLabel" name="label_128">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>840</y>
-      <width>110</width>
-      <height>35</height>
+      <x>1100</x>
+      <y>1680</y>
+      <width>220</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>32</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -4688,7 +4698,7 @@ border-right: 0.5px solid  rgb(0, 0, 0);
   </widget>
  </widget>
  <resources>
-  <include location="../../Python/Insert_Picture/image.qrc"/>
+  <include location="../../Python/image_qrc/image.qrc"/>
  </resources>
  <connections>
   <connection>
