@@ -106,6 +106,76 @@ class PublicDataUpdate:
         self.label_122.setText(str(data.get('lower_limit_warning', '')))
         self.label_123.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
 
+    def _update_history_jcj_realtime(self, data):
+        """更新挤出机实时数据"""
+        # 更新参数1显示（label_10标签）
+        self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
+        # 更新参数2显示（label_14标签）
+        self.label_14.setText(str(data.get('preheating_timer', '')))
+        self.label_18.setText(str(data.get('temperature1', '')))
+        self.label_22.setText(str(data.get('temperature2', '')))
+        self.label_26.setText(str(data.get('temperature3', '')))
+        self.label_30.setText(str(data.get('temperature4', '')))
+        self.label_34.setText(str(data.get('exhaust_temperature', '')))
+        self.label_38.setText(str(data.get('cabinet_temperature', '')))
+        self.label_42.setText(str(data.get('extruder_rpm', '')))
+        self.label_46.setText(str(data.get('inverter_current', '')))
+        self.label_50.setText(str(data.get('inverter_error', '')))
+        self.label_123.setText(str(data.get('temperature1', '')))
+        self.label_127.setText(str(data.get('temperature2', '')))
+        self.label_125.setText(str(data.get('temperature3', '')))
+        self.label_126.setText(str(data.get('temperature4', '')))
+        self.label_128.setText(str(data.get('extruder_rpm', '')))
+        self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
+
+    def _update_history_fjj_realtime(self, data):
+        """更新挤出机实时数据"""
+        # 更新参数12显示（label_53标签）
+        self.label_53.setText(str(data.get('wire_tension', '')))
+        self.label_57.setText(str(data.get('unwinding_speed', '')))
+        self.label_61.setText(str(data.get('linear_velocity', '')))
+        self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
+
+    def _update_history_zdj_realtime(self, data):
+        """更新挤出机实时数据"""
+        self.label_73.setText(str(data.get('rpm', '')))
+        self.label_77.setText(str(data.get('traction_speed', '')))
+        self.label_81.setText(str(data.get('pipe_diameter', '')))
+        self.label_85.setText(str(data.get('current_production', '')))
+        self.label_89.setText(str(data.get('equipment_production', '')))
+        self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
+
+    def _update_history_jcj_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_104.setText(str(data.get('temperature1_set', '')))
+        self.label_105.setText(str(data.get('temperature2_set', '')))
+        self.label_106.setText(str(data.get('temperature3_set', '')))
+        self.label_107.setText(str(data.get('temperature4_set', '')))
+        self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
+        self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
+
+    def _update_history_fjj_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_109.setText(str(data.get('wire_tension_set', '')))
+        self.label_110.setText(str(data.get('linear_velocity_set', '')))
+        self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
+
+    def _update_history_zdj_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_112.setText(str(data.get('rpm_set', '')))
+        self.label_113.setText(str(data.get('traction_speed_set', '')))
+        self.label_114.setText(str(data.get('pipe_diameter_set', '')))
+        self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
+
+    def _update_history_curve_set(self, data):
+        """更新挤出机实时数据"""
+        self.label_117.setText(str(data.get('upper_limit_alarm', '')))
+        self.label_118.setText(str(data.get('upper_limit_warning', '')))
+        self.label_114.setText(str(data.get('diameter_difference', '')))
+        self.label_115.setText(str(data.get('tension_percentage', '')))
+        self.label_121.setText(str(data.get('lower_limit_warning', '')))
+        self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
 class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
@@ -795,7 +865,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
 
 
 # ---------------------------------历史参数弹窗类（继承QDialog和UI类）---------------------------------
-class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
+class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, PublicDataUpdate):
     def __init__(self):
         # 调用父类构造方法
         super().__init__()
@@ -932,71 +1002,31 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
                 # 更新界面标签（取第一条/唯一一条数据）
                 self._update_ui_labels(table_name, data)
 
+    # 添加新方法：处理数据更新
     def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
         """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory1_1_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory1_1_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory1_1_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_1_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_1_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_1_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_1_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory1_1_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory1_1_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory1_1_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory1_1_set_data_jcj": self._update_history_jcj_set,
+            "factory1_1_set_data_fjj": self._update_history_fjj_set,
+            "factory1_1_set_data_zdj": self._update_history_zdj_set,
+            "factory1_1_set_data_curve": self._update_history_curve_set
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)  # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
 
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
@@ -1084,7 +1114,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter):
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
 
-class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device2):
+class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device2, PublicDataUpdate):
     def __init__(self):
         # 调用父类构造方法
         super().__init__()
@@ -1221,71 +1251,31 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 # 更新界面标签（取第一条/唯一一条数据）
                 self._update_ui_labels(table_name, data)
 
+    # 添加新方法：处理数据更新
     def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
         """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory1_2_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory1_2_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory1_2_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_2_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_2_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_2_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_2_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory1_2_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory1_2_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory1_2_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory1_2_set_data_jcj": self._update_history_jcj_set,
+            "factory1_2_set_data_fjj": self._update_history_fjj_set,
+            "factory1_2_set_data_zdj": self._update_history_zdj_set,
+            "factory1_2_set_data_curve": self._update_history_curve_set
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)  # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
 
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
@@ -1373,7 +1363,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         super().closeEvent(event)  # 调用父类QDialog的关闭事件处理，确保正常关闭流程
 
 
-class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device3):
+class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical_Parameter_Factory1Device3, PublicDataUpdate):
     def __init__(self):
         # 调用父类构造方法
         super().__init__()
@@ -1510,71 +1500,31 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 # 更新界面标签（取第一条/唯一一条数据）
                 self._update_ui_labels(table_name, data)
 
+    # 添加新方法：处理数据更新
     def _update_ui_labels(self, table_name, data):
-        """根据数据表名更新对应的UI标签
-        Args:
-            table_name: 数据表名称（用于分支判断）
-            data: 单条历史数据记录（字典格式）
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
         """
-        # 挤出机实时数据表处理分支
-        if table_name == "factory1_3_realtime_data_jcj":
-            # 更新参数1显示（label_10标签）
-            self.label_10.setText(str(data.get('preheating_stage', '')))  # 使用空字符串作为默认值
-            # 更新参数2显示（label_14标签）
-            self.label_14.setText(str(data.get('preheating_timer', '')))
-            self.label_18.setText(str(data.get('temperature1', '')))
-            self.label_22.setText(str(data.get('temperature2', '')))
-            self.label_26.setText(str(data.get('temperature3', '')))
-            self.label_30.setText(str(data.get('temperature4', '')))
-            self.label_34.setText(str(data.get('exhaust_temperature', '')))
-            self.label_38.setText(str(data.get('cabinet_temperature', '')))
-            self.label_42.setText(str(data.get('extruder_rpm', '')))
-            self.label_46.setText(str(data.get('inverter_current', '')))
-            self.label_50.setText(str(data.get('inverter_error', '')))
-            self.label_123.setText(str(data.get('temperature1', '')))
-            self.label_127.setText(str(data.get('temperature2', '')))
-            self.label_125.setText(str(data.get('temperature3', '')))
-            self.label_126.setText(str(data.get('temperature4', '')))
-            self.label_128.setText(str(data.get('extruder_rpm', '')))
-            self.label_124.setText(str(data.get('inverter_current', '')))  # 使用get方法提供默认值
-        # 放卷机实时数据表处理分支
-        elif table_name == "factory1_3_realtime_data_fjj":
-            # 更新参数12显示（label_53标签）
-            self.label_53.setText(str(data.get('wire_tension', '')))
-            self.label_57.setText(str(data.get('unwinding_speed', '')))
-            self.label_61.setText(str(data.get('linear_velocity', '')))
-            self.label_65.setText(str(data.get('ribs_usage', '')))  # 使用get方法提供默认值
-        # 自动机历史数据表处理分支
-        elif table_name == "factory1_3_realtime_data_zdj":
-            self.label_73.setText(str(data.get('rpm', '')))
-            self.label_77.setText(str(data.get('traction_speed', '')))
-            self.label_81.setText(str(data.get('pipe_diameter', '')))
-            self.label_85.setText(str(data.get('current_production', '')))
-            self.label_89.setText(str(data.get('equipment_production', '')))
-            self.label_93.setText(str(data.get('pass_rate', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_3_set_data_jcj":
-            self.label_104.setText(str(data.get('temperature1_set', '')))
-            self.label_105.setText(str(data.get('temperature2_set', '')))
-            self.label_106.setText(str(data.get('temperature3_set', '')))
-            self.label_107.setText(str(data.get('temperature4_set', '')))
-            self.label_108.setText(str(data.get('exhaust_temperature_set', '')))
-            self.label_115.setText(str(data.get('cabinet_temperature_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_3_set_data_fjj":
-            self.label_109.setText(str(data.get('wire_tension_set', '')))
-            self.label_110.setText(str(data.get('linear_velocity_set', '')))
-            self.label_111.setText(str(data.get('ribs_usage_set', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_3_set_data_zdj":
-            self.label_112.setText(str(data.get('rpm_set', '')))
-            self.label_113.setText(str(data.get('traction_speed_set', '')))
-            self.label_114.setText(str(data.get('pipe_diameter_set', '')))
-            self.label_116.setText(str(data.get('planned_production', '')))  # 使用get方法提供默认值
-        elif table_name == "factory1_3_set_data_curve":
-            self.label_117.setText(str(data.get('upper_limit_alarm', '')))
-            self.label_118.setText(str(data.get('upper_limit_warning', '')))
-            self.label_114.setText(str(data.get('diameter_difference', '')))
-            self.label_115.setText(str(data.get('tension_percentage', '')))
-            self.label_121.setText(str(data.get('lower_limit_warning', '')))
-            self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory1_3_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory1_3_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory1_3_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory1_3_set_data_jcj": self._update_history_jcj_set,
+            "factory1_3_set_data_fjj": self._update_history_fjj_set,
+            "factory1_3_set_data_zdj": self._update_history_zdj_set,
+            "factory1_3_set_data_curve": self._update_history_curve_set
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            if isinstance(strategy, list):  # 处理多个方法的情况
+                for method in strategy:
+                    method(data)  # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
 
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
