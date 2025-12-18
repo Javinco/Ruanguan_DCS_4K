@@ -21,7 +21,6 @@ from Ruanguan_Curve import RealTimeMainWindowCurve1
 # from Ruanguan_Historical import HistoricalCurvePlotter
 from RealtimeCurve import RealTimeCurvePlotter
 from HistoricalCurve import HistoricalCurvePlotter
-from NEWFX3GA import plc_data_manager
 
 CLASS_COLORS1 = ['#FF0000', '#FFFF00', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000', '#FFA500',
                  '#800080', '#008000', '#000080', '#808000', '#800000', '#008080', '#C0C0C0',

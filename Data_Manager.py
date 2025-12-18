@@ -741,7 +741,7 @@ class HistoricalDataManager:
             # 验证目标表存在性（防止SQL注入）
             cursor.execute(f"SHOW TABLES LIKE '{table_name}'")
             if not cursor.fetchone():  # 无匹配表时返回空
-                print(f"[历史数据] 数据表 {table_name} 不存在")
+                print(f"[历史数据123] 数据表 {table_name} 不存在")
                 return []
 
             # 构造参数化SQL查询（BETWEEN时间范围查询）
@@ -1100,7 +1100,7 @@ class PLCHistoricalDataManager:
             # 验证目标表存在性（防止SQL注入）
             cursor.execute(f"SHOW TABLES LIKE '{table_name}'")
             if not cursor.fetchone():  # 无匹配表时返回空
-                print(f"[历史数据] 数据表 {table_name} 不存在")
+                print(f"[历史数据12] 数据表 {table_name} 不存在")
                 return []
 
             # 构造参数化SQL查询（BETWEEN时间范围查询）
