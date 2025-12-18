@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 import pyqtgraph as pg
-from DataManager import data_manager
+from Data_Manager import data_manager
 import datetime
 from collections import deque
 import numpy as np
