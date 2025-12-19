@@ -208,13 +208,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         self.threads = {}
         # 需要监控的表名列表
         self.tables_to_monitor = [
-            "factory1_1_realtime_data_jcj",
-            "factory1_1_realtime_data_fjj",
-            "factory1_1_realtime_data_zdj",
-            "factory1_1_set_data_jcj",
-            "factory1_1_set_data_fjj",
-            "factory1_1_set_data_zdj",
-            "factory1_1_set_data_curve"
+            "factory2_4_realtime_data_jcj",
+            "factory2_4_realtime_data_fjj",
+            "factory2_4_realtime_data_zdj",
+            "factory2_4_set_data_jcj",
+            "factory2_4_set_data_fjj",
+            "factory2_4_set_data_zdj",
+            "factory2_4_set_data_curve"
         ]
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -285,13 +285,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
-            "factory1_1_realtime_data_fjj": self._update_fjj_realtime,
-            "factory1_1_realtime_data_zdj": self._update_zdj_realtime,
-            "factory1_1_set_data_jcj": self._update_jcj_set,
-            "factory1_1_set_data_fjj": self._update_fjj_set,
-            "factory1_1_set_data_zdj": self._update_zdj_set,
-            "factory1_1_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
+            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
+            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_jcj_set,
+            "factory2_4_set_data_fjj": self._update_fjj_set,
+            "factory2_4_set_data_zdj": self._update_zdj_set,
+            "factory2_4_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -440,13 +440,13 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.threads = {}
         # 需要监控的表名列表
         self.tables_to_monitor = [
-            "factory1_2_realtime_data_jcj",
-            "factory1_2_realtime_data_fjj",
-            "factory1_2_realtime_data_zdj",
-            "factory1_2_set_data_jcj",
-            "factory1_2_set_data_fjj",
-            "factory1_2_set_data_zdj",
-            "factory1_2_set_data_curve"
+            "factory2_4_realtime_data_jcj",
+            "factory2_4_realtime_data_fjj",
+            "factory2_4_realtime_data_zdj",
+            "factory2_4_set_data_jcj",
+            "factory2_4_set_data_fjj",
+            "factory2_4_set_data_zdj",
+            "factory2_4_set_data_curve"
         ]
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -517,13 +517,13 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_2_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
-            "factory1_2_realtime_data_fjj": self._update_fjj_realtime,
-            "factory1_2_realtime_data_zdj": self._update_zdj_realtime,
-            "factory1_2_set_data_jcj": self._update_jcj_set,
-            "factory1_2_set_data_fjj": self._update_fjj_set,
-            "factory1_2_set_data_zdj": self._update_zdj_set,
-            "factory1_2_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
+            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
+            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_jcj_set,
+            "factory2_4_set_data_fjj": self._update_fjj_set,
+            "factory2_4_set_data_zdj": self._update_zdj_set,
+            "factory2_4_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -671,13 +671,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.threads = {}
         # 需要监控的表名列表
         self.tables_to_monitor = [
-            "factory1_3_realtime_data_jcj",
-            "factory1_3_realtime_data_fjj",
-            "factory1_3_realtime_data_zdj",
-            "factory1_3_set_data_jcj",
-            "factory1_3_set_data_fjj",
-            "factory1_3_set_data_zdj",
-            "factory1_3_set_data_curve"
+            "factory2_4_realtime_data_jcj",
+            "factory2_4_realtime_data_fjj",
+            "factory2_4_realtime_data_zdj",
+            "factory2_4_set_data_jcj",
+            "factory2_4_set_data_fjj",
+            "factory2_4_set_data_zdj",
+            "factory2_4_set_data_curve"
         ]
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -748,13 +748,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_3_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
-            "factory1_3_realtime_data_fjj": self._update_fjj_realtime,
-            "factory1_3_realtime_data_zdj": self._update_zdj_realtime,
-            "factory1_3_set_data_jcj": self._update_jcj_set,
-            "factory1_3_set_data_fjj": self._update_fjj_set,
-            "factory1_3_set_data_zdj": self._update_zdj_set,
-            "factory1_3_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
+            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
+            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_jcj_set,
+            "factory2_4_set_data_fjj": self._update_fjj_set,
+            "factory2_4_set_data_zdj": self._update_zdj_set,
+            "factory2_4_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -913,7 +913,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
             parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name="factory1_1_set_data_curve",  # 对应的数据库表名
+            table_name="factory2_4_set_data_curve",  # 对应的数据库表名
             params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
@@ -929,7 +929,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
             parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name="factory1_1_realtime_data_jcj",  # 挤出机实时数据表
+            table_name="factory2_4_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -974,8 +974,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj", "factory1_1_set_data_curve",
-                  "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
+        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj", "factory2_4_set_data_curve",
+                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
 
         # 创建线程对象
         thread = QThread()
@@ -1021,13 +1021,13 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_realtime_data_jcj": self._update_history_jcj_realtime,
-            "factory1_1_realtime_data_fjj": self._update_history_fjj_realtime,
-            "factory1_1_realtime_data_zdj": self._update_history_zdj_realtime,
-            "factory1_1_set_data_jcj": self._update_history_jcj_set,
-            "factory1_1_set_data_fjj": self._update_history_fjj_set,
-            "factory1_1_set_data_zdj": self._update_history_zdj_set,
-            "factory1_1_set_data_curve": self._update_history_curve_set
+            "factory2_4_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory2_4_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_history_jcj_set,
+            "factory2_4_set_data_fjj": self._update_history_fjj_set,
+            "factory2_4_set_data_zdj": self._update_history_zdj_set,
+            "factory2_4_set_data_curve": self._update_history_curve_set
         }
 
         # 获取并执行对应的更新策略
@@ -1165,7 +1165,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
             parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name="factory1_2_set_data_curve",  # 对应的数据库表名
+            table_name="factory2_4_set_data_curve",  # 对应的数据库表名
             params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
@@ -1181,7 +1181,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
             parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name="factory1_2_realtime_data_jcj",  # 挤出机实时数据表
+            table_name="factory2_4_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -1226,8 +1226,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj", "factory1_2_set_data_curve",
-                  "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
+        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj", "factory2_4_set_data_curve",
+                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
 
         # 创建线程对象
         thread = QThread()
@@ -1273,13 +1273,13 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_2_realtime_data_jcj": self._update_history_jcj_realtime,
-            "factory1_2_realtime_data_fjj": self._update_history_fjj_realtime,
-            "factory1_2_realtime_data_zdj": self._update_history_zdj_realtime,
-            "factory1_2_set_data_jcj": self._update_history_jcj_set,
-            "factory1_2_set_data_fjj": self._update_history_fjj_set,
-            "factory1_2_set_data_zdj": self._update_history_zdj_set,
-            "factory1_2_set_data_curve": self._update_history_curve_set
+            "factory2_4_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory2_4_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_history_jcj_set,
+            "factory2_4_set_data_fjj": self._update_history_fjj_set,
+            "factory2_4_set_data_zdj": self._update_history_zdj_set,
+            "factory2_4_set_data_curve": self._update_history_curve_set
         }
 
         # 获取并执行对应的更新策略
@@ -1417,7 +1417,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
             parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name="factory1_3_set_data_curve",  # 对应的数据库表名
+            table_name="factory2_4_set_data_curve",  # 对应的数据库表名
             params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
@@ -1433,7 +1433,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
             parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name="factory1_3_realtime_data_jcj",  # 挤出机实时数据表
+            table_name="factory2_4_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -1478,8 +1478,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj", "factory1_3_set_data_curve",
-                  "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
+        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj", "factory2_4_set_data_curve",
+                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
 
         # 创建线程对象
         thread = QThread()
@@ -1525,13 +1525,13 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_3_realtime_data_jcj": self._update_history_jcj_realtime,
-            "factory1_3_realtime_data_fjj": self._update_history_fjj_realtime,
-            "factory1_3_realtime_data_zdj": self._update_history_zdj_realtime,
-            "factory1_3_set_data_jcj": self._update_history_jcj_set,
-            "factory1_3_set_data_fjj": self._update_history_fjj_set,
-            "factory1_3_set_data_zdj": self._update_history_zdj_set,
-            "factory1_3_set_data_curve": self._update_history_curve_set
+            "factory2_4_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory2_4_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory2_4_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory2_4_set_data_jcj": self._update_history_jcj_set,
+            "factory2_4_set_data_fjj": self._update_history_fjj_set,
+            "factory2_4_set_data_zdj": self._update_history_zdj_set,
+            "factory2_4_set_data_curve": self._update_history_curve_set
         }
 
         # 获取并执行对应的更新策略
@@ -1964,8 +1964,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #     "factory2_4_production_data"
         # ]
         self.plc_tables_to_monitor = [
-            "factory1_1_set_data_curve",
-            "factory1_1_production_data"
+            "factory2_4_set_data_curve",
+            "factory2_4_production_data"
         ]
         # 添加管径实时曲线
         self.curve_plotter1 = RealTimeMainWindowCurve1(
@@ -2009,13 +2009,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
-        self._start_data_update_thread(self.tables_to_monitor, self.plc1_data_manager)
-        self._start_data_update_thread(self.tables_to_monitor, self.plc2_data_manager)
-        self._start_data_update_thread(self.tables_to_monitor, self.plc3_data_manager)
+        self._start_plc1_data_update_thread(self.tables_to_monitor, self.plc1_data_manager)
+        self._start_plc2_data_update_thread(self.tables_to_monitor, self.plc2_data_manager)
+        self._start_plc3_data_update_thread(self.tables_to_monitor, self.plc3_data_manager)
 
 
     # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor, plc_data_manager):
+    def _start_plc1_data_update_thread(self, tables_to_monitor, plc_data_manager):
         """启动数据更新线程
         参数:
             tables_to_monitor: 需要监控的表名列表
@@ -2035,7 +2035,63 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)  # type: ignore[attr-defined]
+        worker.data_updated.connect(self._handle_plc1_data_update)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _start_plc2_data_update_thread(self, tables_to_monitor, plc_data_manager):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(tables_to_monitor, plc_data_manager)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
+
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_plc2_data_update)  # type: ignore[attr-defined]
+
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _start_plc3_data_update_thread(self, tables_to_monitor, plc_data_manager):
+        """启动数据更新线程
+        参数:
+            tables_to_monitor: 需要监控的表名列表
+        """
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例
+        worker = DataUpdateWorker(tables_to_monitor, plc_data_manager)
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
+
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_plc3_data_update)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['data_update'] = (thread, worker)
@@ -2044,7 +2100,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.start()
 
     # 添加新方法：处理数据更新
-    def _handle_data_update(self, table_name, data):
+    def _handle_plc1_data_update(self, table_name, data):
         """处理从子线程接收到的数据更新
         参数:
             table_name: 表名
@@ -2052,12 +2108,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_set_data_curve": self.curve_plotter1.update_plot,
-            "factory1_2_set_data_curve": self.curve_plotter2.update_plot,
-            "factory1_3_set_data_curve": self.curve_plotter3.update_plot,
-            "factory1_1_production_data": self._update_curve1_realtime,
-            "factory1_2_production_data": self._update_curve2_realtime,
-            "factory1_3_production_data": self._update_curve3_realtime
+            "factory2_4_set_data_curve": self.curve_plotter1.update_plot,
+            "factory2_4_production_data": self._update_curve1_realtime
+
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
+                for method in strategy:
+                    method(data)  # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
+
+    def _handle_plc2_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory2_4_set_data_curve": self.curve_plotter2.update_plot,
+            "factory2_4_production_data": self._update_curve2_realtime
+
+        }
+
+        # 获取并执行对应的更新策略
+        if strategy := update_strategies.get(table_name):
+            if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
+                for method in strategy:
+                    method(data)  # type: ignore[attr-defined]
+            else:
+                strategy(data)  # type: ignore[attr-defined]
+
+    def _handle_plc3_data_update(self, table_name, data):
+        """处理从子线程接收到的数据更新
+        参数:
+            table_name: 表名
+            data: 数据字典
+        """
+        # 创建策略映射字典（与原来相同）
+        update_strategies = {
+            "factory2_4_set_data_curve": self.curve_plotter3.update_plot,
+            "factory2_4_production_data": self._update_curve3_realtime
+
         }
 
         # 获取并执行对应的更新策略
