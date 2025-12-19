@@ -1938,31 +1938,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
-        self.plc1_data_manager = plc1_data_manager
-        self.plc2_data_manager = plc2_data_manager
-        self.plc3_data_manager = plc3_data_manager
-
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
-        # self.tables_to_monitor = [
-        #     "factory1_1_set_data_curve",
-        #     "factory1_2_set_data_curve",
-        #     "factory1_3_set_data_curve",
-        #     "factory1_4_set_data_curve",
-        #     "factory2_1_set_data_curve",
-        #     "factory2_2_set_data_curve",
-        #     "factory2_3_set_data_curve",
-        #     "factory2_4_set_data_curve",
-        #     "factory1_1_production_data",
-        #     "factory1_2_production_data",
-        #     "factory1_3_production_data",
-        #     "factory1_4_production_data",
-        #     "factory2_1_production_data",
-        #     "factory2_2_production_data",
-        #     "factory2_3_production_data",
-        #     "factory2_4_production_data"
-        # ]
         self.plc_tables_to_monitor = [
             "factory2_4_set_data_curve",
             "factory2_4_production_data"
@@ -2009,16 +1987,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
-        self._start_plc1_data_update_thread(self.tables_to_monitor, self.plc1_data_manager)
-        self._start_plc2_data_update_thread(self.tables_to_monitor, self.plc2_data_manager)
-        self._start_plc3_data_update_thread(self.tables_to_monitor, self.plc3_data_manager)
+        # PLC数据管理器和曲线绘制器映射
+        self.plc_managers = {
+            'plc1': plc1_data_manager,
+            'plc2': plc2_data_manager,
+            'plc3': plc3_data_manager
+        }
 
+        self.curve_plotters = {
+            'plc1': self.curve_plotter1,
+            'plc2': self.curve_plotter2,
+            'plc3': self.curve_plotter3
+        }
 
-    # 添加新方法：启动数据更新线程
-    def _start_plc1_data_update_thread(self, tables_to_monitor, plc_data_manager):
-        """启动数据更新线程
+        self.update_methods = {
+            'plc1': self._update_curve1_realtime,
+            'plc2': self._update_curve2_realtime,
+            'plc3': self._update_curve3_realtime
+        }
+        # 启动所有PLC数据更新线程
+        for plc_id, plc_manager in self.plc_managers.items():
+            self._start_plc_data_update_thread(plc_id, self.plc_tables_to_monitor, plc_manager)
+
+    # 通用的PLC数据更新线程启动方法
+    def _start_plc_data_update_thread(self, plc_id, tables_to_monitor, plc_data_manager):
+        """启动PLC数据更新线程
         参数:
+            plc_id: PLC标识符 ('plc1', 'plc2', 'plc3')
             tables_to_monitor: 需要监控的表名列表
+            plc_data_manager: PLC数据管理器实例
         """
         # 创建线程对象
         thread = QThread()
@@ -2029,135 +2026,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         worker.moveToThread(thread)
 
         # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_plc1_data_update)  # type: ignore[attr-defined]
+        # 连接数据更新信号到对应的处理方法
+        worker.data_updated.connect(lambda table_name, data: self._handle_plc_data_update(plc_id, table_name, data))  # type: ignore[attr-defined]
 
-        # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _start_plc2_data_update_thread(self, tables_to_monitor, plc_data_manager):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, plc_data_manager)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_plc2_data_update)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
+        # 存储线程引用，使用不同的键避免覆盖
+        self.threads[f'data_update_{plc_id}'] = (thread, worker)
 
         # 启动线程
         thread.start()
 
-    def _start_plc3_data_update_thread(self, tables_to_monitor, plc_data_manager):
-        """启动数据更新线程
-        参数:
-            tables_to_monitor: 需要监控的表名列表
-        """
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, plc_data_manager)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_plc3_data_update)  # type: ignore[attr-defined]
-
-        # 存储线程引用
-        self.threads['data_update'] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    # 添加新方法：处理数据更新
-    def _handle_plc1_data_update(self, table_name, data):
+    # 通用的PLC数据处理方法
+    def _handle_plc_data_update(self, plc_id, table_name, data):
         """处理从子线程接收到的数据更新
         参数:
+            plc_id: PLC标识符 ('plc1', 'plc2', 'plc3')
             table_name: 表名
             data: 数据字典
         """
-        # 创建策略映射字典（与原来相同）
+        # 创建策略映射字典
         update_strategies = {
-            "factory2_4_set_data_curve": self.curve_plotter1.update_plot,
-            "factory2_4_production_data": self._update_curve1_realtime
-
+            "factory2_4_set_data_curve": self.curve_plotters[plc_id].update_plot,
+            "factory2_4_production_data": self.update_methods[plc_id]
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
-                for method in strategy:
-                    method(data)  # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-
-    def _handle_plc2_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory2_4_set_data_curve": self.curve_plotter2.update_plot,
-            "factory2_4_production_data": self._update_curve2_realtime
-
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
-                for method in strategy:
-                    method(data)  # type: ignore[attr-defined]
-            else:
-                strategy(data)  # type: ignore[attr-defined]
-
-    def _handle_plc3_data_update(self, table_name, data):
-        """处理从子线程接收到的数据更新
-        参数:
-            table_name: 表名
-            data: 数据字典
-        """
-        # 创建策略映射字典（与原来相同）
-        update_strategies = {
-            "factory2_4_set_data_curve": self.curve_plotter3.update_plot,
-            "factory2_4_production_data": self._update_curve3_realtime
-
-        }
-
-        # 获取并执行对应的更新策略
-        if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
+            if isinstance(strategy, list):
                 for method in strategy:
                     method(data)  # type: ignore[attr-defined]
             else:
