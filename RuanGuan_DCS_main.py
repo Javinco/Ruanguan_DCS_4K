@@ -1938,26 +1938,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer.start(1000)  # 启动定时器（1秒间隔）
         self.update_time()  # 立即更新时间显示
 
+        self.plc1_data_manager = plc1_data_manager
+        self.plc2_data_manager = plc2_data_manager
+        self.plc3_data_manager = plc3_data_manager
+
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
-        self.tables_to_monitor = [
+        # self.tables_to_monitor = [
+        #     "factory1_1_set_data_curve",
+        #     "factory1_2_set_data_curve",
+        #     "factory1_3_set_data_curve",
+        #     "factory1_4_set_data_curve",
+        #     "factory2_1_set_data_curve",
+        #     "factory2_2_set_data_curve",
+        #     "factory2_3_set_data_curve",
+        #     "factory2_4_set_data_curve",
+        #     "factory1_1_production_data",
+        #     "factory1_2_production_data",
+        #     "factory1_3_production_data",
+        #     "factory1_4_production_data",
+        #     "factory2_1_production_data",
+        #     "factory2_2_production_data",
+        #     "factory2_3_production_data",
+        #     "factory2_4_production_data"
+        # ]
+        self.plc_tables_to_monitor = [
             "factory1_1_set_data_curve",
-            "factory1_2_set_data_curve",
-            "factory1_3_set_data_curve",
-            "factory1_4_set_data_curve",
-            "factory2_1_set_data_curve",
-            "factory2_2_set_data_curve",
-            "factory2_3_set_data_curve",
-            "factory2_4_set_data_curve",
-            "factory1_1_production_data",
-            "factory1_2_production_data",
-            "factory1_3_production_data",
-            "factory1_4_production_data",
-            "factory2_1_production_data",
-            "factory2_2_production_data",
-            "factory2_3_production_data",
-            "factory2_4_production_data"
+            "factory1_1_production_data"
         ]
         # 添加管径实时曲线
         self.curve_plotter1 = RealTimeMainWindowCurve1(
@@ -2001,472 +2009,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
-        # 添加首页面采集子线程
-        self._start_insert_threads()
-        self._start_data_update_thread(self.tables_to_monitor)
+        self._start_data_update_thread(self.tables_to_monitor, self.plc1_data_manager)
+        self._start_data_update_thread(self.tables_to_monitor, self.plc2_data_manager)
+        self._start_data_update_thread(self.tables_to_monitor, self.plc3_data_manager)
 
-    def _start_insert_threads(self):
-        """启动所有数据采集线程"""
-        # 工厂1设备1产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_1_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory1_1_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory1_1_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory1_1_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory1_1_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory1_1_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory1_1_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory1_1_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory1_1_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.155.10"
-        )
-        # 工厂1设备2产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_2_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory1_2_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory1_2_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory1_2_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory1_2_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory1_2_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory1_2_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory1_2_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory1_2_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.155.14"
-        )
-        # 工厂1设备3产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_3_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory1_3_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory1_3_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory1_3_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory1_3_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory1_3_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory1_3_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory1_3_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory1_3_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.155.22"
-        )
-        # 工厂1设备4产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory1_4_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory1_4_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory1_4_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory1_4_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory1_4_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory1_4_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory1_4_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory1_4_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory1_4_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.155.26"
-        )
-        # 工厂2设备1产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_1_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory2_1_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory2_1_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory2_1_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory2_1_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory2_1_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory2_1_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory2_1_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory2_1_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.156.18"
-        )
-        # 工厂2设备2产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_2_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory2_2_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory2_2_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory2_2_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory2_2_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory2_2_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory2_2_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory2_2_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory2_2_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.156.14"
-        )
-        # 工厂2设备3产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_3_realtime_data_jcj", [
-                    (11, 4, ["preheating_stage", "preheating_timer"]),
-                    (21, 12, ["temperature1", "temperature2", "temperature3", "temperature4", "exhaust_temperature", "cabinet_temperature"]),
-                    (1, 2, ["extruder_rpm"]),
-                    (5, 2, ["inverter_current"]),
-                    (7, 2, ["inverter_error"])
-                ]),
-                ("factory2_3_realtime_data_fjj", [
-                    (103, 2, ["wire_tension"]),
-                    (107, 4, ["unwinding_speed", "ribs_usage"]),
-                    (113, 2, ["linear_velocity"])
-                ]),
-                ("factory2_3_realtime_data_zdj", [
-                    (201, 2, ["rpm"]),
-                    (221, 2, ["traction_speed"]),
-                    (203, 2, ["pipe_diameter"]),
-                    (231, 2, ["current_production"]),
-                    (235, 2, ["equipment_production"]),
-                    (239, 2, ["pass_rate"])
-                ]),
-                ("factory2_3_set_data_curve", [
-                    (203, 6, ["diameter_difference", "upper_limit_alarm", "upper_limit_warning"]),
-                    (103, 2, ["tension_percentage"]),
-                    (209, 6, ["intermediate_variable", "lower_limit_warning", "lower_limit_alarm"])
-                ]),
-                ("factory2_3_set_data_jcj", [
-                    (41, 10, ["temperature1_set", "temperature2_set", "temperature3_set", "temperature4_set", "exhaust_temperature_set"]),
-                    (3, 2, ["cabinet_temperature_set"])
-                ]),
-                ("factory2_3_set_data_fjj", [
-                    (101, 2, ["wire_tension_set"]),
-                    (105, 2, ["linear_velocity_set"]),
-                    (123, 2, ["ribs_usage_set"])
-                ]),
-                ("factory2_3_set_data_zdj", [
-                    (201, 2, ["rpm_set"]),
-                    (217, 2, ["traction_speed_set"]),
-                    (209, 2, ["pipe_diameter_set"]),
-                    (233, 2, ["planned_production"])
-                ]),
-                ("factory2_3_production_data", [
-                    (231, 4, ["current_production", "planned_production"]),
-                    (237, 4, ["qualified_products", "pass_rate"]),
-                    (1, 2, ["extruder_rpm"])
-                ]),
-                ("factory2_3_alarm_data", [
-                    (16, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.156.22"
-        )
-        # # 工厂2设备4产量数据采集
-        # self._start_plc_insert_thread(
-        #     groups_config=[("factory2_4_plc0", [(900, 30, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-        #                    "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-        #                    "parameter11", "parameter12", "parameter13", "parameter14", "parameter15"])
-        #                     ])
-        #                    ],
-        #     com = 'COM22')
-        # self._start_plc_insert_thread(
-        #     groups_config=[("factory2_4_plc1", [
-        #         (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-        #                    "parameter6", "parameter7"])
-        #     ])
-        #                    ],
-        #     com = 'COM21')
-        # self._start_plc_insert_thread(
-        #     groups_config=[("factory2_4_plc2", [
-        #         (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-        #                     "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-        #                     "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-        #     ])
-        #                    ],
-        #     com = 'COM20')
-
-    # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker)  # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
-
-    # ------------------------- 线程启动方法 -------------------------
-    def _start_plc_insert_thread(self, groups_config, com):
-        # 创建线程对象
-        thread = QThread()
-        worker = PlcDataWorker(groups_config, com)
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  #type: ignore[attr-defined]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  #type: ignore[attr-defined] # 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  #type: ignore[attr-defined]  # 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  #type: ignore[attr-defined]  # 线程退出后销毁线程对象
-
-        # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)  #type: ignore[attr-defined] # 处理数据更新的方法
-        thread_key = f'plc_data_{com}'
-        # 存储线程引用
-        self.threads[thread_key] = (thread, worker)
-
-        # 启动线程
-        thread.start()
 
     # 添加新方法：启动数据更新线程
-    def _start_data_update_thread(self, tables_to_monitor):
+    def _start_data_update_thread(self, tables_to_monitor, plc_data_manager):
         """启动数据更新线程
         参数:
             tables_to_monitor: 需要监控的表名列表
@@ -2474,7 +2023,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor, plc_data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
