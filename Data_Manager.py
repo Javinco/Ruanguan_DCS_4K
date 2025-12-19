@@ -1215,9 +1215,9 @@ def plc_data_manager():
 def plc_historical_data_manager():
     return get_plc_historical_data_manager()
 
-# plc1_data_manager = PLCDataManager(host= '192.168.1.10')
-# plc2_data_manager = PLCDataManager(host= '192.168.1.11')
-# plc3_data_manager = PLCDataManager(host= '192.168.1.12')
-# plc1_historical_data_manager = PLCHistoricalDataManager(host= '192.168.1.10')
-# plc2_historical_data_manager = PLCHistoricalDataManager(host= '192.168.1.11')
-# plc3_historical_data_manager = PLCHistoricalDataManager(host= '192.168.1.12')
+plc1_data_manager = PLCDataManager(host= '192.168.1.10')
+plc2_data_manager = PLCDataManager(host= '192.168.1.11')
+plc3_data_manager = PLCDataManager(host= '192.168.1.12')
+plc1_historical_data_manager = PLCHistoricalDataManager(host= '192.168.1.10')
+plc2_historical_data_manager = PLCHistoricalDataManager(host= '192.168.1.11')
+plc3_historical_data_manager = PLCHistoricalDataManager(host= '192.168.1.12')

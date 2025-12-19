@@ -16,7 +16,7 @@ from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_historical_parameter_factory1_2 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device2
 from Ui_pop_historical_parameter_factory1_3 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device3
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import data_manager, inserter, historical_data_manager, get_plc_data_manager, get_plc_historical_data_manager
+from Data_Manager import data_manager, inserter, historical_data_manager, get_plc_data_manager, get_plc_historical_data_manager,plc1_data_manager,plc2_data_manager,plc3_data_manager,plc1_historical_data_manager,plc2_historical_data_manager,plc3_historical_data_manager
 from Ruanguan_Curve import RealTimeMainWindowCurve1
 # from Ruanguan_Historical import HistoricalCurvePlotter
 from RealtimeCurve import RealTimeCurvePlotter
@@ -202,6 +202,8 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
+        self.data_manager = plc1_data_manager
+
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -254,7 +256,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor, self.data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -431,6 +433,9 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
+
+        self.data_manager = plc2_data_manager
+
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -483,7 +488,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor, self.data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -659,6 +664,9 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
+
+        self.data_manager = plc3_data_manager
+
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -711,7 +719,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor, self.data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -885,6 +893,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
+
+        self.historical_data_manager = plc1_historical_data_manager
+
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -969,7 +980,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time, self.historical_data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1134,6 +1145,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
+
+        self.historical_data_manager = plc2_historical_data_manager
+
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -1218,7 +1232,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time, self.historical_data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1383,6 +1397,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
+
+        self.historical_data_manager = plc3_historical_data_manager
+
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -1467,7 +1484,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time, self.historical_data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -2712,7 +2729,7 @@ class DataUpdateWorker(QObject):
     data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
     finished = pyqtSignal()  # 完成信号
 
-    def __init__(self, tables_to_monitor):
+    def __init__(self, tables_to_monitor, data_manager):
         """初始化数据更新工作线程
         参数:
             data_manager: 数据管理器实例
@@ -2899,7 +2916,7 @@ class HistoricalDataQueryWorker(QObject):
     finished = pyqtSignal()
     error = pyqtSignal(str)
 
-    def __init__(self, tables, exact_time, start_time, end_time):
+    def __init__(self, tables, exact_time, start_time, end_time, historical_data_manager):
         """初始化历史数据查询工作线程
         Args:
             tables: 要查询的表名列表3
