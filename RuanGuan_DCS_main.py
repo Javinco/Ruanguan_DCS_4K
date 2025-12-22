@@ -923,7 +923,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
                 'curve6': 'lower_limit_alarm'
             },
             colors=CLASS_COLORS1,  #曲线颜色配置
+            historical_data_manager = self.historical_data_manager,
             y_limits=(-1, 1)  # Y轴显示范围
+
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
@@ -940,7 +942,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
             },
             # 参数映射关系
             colors=CLASS_COLORS2,  #曲线颜色配置
-            y_limits=(0, 200)  # Y轴最大范围200
+            historical_data_manager = self.historical_data_manager,
+            y_limits=(0, 200),  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -1175,6 +1178,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'lower_limit_alarm'
             },
             colors=CLASS_COLORS1,  #曲线颜色配置
+            historical_data_manager=self.historical_data_manager,
             y_limits=(-1, 1)  # Y轴显示范围
         )
 
@@ -1192,6 +1196,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             },
             # 参数映射关系
             colors=CLASS_COLORS2,  #曲线颜色配置
+            historical_data_manager=self.historical_data_manager,
             y_limits=(0, 200)  # Y轴最大范围200
         )
 
@@ -1427,6 +1432,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'lower_limit_alarm'
             },
             colors=CLASS_COLORS1,  #曲线颜色配置
+            historical_data_manager=self.historical_data_manager,
             y_limits=(-1, 1)  # Y轴显示范围
         )
 
@@ -1444,6 +1450,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             },
             # 参数映射关系
             colors=CLASS_COLORS2,  #曲线颜色配置
+            historical_data_manager=self.historical_data_manager,
             y_limits=(0, 200)  # Y轴最大范围200
         )
 
