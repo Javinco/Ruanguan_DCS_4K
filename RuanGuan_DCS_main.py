@@ -3,7 +3,7 @@ import sys
 from datetime import datetime, timedelta
 import socket
 import serial
-
+import threading
 # 从PyQt5导入需要的组件
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QTableWidgetItem
 from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal, QThread
@@ -2284,30 +2284,41 @@ class DataUpdateWorker(QObject):
         self.running = True
         # 存储本地缓存的版本号
         self.data_versions = {table: 0 for table in self.tables_to_monitor}
+        # 添加线程安全锁
+        self._lock = threading.Lock()
 
     def run(self):
         """线程运行方法，定期检查数据库更新"""
-        while self.running:
-            # 获取所有表的当前版本号
-            current_versions = self.data_manager.get_data_versions()
+        try:
+            while self.running:
+                # 使用锁确保线程安全
+                with self._lock:
+                    # 获取所有表的当前版本号
+                    current_versions = self.data_manager.get_data_versions()
 
-            # 检查每个监控的表是否有更新
-            for table_name in self.tables_to_monitor:
-                if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
-                    # 获取表的最新数据
-                    data = self.data_manager.get_realtime_data(table_name)
-                    if data:  # 确保数据有效
-                        # 发送信号，将表名和数据传递给主线程
-                        self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
-                    # 更新本地版本号
-                    self.data_versions[table_name] = current_versions[table_name]
+                    # 检查每个监控的表是否有更新
+                    for table_name in self.tables_to_monitor:
+                        if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
+                            # 获取表的最新数据
+                            data = self.data_manager.get_realtime_data(table_name)
+                            if data:  # 确保数据有效
+                                # 发送信号，将表名和数据传递给主线程
+                                self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
+                            # 更新本地版本号
+                            self.data_versions[table_name] = current_versions[table_name]
 
-            # 短暂休眠，避免过度占用CPU
-            QThread.msleep(100)  # 休眠100毫秒
+                # 增加休眠时间，减少CPU占用
+                QThread.msleep(500)  # 从100ms增加到500ms
+
+        except Exception as e:
+            print(f"DataUpdateWorker运行异常: {e}")
+        finally:
+            self.finished.emit()  # type: ignore[attr-defined]
 
     def stop(self):
         """停止线程运行"""
-        self.running = False
+        with self._lock:
+            self.running = False
         self.finished.emit()  # type: ignore[attr-defined]
 
 
