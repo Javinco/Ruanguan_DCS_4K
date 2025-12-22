@@ -1185,35 +1185,35 @@ class PLCHistoricalDataManager:
 # manager = DataManager()
 # print(manager.get_realtime_data('jcj', 1))
 # 模块级单例实例
-inserter = DataInserter()
-data_manager = DataManager()
-historical_data_manager = HistoricalDataManager()
-# 延迟初始化的PLC数据管理器
-_plc_data_manager = None
-_plc_historical_data_manager = None
-
-def get_plc_data_manager():
-    """获取PLC数据管理器实例（懒加载）"""
-    global _plc_data_manager
-    if _plc_data_manager is None:
-        _plc_data_manager = PLCDataManager()
-    return _plc_data_manager
-
-def get_plc_historical_data_manager():
-    """获取PLC历史数据管理器实例（懒加载）"""
-    global _plc_historical_data_manager
-    if _plc_historical_data_manager is None:
-        _plc_historical_data_manager = PLCHistoricalDataManager()
-    return _plc_historical_data_manager
-
-# 为了保持向后兼容，提供属性访问方式
-@property
-def plc_data_manager():
-    return get_plc_data_manager()
-
-@property
-def plc_historical_data_manager():
-    return get_plc_historical_data_manager()
+# inserter = DataInserter()
+# data_manager = DataManager()
+# historical_data_manager = HistoricalDataManager()
+# # 延迟初始化的PLC数据管理器
+# _plc_data_manager = None
+# _plc_historical_data_manager = None
+#
+# def get_plc_data_manager():
+#     """获取PLC数据管理器实例（懒加载）"""
+#     global _plc_data_manager
+#     if _plc_data_manager is None:
+#         _plc_data_manager = PLCDataManager()
+#     return _plc_data_manager
+#
+# def get_plc_historical_data_manager():
+#     """获取PLC历史数据管理器实例（懒加载）"""
+#     global _plc_historical_data_manager
+#     if _plc_historical_data_manager is None:
+#         _plc_historical_data_manager = PLCHistoricalDataManager()
+#     return _plc_historical_data_manager
+#
+# # 为了保持向后兼容，提供属性访问方式
+# @property
+# def plc_data_manager():
+#     return get_plc_data_manager()
+#
+# @property
+# def plc_historical_data_manager():
+#     return get_plc_historical_data_manager()
 
 plc1_data_manager = PLCDataManager(host= '192.168.1.10')
 plc2_data_manager = PLCDataManager(host= '192.168.1.11')

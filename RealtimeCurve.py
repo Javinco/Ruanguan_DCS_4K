@@ -33,7 +33,7 @@ class CurveDataProcessor(QObject):
         # 计算最大数据点数量（基于时间间隔和0.1秒采样率）
         max_points = self.time_interval_minutes * 600
         self.time_data = deque(maxlen=max_points)
-        self.curve_data = {f'curve{i}': deque(maxlen=max_points) for i in range(1, 31)}
+        self.curve_data = {f'curve{i}': deque(maxlen=max_points) for i in range(1, 7)}
 
     def process_data(self, data):
         """处理新的数据点
@@ -51,7 +51,7 @@ class CurveDataProcessor(QObject):
         self.time_data.append(timestamp)
 
         # 循环追加所有曲线数据
-        for i in range(1, 31):
+        for i in range(1, 7):
             curve_key = f'curve{i}'
             param_name = self.params_config.get(curve_key)
             if param_name:
@@ -87,7 +87,7 @@ class CurveDataProcessor(QObject):
         # 准备曲线数据
         curves_to_draw = []
 
-        for i in range(1, 31):
+        for i in range(1, 7):
             curve_key = f'curve{i}'
 
             # 检查曲线是否应该可见
@@ -139,7 +139,7 @@ class CurveDataProcessor(QObject):
             max_points = self.time_interval_minutes * 600
             # 更新deque的最大长度
             self.time_data = deque(self.time_data, maxlen=max_points)
-            for i in range(1, 31):
+            for i in range(1, 7):
                 curve_key = f'curve{i}'
                 self.curve_data[curve_key] = deque(self.curve_data[curve_key], maxlen=max_points)
 
@@ -171,19 +171,19 @@ class RealTimeCurvePlotter(QWidget):
         self._setup_layout()
 
         # 添加曲线可见性控制字典，默认所有曲线可见
-        self.visible_curves = {f'curve{i}': True for i in range(1, 31)}
+        self.visible_curves = {f'curve{i}': True for i in range(1, 7)}
         # 初始化曲线对象字典，存储所有曲线的PlotDataItem对象
-        self.curve_objects = {f'curve{i}': None for i in range(1, 31)}
+        self.curve_objects = {f'curve{i}': None for i in range(1, 7)}
         # 定义30种对比鲜明的颜色（适配黑色背景）
         self.curve_colors = colors
         # 新增：尾段图层/状态缓存与刷新策略
-        self.curve_tail_objects = {f'curve{i}': None for i in range(1, 31)}  # 尾段曲线（高频少点）
-        self.curve_last_len = {f'curve{i}':  0 for i in range(1, 31)}         # 已绘制的累计点数
+        self.curve_tail_objects = {f'curve{i}': None for i in range(1, 7)}  # 尾段曲线（高频少点）
+        self.curve_last_len = {f'curve{i}':  0 for i in range(1, 7)}         # 已绘制的累计点数
         self.tail_length_points = 100                                        # 尾段长度（可调）
         self.full_refresh_interval_ms = 1000                                  # 历史层全量刷新周期
         self._last_full_refresh_ts_ms = 0                                     # 上次历史层刷新时间戳(ms)
         # 新增：记录每条曲线最后一次绘制的数据的“最后时间戳”，用于在滑动窗口满后仍能识别新数据
-        self.curve_last_x = {f'curve{i}': None for i in range(1, 31)}
+        self.curve_last_x = {f'curve{i}': None for i in range(1, 7)}
 
         # 初始化数据处理线程
         self._init_data_processor()
@@ -303,7 +303,7 @@ class RealTimeCurvePlotter(QWidget):
             do_full_refresh = (now_ms - self._last_full_refresh_ts_ms) >= self.full_refresh_interval_ms
 
             # 隐藏不可见曲线（历史层 + 尾段层）
-            for i in range(1, 31):
+            for i in range(1, 7):
                 curve_key = f'curve{i}'
                 if not self.visible_curves.get(curve_key, True):
                     if self.curve_objects[curve_key] is not None:

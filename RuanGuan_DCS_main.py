@@ -16,7 +16,7 @@ from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_historical_parameter_factory1_2 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device2
 from Ui_pop_historical_parameter_factory1_3 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device3
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import data_manager, inserter, historical_data_manager, get_plc_data_manager, get_plc_historical_data_manager,plc1_data_manager,plc2_data_manager,plc3_data_manager,plc1_historical_data_manager,plc2_historical_data_manager,plc3_historical_data_manager
+from Data_Manager import plc1_data_manager,plc2_data_manager,plc3_data_manager,plc1_historical_data_manager,plc2_historical_data_manager,plc3_historical_data_manager
 from Ruanguan_Curve import RealTimeMainWindowCurve1
 # from Ruanguan_Historical import HistoricalCurvePlotter
 from RealtimeCurve import RealTimeCurvePlotter
@@ -1680,7 +1680,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor)
+        worker = DataUpdateWorker(tables_to_monitor, plc1_data_manager)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -2523,7 +2523,7 @@ class AlarmHistoryQueryWorker(QObject):
         self.start_time_str = start_time_str
         self.end_time_str = end_time_str
         # 创建历史数据管理器实例
-        self.hist_data_manager = historical_data_manager
+        self.hist_data_manager = plc1_historical_data_manager
 
     def run(self):
         """执行报警历史数据查询任务"""

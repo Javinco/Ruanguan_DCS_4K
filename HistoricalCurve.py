@@ -28,9 +28,9 @@ class HistoricalCurvePlotter(QWidget):
         self._setup_layout()
 
         # 添加曲线可见性控制字典，默认所有曲线可见
-        self.visible_curves = {f'curve{i}': True for i in range(1, 31)}
+        self.visible_curves = {f'curve{i}': True for i in range(1, 7)}
         # 初始化曲线对象字典，存储所有曲线的PlotDataItem对象
-        self.curve_objects = {f'curve{i}': None for i in range(1, 31)}
+        self.curve_objects = {f'curve{i}': None for i in range(1, 7)}
 
         # 定义30种对比鲜明的颜色（适配黑色背景）
         self.curve_colors = colors
@@ -105,14 +105,14 @@ class HistoricalCurvePlotter(QWidget):
             for curve_obj in self.curve_objects.values():
                 if curve_obj is not None:
                     self.plot_widget.removeItem(curve_obj)
-            self.curve_objects = {f'curve{i}': None for i in range(1, 31)}
+            self.curve_objects = {f'curve{i}': None for i in range(1, 7)}
             return
 
         # 清空现有曲线
         for curve_obj in self.curve_objects.values():
             if curve_obj is not None:
                 self.plot_widget.removeItem(curve_obj)
-        self.curve_objects = {f'curve{i}': None for i in range(1, 31)}
+        self.curve_objects = {f'curve{i}': None for i in range(1, 7)}
 
         # 提取时间戳列表并转换为时间戳格式
         timestamps = []
@@ -124,7 +124,7 @@ class HistoricalCurvePlotter(QWidget):
                 timestamps.append(item['timestamp'])
 
         # 循环绘制曲线
-        for i in range(1, 31):
+        for i in range(1, 7):
             curve_key = f'curve{i}'
             param_name = self.params_config.get(curve_key)
             if not param_name:  # 如果没有配置该曲线，跳过
