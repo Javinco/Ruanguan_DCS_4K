@@ -828,19 +828,19 @@ class PLCDataManager:
         'factory2_4_production_data',  # 新增生产数据表
         'factory2_4_alarm_data',
     ]
-    _instance = None  # 单例实例
-    _lock = threading.Lock()  # 添加线程锁
+    # _instance = None  # 单例实例
+    # _lock = threading.Lock()  # 添加线程锁
 
-    def __new__(cls, *args, **kwargs):
-        """实例创建方法（线程安全单例模式实现）"""
-        with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
-            # 检查是否已有实例存在
-            if cls._instance is None:
-                # 调用父类__new__方法创建新实例
-                cls._instance = super().__new__(cls)
-                # 初始化标记（防止重复初始化）
-                cls._instance.__initialized = False
-            return cls._instance    # 返回单例实例
+    # def __new__(cls, *args, **kwargs):
+    #     """实例创建方法（线程安全单例模式实现）"""
+    #     with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
+    #         # 检查是否已有实例存在
+    #         if cls._instance is None:
+    #             # 调用父类__new__方法创建新实例
+    #             cls._instance = super().__new__(cls)
+    #             # 初始化标记（防止重复初始化）
+    #             cls._instance.__initialized = False
+    #         return cls._instance    # 返回单例实例
     # 初始化方法（构造器）
     def __init__(self, host='192.168.10.99', user='root', password='admin', database='dcs_data'):
         """数据库管理器
@@ -859,10 +859,10 @@ class PLCDataManager:
             'pool_size': 20,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
-        # 单例初始化控制（防止重复初始化）
-        if self.__initialized:  # 检查是否已经初始化
-            return  # 如果已初始化则直接返回
-        self.__initialized = True   # 设置初始化标记
+        # # 单例初始化控制（防止重复初始化）
+        # if self.__initialized:  # 检查是否已经初始化
+        #     return  # 如果已初始化则直接返回
+        # self.__initialized = True   # 设置初始化标记
         self.connection_pool = None  # 添加连接池状态标记
         self.connection_available = False  # 添加连接可用性标记
         self._init_pool()  # 调用私有方法初始化连接池
@@ -1186,8 +1186,8 @@ class PLCHistoricalDataManager:
 # print(manager.get_realtime_data('jcj', 1))
 # 模块级单例实例
 # inserter = DataInserter()
-# data_manager = DataManager()
-# historical_data_manager = HistoricalDataManager()
+data_manager = DataManager()
+historical_data_manager = HistoricalDataManager()
 # # 延迟初始化的PLC数据管理器
 # _plc_data_manager = None
 # _plc_historical_data_manager = None
