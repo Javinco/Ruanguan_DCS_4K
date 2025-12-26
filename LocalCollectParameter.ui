@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>350</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>350</width>
+      <height>300</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(192, 192, 192);</string>
+    </property>
+    <widget class="QLabel" name="title_DCS">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>0</y>
+       <width>320</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>23</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>数据采集设备参数配置</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_1">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>80</y>
+       <width>80</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <item>
+      <property name="text">
+       <string>COM1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM6</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM7</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM8</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM11</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM12</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM13</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM14</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM15</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM16</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM17</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM18</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM19</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM20</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBox_2">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>130</y>
+       <width>80</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="currentText">
+      <string>COM2</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>COM2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM6</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM7</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM8</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM11</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM12</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM13</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM14</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM15</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM16</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM17</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM18</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM19</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM20</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBox_3">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>180</y>
+       <width>80</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="currentText">
+      <string>COM3</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>COM3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM6</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM7</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM8</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM11</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM12</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM13</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM14</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM15</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM16</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM17</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM18</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM19</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM20</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QComboBox" name="comboBox_4">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>230</y>
+       <width>80</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="currentText">
+      <string>COM4</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>COM4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM6</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM7</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM8</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM11</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM12</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM13</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM14</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM15</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM16</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM17</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM18</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM19</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>COM20</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="title_DCS_2">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>70</y>
+       <width>51</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>PLC0</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_3">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>120</y>
+       <width>51</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>PLC1</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_4">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>170</y>
+       <width>51</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>PLC2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_5">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>220</y>
+       <width>51</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>PLC3</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_7">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>70</y>
+       <width>60</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>端口号:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_9">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>120</y>
+       <width>60</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>端口号:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_11">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>170</y>
+       <width>60</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>端口号:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="title_DCS_13">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>220</y>
+       <width>60</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>端口号:</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
