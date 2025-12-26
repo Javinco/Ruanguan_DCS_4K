@@ -859,13 +859,15 @@ class PLCDataManager:
             'pool_size': 20,  # 连接池中保持的活跃连接数（防止多线程竞争）
             'autocommit': True
         }
+        self.host = host
         # # 单例初始化控制（防止重复初始化）
         # if self.__initialized:  # 检查是否已经初始化
         #     return  # 如果已初始化则直接返回
         # self.__initialized = True   # 设置初始化标记
         self.connection_pool = None  # 添加连接池状态标记
         self.connection_available = False  # 添加连接可用性标记
-        self._init_pool()  # 调用私有方法初始化连接池
+        # self._init_pool()  # 调用私有方法初始化连接池
+        self._start_reconnect_thread()  # 启动后台连接线程
 
     def get_data_versions(self):
         """获取各表数据版本号（实际查询数据库）"""
@@ -915,10 +917,10 @@ class PLCDataManager:
                 **self.config  # 解包连接配置参数
             )
             self.connection_available = True  # 标记连接可用
-            print(f"PLCDataManager连接池初始化成功")
+            print(f"PLCDataManager{self.host}连接池初始化成功")
         except Error as e:
-            print(f"PLCDataManager连接池初始化失败: {e}")  # 输出错误详细信息
-            print(f"将在后台尝试重连mini机数据库...")
+            print(f"PLCDataManager{self.host}连接池初始化失败: {e}")  # 输出错误详细信息
+            print(f"将在后台尝试重连mini机{self.host}数据库...")
             self.connection_available = False  # 标记连接不可用
             self.connection_pool = None
             # 启动重连线程，不退出程序
@@ -936,7 +938,7 @@ class PLCDataManager:
 
             while not self.connection_available and (max_retries == -1 or retry_count < max_retries):
                 retry_count += 1
-                print(f"PLCDataManager第{retry_count}次尝试重连mini机数据库...")
+                print(f"PLCDataManager{self.host}第{retry_count}次尝试重连mini机数据库...")
 
                 try:
                     self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
@@ -945,10 +947,10 @@ class PLCDataManager:
                         **self.config
                     )
                     self.connection_available = True
-                    print(f"PLCDataManager重连成功！")
+                    print(f"PLCDataManager{self.host}重连成功！")
                     break
                 except Error as e:
-                    print(f"PLCDataManager重连失败: {e}，{retry_interval}秒后重试...")
+                    print(f"PLCDataManager{self.host}重连失败: {e}，{retry_interval}秒后重试...")
                     time.sleep(retry_interval)
 
         # 创建并启动重连线程
@@ -964,7 +966,7 @@ class PLCDataManager:
                   None表示查询失败
         """
         if not self.connection_available or not self.connection_pool:
-            print(f"PLCDataManager连接不可用，跳过数据查询")
+            print(f"PLCDataManager{self.host}连接不可用，跳过数据查询")
             return None
 
         try:  # try关键字：异常处理开始，捕获代码块中可能发生的异常
@@ -1021,9 +1023,11 @@ class PLCHistoricalDataManager:
             'pool_size': 1,  # 连接池容量（根据历史查询并发量设置）
             'autocommit': True  # 自动提交模式（查询操作无需事务）
         }
+        self.host = host
         self.connection_pool = None  # 连接池对象占位符
         self.connection_available = False  # 添加连接可用性标记
-        self._init_pool()  # 立即初始化连接池
+        # self._init_pool()  # 立即初始化连接池
+        self._start_reconnect_thread()  # 启动后台连接线程
 
     def _init_pool(self):
         """私有方法：初始化MySQL连接池
@@ -1036,10 +1040,10 @@ class PLCHistoricalDataManager:
                 **self.config  # 解包连接配置参数
             )
             self.connection_available = True  # 标记连接可用
-            print(f"PLCHistoricalDataManager连接池初始化成功")
+            print(f"PLCHistoricalDataManager{self.host}连接池初始化成功")
         except Error as e:  # 捕获数据库驱动异常
-            print(f"PLCHistoricalDataManager连接池初始化失败: {e}")  # 输出详细错误信息
-            print(f"将在后台尝试重连mini机数据库...")
+            print(f"PLCHistoricalDataManager{self.host}连接池初始化失败: {e}")  # 输出详细错误信息
+            print(f"将在后台尝试重连mini机{self.host}数据库...")
             self.connection_available = False  # 标记连接不可用
             self.connection_pool = None
             # 启动重连线程，不退出程序
@@ -1057,7 +1061,7 @@ class PLCHistoricalDataManager:
 
             while not self.connection_available and (max_retries == -1 or retry_count < max_retries):
                 retry_count += 1
-                print(f"PLCHistoricalDataManager第{retry_count}次尝试重连mini机数据库...")
+                print(f"PLCHistoricalDataManager{self.host}第{retry_count}次尝试重连mini机数据库...")
 
                 try:
                     self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
@@ -1066,10 +1070,10 @@ class PLCHistoricalDataManager:
                         **self.config
                     )
                     self.connection_available = True
-                    print(f"PLCHistoricalDataManager重连成功！")
+                    print(f"PLCHistoricalDataManager{self.host}重连成功！")
                     break
                 except Error as e:
-                    print(f"PLCHistoricalDataManager重连失败: {e}，{retry_interval}秒后重试...")
+                    print(f"PLCHistoricalDataManager{self.host}重连失败: {e}，{retry_interval}秒后重试...")
                     time.sleep(retry_interval)
 
         # 创建并启动重连线程
@@ -1088,7 +1092,7 @@ class PLCHistoricalDataManager:
         # 连接池有效性验证（防御性编程）
         # 检查连接是否可用
         if not self.connection_available or not self.connection_pool:
-            print(f"PLCHistoricalDataManager连接不可用，跳过历史数据查询")
+            print(f"PLCHistoricalDataManager{self.host}连接不可用，跳过历史数据查询")
             return []
 
         # 从连接池获取数据库连接
