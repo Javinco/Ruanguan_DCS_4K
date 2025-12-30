@@ -318,6 +318,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
                             "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
                             "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            ),
+            'thread4': (
+                "factory2_4_plc3",
+                (1000, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7"])
             )
         }
 
@@ -358,6 +363,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # 启动线程3
         self.start_single_thread('thread3', self.get_com(self.comboBox_3))
+        # 启动线程4
+        self.start_single_thread('thread4', self.get_com(self.comboBox_4))
 
     def closeEvent(self, event):
         """窗口关闭时清理所有线程"""
