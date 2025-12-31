@@ -2272,12 +2272,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().closeEvent(event)
 
 
-# ---------------------------------数据更新工作线程类---------------------------------
 class DataUpdateWorker(QObject):
     """数据更新工作线程类，负责从数据库获取数据并发送信号"""
     # 定义信号，用于将获取的数据传递给主线程
     data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
     finished = pyqtSignal()  # 完成信号
+    connection_lost = pyqtSignal()  # 连接丢失信号
+    connection_restored = pyqtSignal()  # 连接恢复信号
 
     def __init__(self, tables_to_monitor, data_manager):
         """初始化数据更新工作线程
@@ -2293,6 +2294,26 @@ class DataUpdateWorker(QObject):
         self.data_versions = {table: 0 for table in self.tables_to_monitor}
         # 添加线程安全锁
         self._lock = threading.Lock()
+        # 连接状态跟踪
+        self.connection_available = False
+        self.last_connection_check = 0
+
+        # 连接数据管理器的连接状态变化信号
+        if hasattr(self.data_manager, 'connection_status_changed'):
+            self.data_manager.connection_status_changed.connect(self._on_connection_status_changed)
+
+    def _on_connection_status_changed(self, is_connected):
+        """处理连接状态变化"""
+        if is_connected and not self.connection_available:
+            # 连接刚恢复
+            self.connection_available = True
+            self.connection_restored.emit()  # type: ignore[attr-defined]
+            print("DataUpdateWorker: 数据管理器连接已恢复")
+        elif not is_connected and self.connection_available:
+            # 连接刚丢失
+            self.connection_available = False
+            self.connection_lost.emit()  # type: ignore[attr-defined]
+            print("DataUpdateWorker: 数据管理器连接已丢失")
 
     def run(self):
         """线程运行方法，定期检查数据库更新"""
@@ -2300,22 +2321,36 @@ class DataUpdateWorker(QObject):
             while self.running:
                 # 使用锁确保线程安全
                 with self._lock:
-                    # 获取所有表的当前版本号
-                    current_versions = self.data_manager.get_data_versions()
+                    try:
+                        # 获取所有表的当前版本号
+                        current_versions = self.data_manager.get_data_versions()
 
-                    # 检查每个监控的表是否有更新
-                    for table_name in self.tables_to_monitor:
-                        if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
-                            # 获取表的最新数据
-                            data = self.data_manager.get_realtime_data(table_name)
-                            if data:  # 确保数据有效
-                                # 发送信号，将表名和数据传递给主线程
-                                self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
-                            # 更新本地版本号
-                            self.data_versions[table_name] = current_versions[table_name]
+                        # # 如果成功获取版本号，说明连接正常
+                        # if not self.connection_available:
+                        #     self.connection_available = True
+                        #     self.connection_restored.emit()  # type: ignore[attr-defined]
+                        #     print("DataUpdateWorker: 数据管理器连接正常")
+
+                        # 检查每个监控的表是否有更新
+                        for table_name in self.tables_to_monitor:
+                            if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
+                                # 获取表的最新数据
+                                data = self.data_manager.get_realtime_data(table_name)
+                                if data:  # 确保数据有效
+                                    # 发送信号，将表名和数据传递给主线程
+                                    self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
+                                # 更新本地版本号
+                                self.data_versions[table_name] = current_versions[table_name]
+
+                    except Exception as e:
+                        # 连接异常处理
+                        if self.connection_available:
+                            self.connection_available = False
+                            self.connection_lost.emit()  # type: ignore[attr-defined]
+                            print(f"DataUpdateWorker: 数据管理器连接异常 - {e}")
 
                 # 增加休眠时间，减少CPU占用
-                QThread.msleep(500)  # 从100ms增加到500ms
+                QThread.msleep(1000)  # 从500ms增加到1000ms，连接异常时延长
 
         except Exception as e:
             print(f"DataUpdateWorker运行异常: {e}")
@@ -2469,22 +2504,17 @@ class InsertWorker(QObject):
         self.cleanup()
 
 
-# ---------------------------------参数弹窗历史数据查询工作线程类---------------------------------
 class HistoricalDataQueryWorker(QObject):
     """执行历史数据查询的工作线程类"""
     # 定义信号，用于将查询结果传递给主线程
     data_ready = pyqtSignal(dict)
     finished = pyqtSignal()
     error = pyqtSignal(str)
+    connection_lost = pyqtSignal()  # 连接丢失信号
+    connection_restored = pyqtSignal()  # 连接恢复信号
 
     def __init__(self, tables, exact_time, start_time, end_time, historical_data_manager):
-        """初始化历史数据查询工作线程
-        Args:
-            tables: 要查询的表名列表3
-            exact_time: 精确时间点
-            start_time: 查询开始时间·
-            end_time: 查询结束时间
-        """
+        """初始化历史数据查询工作线程"""
         super().__init__()
         self.tables = tables
         self.exact_time = exact_time
@@ -2492,10 +2522,34 @@ class HistoricalDataQueryWorker(QObject):
         self.end_time = end_time
         # 创建历史数据管理器实例
         self.hist_data_manager = historical_data_manager
+        # 连接状态跟踪
+        self.connection_available = True
+
+        # 连接历史数据管理器的连接状态变化信号
+        if hasattr(self.hist_data_manager, 'connection_status_changed'):
+            self.hist_data_manager.connection_status_changed.connect(self._on_connection_status_changed)
+
+    def _on_connection_status_changed(self, is_connected):
+        """处理连接状态变化"""
+        if is_connected and not self.connection_available:
+            # 连接刚恢复
+            self.connection_available = True
+            self.connection_restored.emit()  # type: ignore[attr-defined]
+            print("HistoricalDataQueryWorker: 历史数据管理器连接已恢复")
+        elif not is_connected and self.connection_available:
+            # 连接刚丢失
+            self.connection_available = False
+            self.connection_lost.emit()  # type: ignore[attr-defined]
+            print("HistoricalDataQueryWorker: 历史数据管理器连接已丢失")
 
     def run(self):
         """执行历史数据查询任务"""
         try:
+            # 检查连接状态
+            if not self.connection_available:
+                self.error.emit("历史数据管理器连接不可用")  # type: ignore[attr-defined]
+                return
+
             # 存储所有查询结果的字典
             result_data = {}
 
@@ -2616,259 +2670,259 @@ class AlarmHistoryQueryWorker(QObject):
         return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
 
 
-# ---------------------------------PLC数据工作线程类---------------------------------
-class PlcDataWorker(QObject):
-    """执行PLC数据读取和保存的工作类（在线程中运行）"""
-    # 定义信号
-    finished = pyqtSignal()  # 完成信号
-    data_updated = pyqtSignal(str, dict)  # 数据更新信号：表名和数据字典
-
-    def __init__(self, groups_config, com, serial_port=None):
-        """构造函数
-        参数:
-            plc_config: PLC配置参数，包含地址映射和表名
-            serial_port: 串口对象
-        """
-        super().__init__()
-        self.groups_config = groups_config  # PLC配置参数
-        self.com = com  # com口对象
-        self.serial_port = serial_port  # 串口对象
-        self.keep_running = True  # 控制线程运行的标志
-        self.data_manager = plc_data_manager  # 数据管理器实例
-
-    def init_serial(self):
-        """初始化串口连接"""
-        if not self.serial_port or not self.serial_port.is_open:
-            try:
-                # 如果没有提供串口对象或串口未打开，则创建新的串口连接
-                self.serial_port = serial.Serial(
-                    port=self.com,  # 串口号
-                    baudrate=9600,  # 波特率
-                    bytesize=serial.SEVENBITS,  # 数据位7
-                    parity=serial.PARITY_EVEN,  # 偶验位
-                    stopbits=serial.STOPBITS_ONE,  # 停止位
-                    timeout=1  # 超时时间
-                )
-                print(f"成功打开串口 {self.com}")
-                return True
-            except Exception as e:
-                print(f"串口{self.com}打开失败: {str(e)}")
-                self.serial_port = None
-                return False
-        return True
-
-    def run(self):
-        """线程运行方法，定期读取PLC数据并保存"""
-        from time import sleep
-
-        try:
-            while self.keep_running:
-                try:
-                    if not self.init_serial():
-                        sleep(1)  # 连接失败则休眠1秒
-                        continue  # 跳过本次循环，重新尝试
-
-                    combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-
-                    for table_name, groups in self.groups_config:
-                        for start_addr, reg_count, fields in groups:
-                            values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)
-                            print(f'values:{values}---reg_count:{reg_count}')
-                            # 添加数据有效性检查
-                            if len(values) < reg_count / 2:
-                                raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
-
-                            # 使用字典推导式映射字段
-                            combined_data.update({
-                                field: values[i]
-                                for i, field in enumerate(fields)
-                                if i < len(values)
-                            })
-
-                        self.data_manager.save_combined_data(table_name, combined_data)
-                        print(f"向{table_name}存储数据成功: {combined_data}")
-
-                    # # 短暂休眠，控制读取频率
-                    # sleep(1)
-
-                except serial.SerialException as e:
-                    print(f"串口异常: {str(e)}")
-                    self.serial_port = None  # 清除串口对象，下次循环重新初始化
-                    sleep(1)
-                except Exception as e:
-                    print(f"运行时异常: {str(e)}")
-                    sleep(1)
-
-        finally:
-            # 清理资源
-            self.cleanup()
-            # 发送完成信号
-            self.finished.emit()  #type: ignore[attr-defined]
-
-    def cleanup(self):
-        """清理资源"""
-        if self.serial_port and self.serial_port.is_open:
-            try:
-                self.serial_port.close()
-                print("串口已关闭")
-            except Exception as e:
-                print(f"关闭串口异常: {str(e)}")
-
-    def stop(self):
-        """停止线程运行"""
-        self.keep_running = False
-
-
-# ---------------------------------PLC数据更新工作线程类---------------------------------
-class PLCDataUpdateWorker(QObject):
-    """数据更新工作线程类，负责从数据库获取数据并发送信号"""
-    # 定义信号，用于将获取的数据传递给主线程
-    data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
-    finished = pyqtSignal()  # 完成信号
-
-    def __init__(self, tables_to_monitor):
-        """初始化数据更新工作线程
-        参数:
-            data_manager: 数据管理器实例
-            tables_to_monitor: 需要监控的表名列表
-        """
-        super().__init__()
-        self.tables_to_monitor = tables_to_monitor
-        self.running = True
-        self.data_manager = None  # 延迟初始化
-        # 存储本地缓存的版本号
-        self.data_versions = {table: 0 for table in self.tables_to_monitor}
-
-    def init_data_manager(self):
-        """初始化数据管理器连接（在run方法中调用）"""
-        if not self.data_manager:
-            try:
-                self.data_manager = get_plc_data_manager()
-                if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
-                    print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
-                    self.data_manager = None
-                    return False
-                return True
-            except Exception as e:
-                print(f"数据管理器初始化失败: {e}")
-                self.data_manager = None
-                return False
-        return True
-
-    def run(self):
-        """线程运行方法，定期检查数据库更新"""
-        while self.running:
-            # 延迟初始化数据管理器
-            if not self.init_data_manager():
-                QThread.msleep(1000)  # 等待1秒后重试
-                continue
-            # 检查数据管理器是否可用
-            if not self.data_manager or not getattr(self.data_manager, 'connection_available', False):
-                QThread.msleep(1000)  # 等待1秒后重试
-                continue
-
-            try:
-                # 获取所有表的当前版本号
-                current_versions = self.data_manager.get_data_versions()
-
-                # 检查每个监控的表是否有更新
-                for table_name in self.tables_to_monitor:
-                    if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
-                        # 获取表的最新数据
-                        data = self.data_manager.get_realtime_data(table_name)
-                        if data:  # 确保数据有效
-                            # 发送信号，将表名和数据传递给主线程
-                            self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
-                        # 更新本地版本号
-                        self.data_versions[table_name] = current_versions[table_name]
-
-            except Exception as e:
-                print(f"数据更新异常: {e}")
-                QThread.msleep(1000)
-                continue
-
-            # 短暂休眠，避免过度占用CPU
-            QThread.msleep(100)  # 休眠100毫秒
-
-    def stop(self):
-        """停止线程运行"""
-        self.running = False
-        self.finished.emit()  # type: ignore[attr-defined]
-
-
-# ---------------------------------PLC参数弹窗历史数据查询工作线程类---------------------------------
-class PLCHistoricalDataQueryWorker(QObject):
-    """执行历史数据查询的工作线程类"""
-    # 定义信号，用于将查询结果传递给主线程
-    data_ready = pyqtSignal(dict)
-    finished = pyqtSignal()
-    error = pyqtSignal(str)
-
-    def __init__(self, tables, exact_time, start_time, end_time):
-        """初始化历史数据查询工作线程
-        Args:
-            tables: 要查询的表名列表
-            exact_time: 精确时间点
-            start_time: 查询开始时间
-            end_time: 查询结束时间
-        """
-        super().__init__()
-        self.tables = tables
-        self.exact_time = exact_time
-        self.start_time = start_time
-        self.end_time = end_time
-        self.hist_data_manager = None  # 延迟初始化
-
-    def init_hist_data_manager(self):
-        """初始化历史数据管理器连接（在run方法中调用）"""
-        if not self.hist_data_manager:
-            try:
-                self.hist_data_manager = get_plc_historical_data_manager()
-                if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
-                    print("警告：历史数据管理器连接不可用")
-                    self.hist_data_manager = None
-                    return False
-                return True
-            except Exception as e:
-                print(f"历史数据管理器初始化失败: {e}")
-                self.hist_data_manager = None
-                return False
-        return True
-
-    def run(self):
-        """执行历史数据查询任务"""
-        try:
-            # 延迟初始化历史数据管理器
-            if not self.init_hist_data_manager():
-                self.error.emit("历史数据管理器连接不可用，请检查数据库连接")  # type: ignore[attr-defined]
-                return
-            # 检查历史数据管理器是否可用
-            if not self.hist_data_manager:
-                self.error.emit("历史数据管理器连接不可用，请检查数据库连接")  # type: ignore[attr-defined]
-                return
-            # 存储所有查询结果的字典
-            result_data = {}
-
-            # 遍历所有目标数据表
-            for table in self.tables:
-                # 执行精确时间点查询
-                data = self.hist_data_manager.get_nearest_data(
-                    table,
-                    self.exact_time,
-                    self.start_time,
-                    self.end_time
-                )
-                # 存储查询结果
-                result_data[table] = data
-
-            # 发送查询结果信号
-            self.data_ready.emit(result_data)  # type: ignore[attr-defined]
-        except Exception as e:
-            print(f"历史数据查询异常: {str(e)}")
-            self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
-        finally:
-            # 发送完成信号
-            self.finished.emit()  # type: ignore[attr-defined]
+# # ---------------------------------PLC数据工作线程类---------------------------------
+# class PlcDataWorker(QObject):
+#     """执行PLC数据读取和保存的工作类（在线程中运行）"""
+#     # 定义信号
+#     finished = pyqtSignal()  # 完成信号
+#     data_updated = pyqtSignal(str, dict)  # 数据更新信号：表名和数据字典
+#
+#     def __init__(self, groups_config, com, serial_port=None):
+#         """构造函数
+#         参数:
+#             plc_config: PLC配置参数，包含地址映射和表名
+#             serial_port: 串口对象
+#         """
+#         super().__init__()
+#         self.groups_config = groups_config  # PLC配置参数
+#         self.com = com  # com口对象
+#         self.serial_port = serial_port  # 串口对象
+#         self.keep_running = True  # 控制线程运行的标志
+#         self.data_manager = plc_data_manager  # 数据管理器实例
+#
+#     def init_serial(self):
+#         """初始化串口连接"""
+#         if not self.serial_port or not self.serial_port.is_open:
+#             try:
+#                 # 如果没有提供串口对象或串口未打开，则创建新的串口连接
+#                 self.serial_port = serial.Serial(
+#                     port=self.com,  # 串口号
+#                     baudrate=9600,  # 波特率
+#                     bytesize=serial.SEVENBITS,  # 数据位7
+#                     parity=serial.PARITY_EVEN,  # 偶验位
+#                     stopbits=serial.STOPBITS_ONE,  # 停止位
+#                     timeout=1  # 超时时间
+#                 )
+#                 print(f"成功打开串口 {self.com}")
+#                 return True
+#             except Exception as e:
+#                 print(f"串口{self.com}打开失败: {str(e)}")
+#                 self.serial_port = None
+#                 return False
+#         return True
+#
+#     def run(self):
+#         """线程运行方法，定期读取PLC数据并保存"""
+#         from time import sleep
+#
+#         try:
+#             while self.keep_running:
+#                 try:
+#                     if not self.init_serial():
+#                         sleep(1)  # 连接失败则休眠1秒
+#                         continue  # 跳过本次循环，重新尝试
+#
+#                     combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+#
+#                     for table_name, groups in self.groups_config:
+#                         for start_addr, reg_count, fields in groups:
+#                             values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)
+#                             print(f'values:{values}---reg_count:{reg_count}')
+#                             # 添加数据有效性检查
+#                             if len(values) < reg_count / 2:
+#                                 raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
+#
+#                             # 使用字典推导式映射字段
+#                             combined_data.update({
+#                                 field: values[i]
+#                                 for i, field in enumerate(fields)
+#                                 if i < len(values)
+#                             })
+#
+#                         self.data_manager.save_combined_data(table_name, combined_data)
+#                         print(f"向{table_name}存储数据成功: {combined_data}")
+#
+#                     # # 短暂休眠，控制读取频率
+#                     # sleep(1)
+#
+#                 except serial.SerialException as e:
+#                     print(f"串口异常: {str(e)}")
+#                     self.serial_port = None  # 清除串口对象，下次循环重新初始化
+#                     sleep(1)
+#                 except Exception as e:
+#                     print(f"运行时异常: {str(e)}")
+#                     sleep(1)
+#
+#         finally:
+#             # 清理资源
+#             self.cleanup()
+#             # 发送完成信号
+#             self.finished.emit()  #type: ignore[attr-defined]
+#
+#     def cleanup(self):
+#         """清理资源"""
+#         if self.serial_port and self.serial_port.is_open:
+#             try:
+#                 self.serial_port.close()
+#                 print("串口已关闭")
+#             except Exception as e:
+#                 print(f"关闭串口异常: {str(e)}")
+#
+#     def stop(self):
+#         """停止线程运行"""
+#         self.keep_running = False
+#
+#
+# # ---------------------------------PLC数据更新工作线程类---------------------------------
+# class PLCDataUpdateWorker(QObject):
+#     """数据更新工作线程类，负责从数据库获取数据并发送信号"""
+#     # 定义信号，用于将获取的数据传递给主线程
+#     data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
+#     finished = pyqtSignal()  # 完成信号
+#
+#     def __init__(self, tables_to_monitor):
+#         """初始化数据更新工作线程
+#         参数:
+#             data_manager: 数据管理器实例
+#             tables_to_monitor: 需要监控的表名列表
+#         """
+#         super().__init__()
+#         self.tables_to_monitor = tables_to_monitor
+#         self.running = True
+#         self.data_manager = None  # 延迟初始化
+#         # 存储本地缓存的版本号
+#         self.data_versions = {table: 0 for table in self.tables_to_monitor}
+#
+#     def init_data_manager(self):
+#         """初始化数据管理器连接（在run方法中调用）"""
+#         if not self.data_manager:
+#             try:
+#                 self.data_manager = get_plc_data_manager()
+#                 if not hasattr(self.data_manager, 'connection_available') or not self.data_manager.connection_available:
+#                     print("警告：PLC数据管理器连接不可用，数据更新将被跳过")
+#                     self.data_manager = None
+#                     return False
+#                 return True
+#             except Exception as e:
+#                 print(f"数据管理器初始化失败: {e}")
+#                 self.data_manager = None
+#                 return False
+#         return True
+#
+#     def run(self):
+#         """线程运行方法，定期检查数据库更新"""
+#         while self.running:
+#             # 延迟初始化数据管理器
+#             if not self.init_data_manager():
+#                 QThread.msleep(1000)  # 等待1秒后重试
+#                 continue
+#             # 检查数据管理器是否可用
+#             if not self.data_manager or not getattr(self.data_manager, 'connection_available', False):
+#                 QThread.msleep(1000)  # 等待1秒后重试
+#                 continue
+#
+#             try:
+#                 # 获取所有表的当前版本号
+#                 current_versions = self.data_manager.get_data_versions()
+#
+#                 # 检查每个监控的表是否有更新
+#                 for table_name in self.tables_to_monitor:
+#                     if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
+#                         # 获取表的最新数据
+#                         data = self.data_manager.get_realtime_data(table_name)
+#                         if data:  # 确保数据有效
+#                             # 发送信号，将表名和数据传递给主线程
+#                             self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
+#                         # 更新本地版本号
+#                         self.data_versions[table_name] = current_versions[table_name]
+#
+#             except Exception as e:
+#                 print(f"数据更新异常: {e}")
+#                 QThread.msleep(1000)
+#                 continue
+#
+#             # 短暂休眠，避免过度占用CPU
+#             QThread.msleep(100)  # 休眠100毫秒
+#
+#     def stop(self):
+#         """停止线程运行"""
+#         self.running = False
+#         self.finished.emit()  # type: ignore[attr-defined]
+#
+#
+# # ---------------------------------PLC参数弹窗历史数据查询工作线程类---------------------------------
+# class PLCHistoricalDataQueryWorker(QObject):
+#     """执行历史数据查询的工作线程类"""
+#     # 定义信号，用于将查询结果传递给主线程
+#     data_ready = pyqtSignal(dict)
+#     finished = pyqtSignal()
+#     error = pyqtSignal(str)
+#
+#     def __init__(self, tables, exact_time, start_time, end_time):
+#         """初始化历史数据查询工作线程
+#         Args:
+#             tables: 要查询的表名列表
+#             exact_time: 精确时间点
+#             start_time: 查询开始时间
+#             end_time: 查询结束时间
+#         """
+#         super().__init__()
+#         self.tables = tables
+#         self.exact_time = exact_time
+#         self.start_time = start_time
+#         self.end_time = end_time
+#         self.hist_data_manager = None  # 延迟初始化
+#
+#     def init_hist_data_manager(self):
+#         """初始化历史数据管理器连接（在run方法中调用）"""
+#         if not self.hist_data_manager:
+#             try:
+#                 self.hist_data_manager = get_plc_historical_data_manager()
+#                 if not hasattr(self.hist_data_manager, 'connection_available') or not self.hist_data_manager.connection_available:
+#                     print("警告：历史数据管理器连接不可用")
+#                     self.hist_data_manager = None
+#                     return False
+#                 return True
+#             except Exception as e:
+#                 print(f"历史数据管理器初始化失败: {e}")
+#                 self.hist_data_manager = None
+#                 return False
+#         return True
+#
+#     def run(self):
+#         """执行历史数据查询任务"""
+#         try:
+#             # 延迟初始化历史数据管理器
+#             if not self.init_hist_data_manager():
+#                 self.error.emit("历史数据管理器连接不可用，请检查数据库连接")  # type: ignore[attr-defined]
+#                 return
+#             # 检查历史数据管理器是否可用
+#             if not self.hist_data_manager:
+#                 self.error.emit("历史数据管理器连接不可用，请检查数据库连接")  # type: ignore[attr-defined]
+#                 return
+#             # 存储所有查询结果的字典
+#             result_data = {}
+#
+#             # 遍历所有目标数据表
+#             for table in self.tables:
+#                 # 执行精确时间点查询
+#                 data = self.hist_data_manager.get_nearest_data(
+#                     table,
+#                     self.exact_time,
+#                     self.start_time,
+#                     self.end_time
+#                 )
+#                 # 存储查询结果
+#                 result_data[table] = data
+#
+#             # 发送查询结果信号
+#             self.data_ready.emit(result_data)  # type: ignore[attr-defined]
+#         except Exception as e:
+#             print(f"历史数据查询异常: {str(e)}")
+#             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
+#         finally:
+#             # 发送完成信号
+#             self.finished.emit()  # type: ignore[attr-defined]
 
 
 # ---------------------------------程序入口---------------------------------

@@ -6,6 +6,7 @@ from mysql.connector import Error
 from datetime import datetime, timedelta
 import socket
 import struct
+from PyQt5.QtCore import QObject, pyqtSignal
 
 # 定义数据插入器类（单例模式实现）
 class DataInserter:
@@ -622,7 +623,11 @@ class HistoricalDataManager:
             if conn.is_connected():
                 conn.close()
 
-class PLCDataManager:
+class PLCDataManager(QObject):
+    """PLC数据管理器，支持连接状态通知"""
+    # 定义连接状态变化信号
+    connection_status_changed = pyqtSignal(bool)  # True: 连接可用, False: 连接不可用
+    
     # 定义全局表名常量（新增）
     CLASS_TABLES = [
         'factory2_4_realtime_data_jcj',
@@ -635,19 +640,7 @@ class PLCDataManager:
         'factory2_4_production_data',  # 新增生产数据表
         'factory2_4_alarm_data',
     ]
-    # _instance = None  # 单例实例
-    # _lock = threading.Lock()  # 添加线程锁
 
-    # def __new__(cls, *args, **kwargs):
-    #     """实例创建方法（线程安全单例模式实现）"""
-    #     with cls._lock:   # 获取线程锁（保证多线程环境下单例创建安全）
-    #         # 检查是否已有实例存在
-    #         if cls._instance is None:
-    #             # 调用父类__new__方法创建新实例
-    #             cls._instance = super().__new__(cls)
-    #             # 初始化标记（防止重复初始化）
-    #             cls._instance.__initialized = False
-    #         return cls._instance    # 返回单例实例
     # 初始化方法（构造器）
     def __init__(self, host='192.168.10.99', user='root', password='admin', database='dcs_data'):
         """数据库管理器
@@ -657,6 +650,7 @@ class PLCDataManager:
             password: 数据库密码（需根据实际修改）
             database: 要连接的数据库名称（默认dcs_data）
         """
+        super().__init__()  # 调用QObject的构造函数
         # 创建配置字典存储连接参数
         self.config = {
             'host': host,  # 数据库服务器的主机名或IP地址
@@ -667,10 +661,6 @@ class PLCDataManager:
             'autocommit': True
         }
         self.host = host
-        # # 单例初始化控制（防止重复初始化）
-        # if self.__initialized:  # 检查是否已经初始化
-        #     return  # 如果已初始化则直接返回
-        # self.__initialized = True   # 设置初始化标记
         self.connection_pool = None  # 添加连接池状态标记
         self.connection_available = False  # 添加连接可用性标记
         # self._init_pool()  # 调用私有方法初始化连接池
@@ -755,6 +745,8 @@ class PLCDataManager:
                     )
                     self.connection_available = True
                     print(f"PLCDataManager{self.host}重连成功！")
+                    # 发送连接状态变化信号
+                    self.connection_status_changed.emit(True)
                     break
                 except Error as e:
                     print(f"PLCDataManager{self.host}重连失败: {e}，{retry_interval}秒后重试...")
@@ -806,10 +798,12 @@ class PLCDataManager:
             print(f"数据库操作失败: {e}")  # print函数：输出错误信息到控制台
             return None  # 返回空值：表示查询操作失败
 
-class PLCHistoricalDataManager:
+class PLCHistoricalDataManager(QObject):
     """历史数据管理器（采用相同连接池配置）
     功能：独立管理历史数据的数据库连接与查询操作
     设计特点：与DataManager解耦，但保持表结构一致"""
+    # 定义连接状态变化信号
+    connection_status_changed = pyqtSignal(bool)  # True: 连接可用, False: 连接不可用
 
     # 复用实时数据表结构定义（保持数据结构一致性）
     CLASS_TABLES = PLCDataManager.CLASS_TABLES  # 从DataManager继承表名常量
@@ -821,6 +815,7 @@ class PLCHistoricalDataManager:
             user: 数据库用户名（root管理员）
             password: 数据库访问密码
             database: 目标数据库名称"""
+        super().__init__()  # 调用QObject的构造函数
         # 连接池配置字典（独立配置项）
         self.config = {
             'host': host,  # MySQL服务器IP/域名
@@ -878,6 +873,8 @@ class PLCHistoricalDataManager:
                     )
                     self.connection_available = True
                     print(f"PLCHistoricalDataManager{self.host}重连成功！")
+                    # 发送连接状态变化信号
+                    self.connection_status_changed.emit(True)
                     break
                 except Error as e:
                     print(f"PLCHistoricalDataManager{self.host}重连失败: {e}，{retry_interval}秒后重试...")
