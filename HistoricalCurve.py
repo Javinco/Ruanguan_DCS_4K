@@ -3,11 +3,11 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout  # QWidget基础控件，QVBoxL
 # 导入PyQtGraph绘图组件（替换matplotlib）
 import pyqtgraph as pg
 import numpy as np  # 导入numpy用于数值计算
-# from Data_Manager import historical_data_manager  # 自定义数据管理模块
+from Data_Manager import historical_data_manager  # 自定义数据管理模块
 import datetime
 
 class HistoricalCurvePlotter(QWidget):
-    def __init__(self, parent_widget, table_name, params_config, colors, historical_data_manager, y_limits=(-1, 1)):
+    def __init__(self, parent_widget, table_name, params_config, colors, y_limits=(-1, 1)):
         """历史单Y轴曲线构造器
         Args:
             parent_widget: 父级容器控件 - 用于承载本组件的父级GUI容器
