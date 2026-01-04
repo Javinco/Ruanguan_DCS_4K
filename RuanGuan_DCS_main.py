@@ -16,7 +16,7 @@ from Ui_pop_historical_parameter import Ui_Dialog_Pop_Historical_Parameter
 from Ui_pop_historical_parameter_factory1_2 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device2
 from Ui_pop_historical_parameter_factory1_3 import Ui_Dialog_Pop_Historical_Parameter_Factory1Device3
 from Ui_pop_alarm import Ui_Dialog_alarm
-from Data_Manager import plc1_data_manager,plc2_data_manager,plc3_data_manager,plc1_historical_data_manager,plc2_historical_data_manager,plc3_historical_data_manager
+from Data_Manager import data_manager, historical_data_manager
 from Ruanguan_Curve import RealTimeMainWindowCurve1
 # from Ruanguan_Historical import HistoricalCurvePlotter
 from RealtimeCurve import RealTimeCurvePlotter
@@ -202,7 +202,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.data_manager = plc1_data_manager
+        self.data_manager = data_manager
 
         # 创建线程管理器字典
         self.threads = {}
@@ -434,7 +434,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.data_manager = plc2_data_manager
+        self.data_manager = data_manager
 
         # 创建线程管理器字典
         self.threads = {}
@@ -665,7 +665,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.data_manager = plc3_data_manager
+        self.data_manager = data_manager
 
         # 创建线程管理器字典
         self.threads = {}
@@ -894,7 +894,7 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.historical_data_manager = plc1_historical_data_manager
+        self.historical_data_manager = historical_data_manager
 
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
@@ -1149,7 +1149,7 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.historical_data_manager = plc2_historical_data_manager
+        self.historical_data_manager = historical_data_manager
 
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
@@ -1403,7 +1403,7 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.historical_data_manager = plc3_historical_data_manager
+        self.historical_data_manager = historical_data_manager
 
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
@@ -1687,7 +1687,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, plc1_data_manager)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1932,11 +1932,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve1.mousePressEvent = self.show_pop_parameter
         self.curve2.mousePressEvent = self.show_pop_parameter_factory1_2
         self.curve3.mousePressEvent = self.show_pop_parameter_factory1_3
-
         # 绑定曲线控件的鼠标点击事件
         self.pushButton_alarm.mousePressEvent = self.show_pop_alarm
-        # # 绑定关闭按钮：点击时关闭所有窗口
-        # self.Button_close.clicked.connect(self.close_all_windows)
+        # 绑定关闭按钮：点击时关闭所有窗口
+        self.Button_close.clicked.connect(self.close_all_windows)
         # 绑定最小化按钮：点击时最小化所有窗口
         self.Button_minimize.clicked.connect(self.minimize_all_windows)
         # 初始化时间功能
@@ -1948,9 +1947,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
-        self.plc_tables_to_monitor = [
-            "factory2_4_set_data_curve",
-            "factory2_4_production_data"
+        self.tables_to_monitor = [
+            "factory1_1_set_data_curve",
+            "factory1_2_set_data_curve",
+            "factory1_3_set_data_curve",
+            "factory1_1_production_data",
+            "factory1_2_production_data",
+            "factory1_3_production_data"
         ]
         # 添加管径实时曲线
         self.curve_plotter1 = RealTimeMainWindowCurve1(
@@ -1989,85 +1992,68 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             },
             y_limits=(-1, 1)
         )
+
         # 在初始化曲线后添加事件穿透设置
         self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
-        # PLC数据管理器和曲线绘制器映射
-        self.plc_managers = {
-            'plc1': plc1_data_manager,
-            'plc2': plc2_data_manager,
-            'plc3': plc3_data_manager
-        }
+        self._start_data_update_thread(self.tables_to_monitor)
 
-        self.curve_plotters = {
-            'plc1': self.curve_plotter1,
-            'plc2': self.curve_plotter2,
-            'plc3': self.curve_plotter3
-        }
-
-        self.update_methods = {
-            'plc1': self._update_curve1_realtime,
-            'plc2': self._update_curve2_realtime,
-            'plc3': self._update_curve3_realtime
-        }
-        # 启动所有PLC数据更新线程
-        for plc_id, plc_manager in self.plc_managers.items():
-            self._start_plc_data_update_thread(plc_id, self.plc_tables_to_monitor, plc_manager)
-
-    # 通用的PLC数据更新线程启动方法
-    def _start_plc_data_update_thread(self, plc_id, tables_to_monitor, plc_data_manager):
-        """启动PLC数据更新线程
+    # 添加新方法：启动数据更新线程
+    def _start_data_update_thread(self, tables_to_monitor):
+        """启动数据更新线程
         参数:
-            plc_id: PLC标识符 ('plc1', 'plc2', 'plc3')
             tables_to_monitor: 需要监控的表名列表
-            plc_data_manager: PLC数据管理器实例
         """
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, plc_data_manager)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
 
         # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
-        # 连接数据更新信号到对应的处理方法
-        worker.data_updated.connect(lambda table_name, data: self._handle_plc_data_update(plc_id, table_name, data))  # type: ignore[attr-defined]
+        # 连接数据更新信号到处理方法
+        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
 
-        # 存储线程引用，使用不同的键避免覆盖
-        self.threads[f'data_update_{plc_id}'] = (thread, worker)
+        # 存储线程引用
+        self.threads['data_update'] = (thread, worker)
 
         # 启动线程
         thread.start()
 
-    # 通用的PLC数据处理方法
-    def _handle_plc_data_update(self, plc_id, table_name, data):
+    # 添加新方法：处理数据更新
+    def _handle_data_update(self, table_name, data):
         """处理从子线程接收到的数据更新
         参数:
-            plc_id: PLC标识符 ('plc1', 'plc2', 'plc3')
             table_name: 表名
             data: 数据字典
         """
-        # 创建策略映射字典
+        # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_set_data_curve": self.curve_plotters[plc_id].update_plot,
-            "factory2_4_production_data": self.update_methods[plc_id]
+            "factory1_1_set_data_curve":  self.curve_plotter1.update_plot,
+            "factory1_2_set_data_curve":  self.curve_plotter2.update_plot,
+            "factory1_3_set_data_curve":  self.curve_plotter3.update_plot,
+            "factory1_1_production_data": self._update_curve1_realtime,
+            "factory1_2_production_data": self._update_curve2_realtime,
+            "factory1_3_production_data": self._update_curve3_realtime
         }
 
         # 获取并执行对应的更新策略
         if strategy := update_strategies.get(table_name):
-            if isinstance(strategy, list):
+            if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
                 for method in strategy:
-                    method(data)  # type: ignore[attr-defined]
+                    method(data)    # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
+    # 分解原有的大更新方法为多个私有方法
 
     # 分解原有的大更新方法为多个私有方法
     def _update_curve1_realtime(self, data):
@@ -2280,7 +2266,7 @@ class DataUpdateWorker(QObject):
     connection_lost = pyqtSignal()  # 连接丢失信号
     connection_restored = pyqtSignal()  # 连接恢复信号
 
-    def __init__(self, tables_to_monitor, data_manager):
+    def __init__(self, tables_to_monitor):
         """初始化数据更新工作线程
         参数:
             data_manager: 数据管理器实例
@@ -2595,7 +2581,7 @@ class AlarmHistoryQueryWorker(QObject):
         self.start_time_str = start_time_str
         self.end_time_str = end_time_str
         # 创建历史数据管理器实例
-        self.hist_data_manager = plc1_historical_data_manager
+        self.hist_data_manager = historical_data_manager
 
     def run(self):
         """执行报警历史数据查询任务"""
