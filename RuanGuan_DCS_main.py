@@ -208,13 +208,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         self.threads = {}
         # 需要监控的表名列表
         self.tables_to_monitor = [
-            "factory2_4_realtime_data_jcj",
-            "factory2_4_realtime_data_fjj",
-            "factory2_4_realtime_data_zdj",
-            "factory2_4_set_data_jcj",
-            "factory2_4_set_data_fjj",
-            "factory2_4_set_data_zdj",
-            "factory2_4_set_data_curve"
+            "factory1_1_realtime_data_jcj",
+            "factory1_1_realtime_data_fjj",
+            "factory1_1_realtime_data_zdj",
+            "factory1_1_set_data_jcj",
+            "factory1_1_set_data_fjj",
+            "factory1_1_set_data_zdj",
+            "factory1_1_set_data_curve"
         ]
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -256,7 +256,7 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, self.data_manager)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -285,13 +285,13 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
-            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_jcj_set,
-            "factory2_4_set_data_fjj": self._update_fjj_set,
-            "factory2_4_set_data_zdj": self._update_zdj_set,
-            "factory2_4_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
+            "factory1_1_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
+            "factory1_1_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_1_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_1_set_data_jcj": self._update_jcj_set,
+            "factory1_1_set_data_fjj": self._update_fjj_set,
+            "factory1_1_set_data_zdj": self._update_zdj_set,
+            "factory1_1_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -440,13 +440,13 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.threads = {}
         # 需要监控的表名列表
         self.tables_to_monitor = [
-            "factory2_4_realtime_data_jcj",
-            "factory2_4_realtime_data_fjj",
-            "factory2_4_realtime_data_zdj",
-            "factory2_4_set_data_jcj",
-            "factory2_4_set_data_fjj",
-            "factory2_4_set_data_zdj",
-            "factory2_4_set_data_curve"
+            "factory1_2_realtime_data_jcj",
+            "factory1_2_realtime_data_fjj",
+            "factory1_2_realtime_data_zdj",
+            "factory1_2_set_data_jcj",
+            "factory1_2_set_data_fjj",
+            "factory1_2_set_data_zdj",
+            "factory1_2_set_data_curve"
         ]
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -488,7 +488,7 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, self.data_manager)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -517,13 +517,13 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
-            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_jcj_set,
-            "factory2_4_set_data_fjj": self._update_fjj_set,
-            "factory2_4_set_data_zdj": self._update_zdj_set,
-            "factory2_4_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
+            "factory1_2_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
+            "factory1_2_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_2_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_2_set_data_jcj": self._update_jcj_set,
+            "factory1_2_set_data_fjj": self._update_fjj_set,
+            "factory1_2_set_data_zdj": self._update_zdj_set,
+            "factory1_2_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -671,13 +671,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.threads = {}
         # 需要监控的表名列表
         self.tables_to_monitor = [
-            "factory2_4_realtime_data_jcj",
-            "factory2_4_realtime_data_fjj",
-            "factory2_4_realtime_data_zdj",
-            "factory2_4_set_data_jcj",
-            "factory2_4_set_data_fjj",
-            "factory2_4_set_data_zdj",
-            "factory2_4_set_data_curve"
+            "factory1_3_realtime_data_jcj",
+            "factory1_3_realtime_data_fjj",
+            "factory1_3_realtime_data_zdj",
+            "factory1_3_set_data_jcj",
+            "factory1_3_set_data_fjj",
+            "factory1_3_set_data_zdj",
+            "factory1_3_set_data_curve"
         ]
         # 添加管径实时曲线（示例配置）
         self.curve_plotter = RealTimeCurvePlotter(
@@ -719,7 +719,7 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = DataUpdateWorker(tables_to_monitor, self.data_manager)
+        worker = DataUpdateWorker(tables_to_monitor)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -748,13 +748,13 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
-            "factory2_4_realtime_data_fjj": self._update_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_jcj_set,
-            "factory2_4_set_data_fjj": self._update_fjj_set,
-            "factory2_4_set_data_zdj": self._update_zdj_set,
-            "factory2_4_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
+            "factory1_3_realtime_data_jcj": [self._update_jcj_realtime, self.curve_jcj.update_plot],
+            "factory1_3_realtime_data_fjj": self._update_fjj_realtime,
+            "factory1_3_realtime_data_zdj": self._update_zdj_realtime,
+            "factory1_3_set_data_jcj": self._update_jcj_set,
+            "factory1_3_set_data_fjj": self._update_fjj_set,
+            "factory1_3_set_data_zdj": self._update_zdj_set,
+            "factory1_3_set_data_curve": [self._update_curve_set, self.curve_plotter.update_plot]
         }
 
         # 获取并执行对应的更新策略
@@ -893,9 +893,6 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        self.historical_data_manager = historical_data_manager
-
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -912,9 +909,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name="factory2_4_set_data_curve",  # 对应的数据库表名
-            params_config={
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_1_set_data_curve",  # 对应的数据库表名
+            params_config = {
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -922,16 +919,14 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors=CLASS_COLORS1,  #曲线颜色配置
-            historical_data_manager = self.historical_data_manager,
-            y_limits=(-1, 1)  # Y轴显示范围
-
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name="factory2_4_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -941,9 +936,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2,  #曲线颜色配置
-            historical_data_manager = self.historical_data_manager,
-            y_limits=(0, 200),  # Y轴最大范围200
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -967,9 +961,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
 
         # 更新参数显示（精确到秒的查询）
         self._update_parameters(
-            query_time.strftime("%Y-%m-%d %H:%M:%S"),
-            start_time,
-            end_time)
+        query_time.strftime("%Y-%m-%d %H:%M:%S"),
+        start_time,
+        end_time)
 
     def _update_parameters(self, exact_time, start_time, end_time):
         """更新指定时间点的参数显示
@@ -977,25 +971,25 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj", "factory2_4_set_data_curve",
-                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
+        tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
+                  "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
 
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time, self.historical_data_manager)
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['historical_query'] = (thread, worker)
@@ -1024,13 +1018,13 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": self._update_history_jcj_realtime,
-            "factory2_4_realtime_data_fjj": self._update_history_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_history_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_history_jcj_set,
-            "factory2_4_set_data_fjj": self._update_history_fjj_set,
-            "factory2_4_set_data_zdj": self._update_history_zdj_set,
-            "factory2_4_set_data_curve": self._update_history_curve_set
+            "factory1_1_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory1_1_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory1_1_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory1_1_set_data_jcj": self._update_history_jcj_set,
+            "factory1_1_set_data_fjj": self._update_history_fjj_set,
+            "factory1_1_set_data_zdj": self._update_history_zdj_set,
+            "factory1_1_set_data_curve": self._update_history_curve_set
         }
 
         # 获取并执行对应的更新策略
@@ -1148,9 +1142,6 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        self.historical_data_manager = historical_data_manager
-
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -1167,9 +1158,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name="factory2_4_set_data_curve",  # 对应的数据库表名
-            params_config={
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_2_set_data_curve",  # 对应的数据库表名
+            params_config = {
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -1177,15 +1168,14 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors=CLASS_COLORS1,  #曲线颜色配置
-            historical_data_manager=self.historical_data_manager,
-            y_limits=(-1, 1)  # Y轴显示范围
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name="factory2_4_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_2_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -1195,9 +1185,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2,  #曲线颜色配置
-            historical_data_manager=self.historical_data_manager,
-            y_limits=(0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -1221,9 +1210,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
 
         # 更新参数显示（精确到秒的查询）
         self._update_parameters(
-            query_time.strftime("%Y-%m-%d %H:%M:%S"),
-            start_time,
-            end_time)
+        query_time.strftime("%Y-%m-%d %H:%M:%S"),
+        start_time,
+        end_time)
 
     def _update_parameters(self, exact_time, start_time, end_time):
         """更新指定时间点的参数显示
@@ -1231,25 +1220,25 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj", "factory2_4_set_data_curve",
-                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
+        tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
+                  "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
 
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time, self.historical_data_manager)
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['historical_query'] = (thread, worker)
@@ -1278,13 +1267,13 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": self._update_history_jcj_realtime,
-            "factory2_4_realtime_data_fjj": self._update_history_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_history_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_history_jcj_set,
-            "factory2_4_set_data_fjj": self._update_history_fjj_set,
-            "factory2_4_set_data_zdj": self._update_history_zdj_set,
-            "factory2_4_set_data_curve": self._update_history_curve_set
+            "factory1_2_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory1_2_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory1_2_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory1_2_set_data_jcj": self._update_history_jcj_set,
+            "factory1_2_set_data_fjj": self._update_history_fjj_set,
+            "factory1_2_set_data_zdj": self._update_history_zdj_set,
+            "factory1_2_set_data_curve": self._update_history_curve_set
         }
 
         # 获取并执行对应的更新策略
@@ -1402,9 +1391,6 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        self.historical_data_manager = historical_data_manager
-
         self.dateTimeEdit.setDateTime(datetime.now())
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
@@ -1421,9 +1407,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name="factory2_4_set_data_curve",  # 对应的数据库表名
-            params_config={
+            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name = "factory1_3_set_data_curve",  # 对应的数据库表名
+            params_config = {
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -1431,15 +1417,14 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors=CLASS_COLORS1,  #曲线颜色配置
-            historical_data_manager=self.historical_data_manager,
-            y_limits=(-1, 1)  # Y轴显示范围
+            colors = CLASS_COLORS1, #曲线颜色配置
+            y_limits = (-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name="factory2_4_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name = "factory1_3_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -1449,9 +1434,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2,  #曲线颜色配置
-            historical_data_manager=self.historical_data_manager,
-            y_limits=(0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2, #曲线颜色配置
+            y_limits = (0, 200)  # Y轴最大范围200
         )
 
     def set_time_interval(self, minutes):
@@ -1475,9 +1459,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
 
         # 更新参数显示（精确到秒的查询）
         self._update_parameters(
-            query_time.strftime("%Y-%m-%d %H:%M:%S"),
-            start_time,
-            end_time)
+        query_time.strftime("%Y-%m-%d %H:%M:%S"),
+        start_time,
+        end_time)
 
     def _update_parameters(self, exact_time, start_time, end_time):
         """更新指定时间点的参数显示
@@ -1485,13 +1469,13 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
         """
         # 定义需要查询的数据表列表
-        tables = ["factory2_4_realtime_data_jcj", "factory2_4_realtime_data_fjj", "factory2_4_realtime_data_zdj", "factory2_4_set_data_curve",
-                  "factory2_4_set_data_jcj", "factory2_4_set_data_fjj", "factory2_4_set_data_zdj"]
+        tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
+                  "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
 
         # 创建线程对象
         thread = QThread()
         # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time, self.historical_data_manager)
+        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1532,13 +1516,13 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory2_4_realtime_data_jcj": self._update_history_jcj_realtime,
-            "factory2_4_realtime_data_fjj": self._update_history_fjj_realtime,
-            "factory2_4_realtime_data_zdj": self._update_history_zdj_realtime,
-            "factory2_4_set_data_jcj": self._update_history_jcj_set,
-            "factory2_4_set_data_fjj": self._update_history_fjj_set,
-            "factory2_4_set_data_zdj": self._update_history_zdj_set,
-            "factory2_4_set_data_curve": self._update_history_curve_set
+            "factory1_3_realtime_data_jcj": self._update_history_jcj_realtime,
+            "factory1_3_realtime_data_fjj": self._update_history_fjj_realtime,
+            "factory1_3_realtime_data_zdj": self._update_history_zdj_realtime,
+            "factory1_3_set_data_jcj": self._update_history_jcj_set,
+            "factory1_3_set_data_fjj": self._update_history_fjj_set,
+            "factory1_3_set_data_zdj": self._update_history_zdj_set,
+            "factory1_3_set_data_curve": self._update_history_curve_set
         }
 
         # 获取并执行对应的更新策略
@@ -1652,12 +1636,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.alarm_tables = [
             'factory1_1_alarm_data',
             'factory1_2_alarm_data',
-            'factory1_3_alarm_data',
-            'factory1_4_alarm_data',
-            'factory2_1_alarm_data',
-            'factory2_2_alarm_data',
-            'factory2_3_alarm_data',
-            'factory2_4_alarm_data'
+            'factory1_3_alarm_data'
         ]
 
         # 存储每个表最后一次的报警值，用于比较变化
@@ -2257,14 +2236,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 调用父类的关闭事件处理
         super().closeEvent(event)
 
-
+# ---------------------------------数据更新工作线程类---------------------------------
 class DataUpdateWorker(QObject):
     """数据更新工作线程类，负责从数据库获取数据并发送信号"""
     # 定义信号，用于将获取的数据传递给主线程
     data_updated = pyqtSignal(str, dict)  # 参数：表名和数据字典
     finished = pyqtSignal()  # 完成信号
-    connection_lost = pyqtSignal()  # 连接丢失信号
-    connection_restored = pyqtSignal()  # 连接恢复信号
 
     def __init__(self, tables_to_monitor):
         """初始化数据更新工作线程
@@ -2278,77 +2255,31 @@ class DataUpdateWorker(QObject):
         self.running = True
         # 存储本地缓存的版本号
         self.data_versions = {table: 0 for table in self.tables_to_monitor}
-        # 添加线程安全锁
-        self._lock = threading.Lock()
-        # 连接状态跟踪
-        self.connection_available = False
-        self.last_connection_check = 0
-
-        # 连接数据管理器的连接状态变化信号
-        if hasattr(self.data_manager, 'connection_status_changed'):
-            self.data_manager.connection_status_changed.connect(self._on_connection_status_changed)
-
-    def _on_connection_status_changed(self, is_connected):
-        """处理连接状态变化"""
-        if is_connected and not self.connection_available:
-            # 连接刚恢复
-            self.connection_available = True
-            self.connection_restored.emit()  # type: ignore[attr-defined]
-            print("DataUpdateWorker: 数据管理器连接已恢复")
-        elif not is_connected and self.connection_available:
-            # 连接刚丢失
-            self.connection_available = False
-            self.connection_lost.emit()  # type: ignore[attr-defined]
-            print("DataUpdateWorker: 数据管理器连接已丢失")
 
     def run(self):
         """线程运行方法，定期检查数据库更新"""
-        try:
-            while self.running:
-                # 使用锁确保线程安全
-                with self._lock:
-                    try:
-                        # 获取所有表的当前版本号
-                        current_versions = self.data_manager.get_data_versions()
+        while self.running:
+            # 获取所有表的当前版本号
+            current_versions = self.data_manager.get_data_versions()
 
-                        # # 如果成功获取版本号，说明连接正常
-                        # if not self.connection_available:
-                        #     self.connection_available = True
-                        #     self.connection_restored.emit()  # type: ignore[attr-defined]
-                        #     print("DataUpdateWorker: 数据管理器连接正常")
+            # 检查每个监控的表是否有更新
+            for table_name in self.tables_to_monitor:
+                if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
+                    # 获取表的最新数据
+                    data = self.data_manager.get_realtime_data(table_name)
+                    if data:  # 确保数据有效
+                        # 发送信号，将表名和数据传递给主线程
+                        self.data_updated.emit(table_name, data)    # type: ignore[attr-defined]
+                    # 更新本地版本号
+                    self.data_versions[table_name] = current_versions[table_name]
 
-                        # 检查每个监控的表是否有更新
-                        for table_name in self.tables_to_monitor:
-                            if table_name in current_versions and current_versions[table_name] > self.data_versions[table_name]:
-                                # 获取表的最新数据
-                                data = self.data_manager.get_realtime_data(table_name)
-                                if data:  # 确保数据有效
-                                    # 发送信号，将表名和数据传递给主线程
-                                    self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
-                                # 更新本地版本号
-                                self.data_versions[table_name] = current_versions[table_name]
-
-                    except Exception as e:
-                        # 连接异常处理
-                        if self.connection_available:
-                            self.connection_available = False
-                            self.connection_lost.emit()  # type: ignore[attr-defined]
-                            print(f"DataUpdateWorker: 数据管理器连接异常 - {e}")
-
-                # 增加休眠时间，减少CPU占用
-                QThread.msleep(1000)  # 从500ms增加到1000ms，连接异常时延长
-
-        except Exception as e:
-            print(f"DataUpdateWorker运行异常: {e}")
-        finally:
-            self.finished.emit()  # type: ignore[attr-defined]
+            # 短暂休眠，避免过度占用CPU
+            QThread.msleep(100)  # 休眠100毫秒
 
     def stop(self):
         """停止线程运行"""
-        with self._lock:
-            self.running = False
-        self.finished.emit()  # type: ignore[attr-defined]
-
+        self.running = False
+        self.finished.emit()    # type: ignore[attr-defined]
 
 # ---------------------------------数据库异步，工作线程类---------------------------------
 class InsertWorker(QObject):
@@ -2490,17 +2421,22 @@ class InsertWorker(QObject):
         self.cleanup()
 
 
+# ---------------------------------参数弹窗历史数据查询工作线程类---------------------------------
 class HistoricalDataQueryWorker(QObject):
     """执行历史数据查询的工作线程类"""
     # 定义信号，用于将查询结果传递给主线程
     data_ready = pyqtSignal(dict)
     finished = pyqtSignal()
     error = pyqtSignal(str)
-    connection_lost = pyqtSignal()  # 连接丢失信号
-    connection_restored = pyqtSignal()  # 连接恢复信号
 
-    def __init__(self, tables, exact_time, start_time, end_time, historical_data_manager):
-        """初始化历史数据查询工作线程"""
+    def __init__(self, tables, exact_time, start_time, end_time):
+        """初始化历史数据查询工作线程
+        Args:
+            tables: 要查询的表名列表
+            exact_time: 精确时间点
+            start_time: 查询开始时间
+            end_time: 查询结束时间
+        """
         super().__init__()
         self.tables = tables
         self.exact_time = exact_time
@@ -2508,34 +2444,10 @@ class HistoricalDataQueryWorker(QObject):
         self.end_time = end_time
         # 创建历史数据管理器实例
         self.hist_data_manager = historical_data_manager
-        # 连接状态跟踪
-        self.connection_available = True
-
-        # 连接历史数据管理器的连接状态变化信号
-        if hasattr(self.hist_data_manager, 'connection_status_changed'):
-            self.hist_data_manager.connection_status_changed.connect(self._on_connection_status_changed)
-
-    def _on_connection_status_changed(self, is_connected):
-        """处理连接状态变化"""
-        if is_connected and not self.connection_available:
-            # 连接刚恢复
-            self.connection_available = True
-            self.connection_restored.emit()  # type: ignore[attr-defined]
-            print("HistoricalDataQueryWorker: 历史数据管理器连接已恢复")
-        elif not is_connected and self.connection_available:
-            # 连接刚丢失
-            self.connection_available = False
-            self.connection_lost.emit()  # type: ignore[attr-defined]
-            print("HistoricalDataQueryWorker: 历史数据管理器连接已丢失")
 
     def run(self):
         """执行历史数据查询任务"""
         try:
-            # 检查连接状态
-            if not self.connection_available:
-                self.error.emit("历史数据管理器连接不可用")  # type: ignore[attr-defined]
-                return
-
             # 存储所有查询结果的字典
             result_data = {}
 
@@ -2552,13 +2464,13 @@ class HistoricalDataQueryWorker(QObject):
                 result_data[table] = data
 
             # 发送查询结果信号
-            self.data_ready.emit(result_data)  # type: ignore[attr-defined]
+            self.data_ready.emit(result_data) # type: ignore[attr-defined]
         except Exception as e:
             print(f"历史数据查询异常: {str(e)}")
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
             # 发送完成信号
-            self.finished.emit()  # type: ignore[attr-defined]
+            self.finished.emit()    # type: ignore[attr-defined]
 
 
 # ---------------------------------报警历史查询工作线程类---------------------------------
