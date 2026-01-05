@@ -154,6 +154,8 @@ class RealTimeCurvePlotter(QWidget):
         # 调用父类QWidget的初始化方法
         super().__init__()
         # 存储父容器窗口引用（用于界面布局）
+        self.data_thread = None
+        self.data_processor = None
         self.parent_widget = parent_widget
         # 参数配置字典（包含曲线和报警线的参数名称）
         self.params_config = params_config
@@ -345,11 +347,11 @@ class RealTimeCurvePlotter(QWidget):
                     # 可选：尽量减少主线程处理量（存在版本差异，做异常保护）
                     try:
                         history_curve.setClipToView(True)  # 仅绘制可视区数据
-                    except Exception:
+                    except Exception:   # type: ignore[attr-defined]
                         pass
                     try:
                         history_curve.setDownsampling(auto=True)  # 自动下采样
-                    except Exception:
+                    except Exception:   # type: ignore[attr-defined]
                         pass
 
                     self.curve_objects[curve_key] = history_curve
@@ -404,12 +406,21 @@ class RealTimeCurvePlotter(QWidget):
 
     def cleanup(self):
         """清理资源"""
-        if hasattr(self, 'data_processor'):
-            self.data_processor.stop()
-        if hasattr(self, 'data_thread'):
-            self.data_thread.quit()
-            self.data_thread.wait()
-            self.data_thread.deleteLater()  # 添加线程清理
+        try:
+            if hasattr(self, 'data_processor') and self.data_processor is not None:
+                self.data_processor.stop()
+                self.data_processor = None  # type: ignore[attr-defined]
+
+        except Exception as e:
+                print(f"data_processor清理异常: {str(e)}")
+        try:
+            if hasattr(self, 'data_thread') and self.data_thread is not None:
+                self.data_thread.quit()
+                self.data_thread.wait()
+                self.data_thread.deleteLater()  # 添加线程清理
+                self.data_thread = None # type: ignore[attr-defined]
+        except Exception as e:
+                print(f"data_thread清理异常: {str(e)}")
 
     def __del__(self):
         """析构函数，确保资源清理"""
