@@ -466,7 +466,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 工厂1设备1产量数据采集
         self._start_insert_thread(
             groups=[
-                ("factory1_1_alarm_data", [
+                ("factory2_4_alarm_data", [
                     (300, 1, ["alarm"])
                 ])
             ],
