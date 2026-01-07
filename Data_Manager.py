@@ -993,7 +993,7 @@ class PLCHistoricalDataManager(QObject):
 # manager = DataManager()
 # print(manager.get_realtime_data('jcj', 1))
 # 模块级单例实例
-# inserter = DataInserter()
+inserter = DataInserter()
 data_manager = DataManager()
 historical_data_manager = HistoricalDataManager()
 

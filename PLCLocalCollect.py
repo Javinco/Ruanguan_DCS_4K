@@ -8,6 +8,7 @@ from datetime import datetime
 from PyQt5.QtCore import QObject, pyqtSignal, QThread, Qt
 from PyQt5.QtWidgets import QApplication, QComboBox, QWidget, QVBoxLayout, QMainWindow
 from Ui_LocalCollectParameter import Ui_MainWindow
+from Data_Manager import inserter
 
 class PlcDataManager:
     def __init__(self, pool_name='plc_pool', pool_size=3):
@@ -238,6 +239,97 @@ class PlcDataWorker(QObject):
 
 plc_data_manager = PlcDataManager()
 
+# ---------------------------------数据库异步，工作线程类---------------------------------
+class InsertWorker(QObject):
+    """执行实际插入操作的工作类（必须在主线程外运行）"""
+    # 定义完成信号（无参数）
+    finished = pyqtSignal()
+
+    def __init__(self, groups, ip, port=502):
+        """构造函数（参数来自_start_insert_thread）"""
+        super().__init__()  # 必须调用父类构造函数
+        # self.table_name = table_name  # 要操作的数据表名
+        self.groups = groups  # 组配置参数
+        self.ip = ip  # 网络设备IP地址
+        self.port = port
+        self.sock = None  # 持久化socket连接
+        self.keep_running = True
+        self.inserter = inserter
+        self.int_inserter = inserter
+
+
+    # 新增连接初始化方法
+    def init_connection(self):
+        if not self.sock:
+            try:
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+                self.sock.settimeout(5)
+                self.sock.connect((self.ip, self.port))
+                print(f"成功建立到 {self.ip}:{self.port} 的持久连接\n")
+                return True
+            except Exception as e:
+                print(f"连接建立失败: {str(e)}")
+                self.sock = None
+                return False
+        return True
+    def run(self):# 定义线程运行方法(处理整数数据)
+        # 导入sleep函数用于线程休眠
+        from time import sleep
+        # 开始异常捕获(最外层)
+        try:
+            while self.keep_running:    # 主循环，当keep_running为True时持续运行
+                try:    # 中层异常捕获(连接和数据采集)
+                    if not self.init_connection():  # 尝试初始化连接
+                        sleep(1)  # 连接失败则休眠1秒
+                        continue  # 跳过本次循环，重新尝试
+
+                    # 新调用方式（一次处理所有表）
+                    success = self.inserter.insert_multiple_tables_data(
+                        table_groups=self.groups,   # 寄存器组配置
+                        sock=self.sock  # 已建立的socket连接
+                    )
+                    # sleep(0.1)
+
+                    if not success:  # 如果插入失败
+                        self.reconnect()  # 执行重连
+                        sleep(0.5)
+
+                except (socket.timeout, ConnectionResetError) as e:
+                    print(f"连接异常: {str(e)}")
+                    self.reconnect()
+                    sleep(1)
+                    # break  # 跳出当前组循环，重新开始
+                except Exception as e:
+                    print(f"运行时异常: {str(e)}")
+                    sleep(1)
+
+        finally:    # 无论是否发生异常都会执行的代码块
+            self.cleanup()  # 清理socket连接等资源
+            self.finished.emit()    # type: ignore[attr-defined]# 发射完成信号通知主线程
+
+    def reconnect(self):
+        if self.sock:
+            try:
+                self.sock.close()
+            except:
+                pass
+            self.sock = None
+        print("尝试重新连接...")
+        self.init_connection()
+
+    def cleanup(self):
+        if self.sock:
+            try:
+                self.sock.close()
+            except:
+                pass
+            self.sock = None
+
+    def stop(self):
+        self.keep_running = False
+        self.cleanup()
+
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -365,6 +457,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.start_single_thread('thread3', self.get_com(self.comboBox_3))
         # 启动线程4
         self.start_single_thread('thread4', self.get_com(self.comboBox_4))
+
+    def _start_insert_threads(self):
+        """启动所有数据采集线程"""
+        # 工厂1设备1产量数据采集
+        self._start_insert_thread(
+            groups=[
+                ("factory1_1_alarm_data", [
+                    (300, 1, ["alarm"])
+                ])
+            ],
+            ip="192.168.10.10"
+        )
+
+    # ------------------------- 线程启动方法 -------------------------
+    def _start_insert_thread(self, groups, ip):
+        """启动异步插入线程的方法（工厂方法）"""
+        # 创建唯一标识符（示例使用第一个表名）
+        table_names = [g[0] for g in groups]
+        key = "_".join(table_names)
+
+        # 检查是否已存在相同线程
+        if key in self.threads:
+            return
+        # 创建线程对象（QThread实例）
+        thread = QThread()
+        # 创建工作线程实例，传递表名、组配置和IP地址
+        worker = InsertWorker(groups, ip)
+
+        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
+        worker.moveToThread(thread)
+
+        # 信号连接（线程启动时触发工作对象的run方法）
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        # 工作完成时退出线程（finished信号来自worker）
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        # 工作完成后销毁worker对象
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        # 线程退出后销毁线程对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+
+        # 存储线程引用（防止被Python垃圾回收）
+        self.threads[key] = (thread, worker) # 使用字符串作为键
+        # 启动线程（开始执行事件循环）
+        thread.start()
 
     def closeEvent(self, event):
         """窗口关闭时清理所有线程"""

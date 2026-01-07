@@ -175,6 +175,41 @@ class PublicDataUpdate:
         self.label_121.setText(str(data.get('lower_limit_warning', '')))
         self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
 
+    @staticmethod
+    def _get_alarm_content(alarm_code):
+        """根据报警代码获取报警内容描述"""
+        # 报警代码与内容的映射字典
+        alarm_dict = {
+            1: "急停按下或挤出变频报警！",
+            2: "尺寸超上下限过久！",
+            3: "尺寸下限报警",
+            4: "尺寸上限报警",
+            5: "尺寸下限预警",
+            6: "尺寸上限预警",
+            7: "温度未达标！",
+            8: "螺旋伺服报警！",
+            9: "牵引伺服报警！",
+            10: "温区1传感器断线或损坏！",
+            11: "温区2传感器断线或损坏！",
+            12: "温区3传感器断线或损坏！",
+            13: "温区4传感器断线或损坏！",
+            14: "温区5传感器断线或损坏！",
+            15: "AD偏移增益错误",
+            16: "AD电源故障",
+            17: "AD硬件错误",
+            18: "变频器通讯中断！",
+            19: "变频器报警！",
+            20: "AD模块异常",
+            21: "切刀护罩打开！",
+            22: "切刀伺服异常报警或未上电！",
+            23: "变频器通讯中断!",
+            24: "分拣伺服异常！",
+            25: "切刀异常！"
+        }
+
+        # 返回对应的报警内容，如果没有对应的内容则返回默认文本
+        return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
+
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
 class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
@@ -1775,22 +1810,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 移动窗口到计算位置
         self.move(x, y)
 
-    @staticmethod
-    def _get_alarm_content(alarm_code):
-        """根据报警代码获取报警内容描述"""
-        # 报警代码与内容的映射字典
-        alarm_dict = {
-            1: "上电加热...",
-            2: "挤出启动...",
-            4: "运转作业...",
-            8: "常规预警！",
-            16: "异常报警！",
-            32: "请求支援！"
-        }
-
-        # 返回对应的报警内容，如果没有对应的内容则返回默认文本
-        return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
-
     def query_historical_alarms(self):
         """查询历史报警记录的方法"""
         # 获取用户选择的起始和结束时间
@@ -2474,7 +2493,7 @@ class HistoricalDataQueryWorker(QObject):
 
 
 # ---------------------------------报警历史查询工作线程类---------------------------------
-class AlarmHistoryQueryWorker(QObject):
+class AlarmHistoryQueryWorker(QObject, PublicDataUpdate):
     """执行报警历史数据查询的工作线程类"""
     # 定义信号，用于将查询结果传递给主线程
     data_ready = pyqtSignal(list)
@@ -2550,22 +2569,6 @@ class AlarmHistoryQueryWorker(QObject):
         finally:
             # 发送完成信号
             self.finished.emit()  # type: ignore[attr-defined]
-
-    @staticmethod
-    def _get_alarm_content(alarm_code):
-        """根据报警代码获取报警内容描述"""
-        # 报警代码与内容的映射字典
-        alarm_dict = {
-            1: "上电加热...",
-            2: "挤出启动...",
-            4: "运转作业...",
-            8: "常规预警！",
-            16: "异常报警！",
-            32: "请求支援！"
-        }
-
-        # 返回对应的报警内容，如果没有对应的内容则返回默认文本
-        return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
 
 
 # # ---------------------------------PLC数据工作线程类---------------------------------
