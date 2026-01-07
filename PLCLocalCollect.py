@@ -321,7 +321,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ),
             'thread4': (
                 "factory2_4_plc3",
-                (1000, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
                            "parameter6", "parameter7"])
             )
         }
