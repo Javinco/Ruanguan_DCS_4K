@@ -9,6 +9,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, QThread, Qt
 from PyQt5.QtWidgets import QApplication, QComboBox, QWidget, QVBoxLayout, QMainWindow
 from Ui_LocalCollectParameter import Ui_MainWindow
 from Data_Manager import inserter
+import socket
 
 class PlcDataManager:
     def __init__(self, pool_name='plc_pool', pool_size=3):
@@ -344,6 +345,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.threads = {}
         # 启动三个独立的数据采集线程
         self.start_plc_threads()
+        # 启动对触摸屏的数据采集线程
+        self._start_insert_threads()
 
     def get_com(self, combo_box):
         """获取ComboBox当前选中的COM口"""
@@ -467,7 +470,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     (300, 1, ["alarm"])
                 ])
             ],
-            ip="192.168.10.10"
+            ip="192.168.10.60"
         )
 
     # ------------------------- 线程启动方法 -------------------------
