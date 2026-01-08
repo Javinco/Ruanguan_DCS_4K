@@ -280,24 +280,24 @@ class PlcDataWorker(QObject):
                     combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
                     for register_type, table_name, groups in self.groups_config:
-                        for start_addr, reg_count, fields in groups:
-                            if register_type == 'D':
-                                values = self.data_manager.read_m(start_addr, reg_count, self.serial_port)  # type: ignore
-                            elif register_type == 'M':
-                                values = self.data_manager.read_m(start_addr, reg_count, self.serial_port)  # type: ignore
-                            else:
-                                raise ValueError(f"未知的寄存器类型: {register_type}")
-                            print(f'values:{values}---reg_count:{reg_count}')
-                            # 添加数据有效性检查
-                            if len(values) < reg_count / 2:
-                                raise ValueError(f"{register_type}类型寄存器地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
+                        start_addr, reg_count, fields = groups
+                        if register_type == 'D':
+                            values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)  # type: ignore
+                        elif register_type == 'M':
+                            values = self.data_manager.read_m(start_addr, reg_count, self.serial_port)  # type: ignore
+                        else:
+                            raise ValueError(f"未知的寄存器类型: {register_type}")
+                        print(f'values:{values}---reg_count:{reg_count}')
+                        # 添加数据有效性检查
+                        if len(values) < reg_count / 2:
+                            raise ValueError(f"{register_type}类型寄存器地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
 
-                            # 使用字典推导式映射字段
-                            combined_data.update({
-                                field: values[i]
-                                for i, field in enumerate(fields)
-                                if i < len(values)
-                            })
+                        # 使用字典推导式映射字段
+                        combined_data.update({
+                            field: values[i]
+                            for i, field in enumerate(fields)
+                            if i < len(values)
+                        })
 
                         self.data_manager.save_combined_data(table_name, combined_data)
                         print(f"向{table_name}存储数据成功: {combined_data}")
@@ -443,7 +443,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 创建新线程和worker
         thread = QThread()
         worker = PlcDataWorker(
-            groups_config=[(register_type, table_name, [(start_addr, reg_count, fields)])],
+            groups_config=configs[thread_name],
             com=com_port
         )
 
