@@ -107,7 +107,7 @@ class PlcDataManager:
         ser.write(send_data)  # type: ignore[attr-defined]
 
         # 等待数据发送完成
-        time.sleep(0.2)
+        time.sleep(0.1)
 
         if ser.in_waiting > 0:
             received_data = ser.read(ser.in_waiting)
