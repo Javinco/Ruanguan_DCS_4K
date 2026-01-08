@@ -279,13 +279,18 @@ class PlcDataWorker(QObject):
 
                     combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-                    for table_name, groups in self.groups_config:
+                    for register_type, table_name, groups in self.groups_config:
                         for start_addr, reg_count, fields in groups:
-                            values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)  # type: ignore
+                            if register_type == 'D':
+                                values = self.data_manager.read_m(start_addr, reg_count, self.serial_port)  # type: ignore
+                            elif register_type == 'M':
+                                values = self.data_manager.read_m(start_addr, reg_count, self.serial_port)  # type: ignore
+                            else:
+                                raise ValueError(f"未知的寄存器类型: {register_type}")
                             print(f'values:{values}---reg_count:{reg_count}')
                             # 添加数据有效性检查
                             if len(values) < reg_count / 2:
-                                raise ValueError(f"地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
+                                raise ValueError(f"{register_type}类型寄存器地址{start_addr}读取数据不足，预期{reg_count}个，实际{len(values)}个")
 
                             # 使用字典推导式映射字段
                             combined_data.update({
@@ -398,40 +403,47 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """启动单个数据采集线程"""
         # 根据线程名称确定配置
         configs = {
-            'thread1': (
+            'thread1': [(
+                "D",
                 "factory2_4_plc0",
                 (900, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
             ),
-            'thread2': (
-                "factory2_4_plc1",
-                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                           "parameter6", "parameter7"])
-            ),
-            'thread3': (
-                "factory2_4_plc2",
-                (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-            ),
-            'thread4': (
-                "factory2_4_plc3",
-                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-                           "parameter6", "parameter7"])
+            (
+                "M",
+                "plc0_read_m",
+                (1000, 16, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
             )
+            ]
+            # 'thread2': (
+            #     "factory2_4_plc1",
+            #     (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+            #                "parameter6", "parameter7"])
+            # ),
+            # 'thread3': (
+            #     "factory2_4_plc2",
+            #     (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+            #                 "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+            #                 "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            # ),
+            # 'thread4': (
+            #     "factory2_4_plc3",
+            #     (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+            #                "parameter6", "parameter7"])
+            # )
         }
 
         if thread_name not in configs:
             print(f'未知的线程名称: {thread_name}')
             return
 
-        table_name, (start_addr, reg_count, fields) = configs[thread_name]
-
         # 创建新线程和worker
         thread = QThread()
         worker = PlcDataWorker(
-            groups_config=[(table_name, [(start_addr, reg_count, fields)])],
+            groups_config=[(register_type, table_name, [(start_addr, reg_count, fields)])],
             com=com_port
         )
 
@@ -453,14 +465,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """启动三个PLC数据采集线程"""
         # 启动线程1
         self.start_single_thread('thread1', self.get_com(self.comboBox_1))
-        # self.start_single_thread('thread1', 'COM5') #可以设定
-        # 启动线程2
-        self.start_single_thread('thread2', self.get_com(self.comboBox_2))
-
-        # 启动线程3
-        self.start_single_thread('thread3', self.get_com(self.comboBox_3))
-        # 启动线程4
-        self.start_single_thread('thread4', self.get_com(self.comboBox_4))
+        # # 启动线程2
+        # self.start_single_thread('thread2', self.get_com(self.comboBox_2))
+        # # 启动线程3
+        # self.start_single_thread('thread3', self.get_com(self.comboBox_3))
+        # # 启动线程4
+        # self.start_single_thread('thread4', self.get_com(self.comboBox_4))
 
     def closeEvent(self, event):
         """窗口关闭时清理所有线程"""
