@@ -33,6 +33,8 @@ class PlcDataManager:
                    VALUES (%(timestamp)s, {','.join([f'%({f})s' for f in fields])})
                    ON DUPLICATE KEY UPDATE 
                    {','.join([f"{f}=VALUES({f})" for f in fields])}"""
+        cnx = None
+        cursor = None
 
         try:
             cnx = self.cnxpool.get_connection()
@@ -42,8 +44,10 @@ class PlcDataManager:
         except mysql.connector.Error as err:
             print(f"数据库操作失败: {err}")
         finally:
-            cursor.close()
-            cnx.close()
+            if cursor is not None:
+                cursor.close()
+            if cnx is not None:
+                cnx.close()
 
     @staticmethod
     def calculate_checksum(data):
