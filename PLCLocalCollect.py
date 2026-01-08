@@ -75,7 +75,7 @@ class PlcDataManager:
             print("读D寄存器-->接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
 
             try:
-                values = self.parse_plc_response(received_data)
+                values = self.parse_plc_d_response(received_data)
                 print(f"读D寄存器-->解析结果: {values}")
                 return values
             except Exception as e:  # type: ignore[attr-defined]
@@ -85,8 +85,46 @@ class PlcDataManager:
             print("读D寄存器-->没有接收到数据")
             return []
 
+    def read_m(self, address, length, ser):
+        # 计算实际要读取的字节数（每个字节对应8个M寄存器）
+        byte_count = (length + 7) // 8  # 向上取整
+        new_address = int(hex((address - 896) // 8), 16) + 0x170  # 地址转换公式
+        print(f'读M寄存器-->转换后的地址：{hex(new_address)}')
+        print(f'读M寄存器-->需要读取的字节数：{byte_count}')
+
+        # 构建发送数据
+        send_data = [0x02, 0x30, *bytes(f"{new_address:04X}", 'ascii'), *bytes(f"{byte_count:02X}", 'ascii'), 0x03]
+        checksum = self.calculate_checksum(send_data)
+        checksum_str = f"{checksum:04X}"[-2:]
+        send_data.extend(bytes(checksum_str, 'ascii'))  # SUM
+
+        # 发送数据
+        print("读M寄存器-->发送数据:", ' '.join([f"{x:02X}" for x in send_data]))
+        ser.write(send_data)  # type: ignore[attr-defined]
+
+        # 等待数据发送完成
+        time.sleep(0.2)
+
+        if ser.in_waiting > 0:
+            received_data = ser.read(ser.in_waiting)
+            print("读M寄存器-->接收到的原始数据:", ' '.join([f"{x:02X}" for x in received_data]))
+
+            try:
+                # 解析M寄存器状态
+                register_states = self.parse_plc_m_response(received_data)
+                print(f"读M寄存器-->解析结果: {register_states}")
+                return register_states
+            except Exception as e:  # type: ignore[attr-defined]
+                print(f"读M寄存器-->解析失败: {str(e)}")
+                import traceback
+                traceback.print_exc()  # 打印详细错误信息
+                return []
+        else:
+            print("读M寄存器-->没有接收到数据")
+            return []
+
     @staticmethod
-    def parse_plc_response(response: bytes) -> list:
+    def parse_plc_d_response(response: bytes) -> list:
         """
         解析PLC返回数据包
         输入示例：b'\x02334132CDAB\x03D7'
@@ -130,6 +168,55 @@ class PlcDataManager:
             registers.append(value)
 
         return registers
+
+    @staticmethod
+    def parse_plc_m_response(response: bytes) -> list:
+        """
+        解析PLC返回的M寄存器数据包
+        :param response: 接收到的原始数据，格式如 b'\x023231\x0366' 或 b'\x0232393830\x034436'
+        :return: M寄存器状态字典，格式如 {M1000: True, M1001: False, ...}
+        """
+        if len(response) < 5:
+            raise ValueError("响应数据过短")
+
+        # 校验帧结构
+        if response[0] != 0x02 or response[-3] != 0x03:
+            raise ValueError("无效的帧头/帧尾")
+
+        # 计算校验和
+        calc_checksum = sum(response[1:-2]) & 0xFFFF
+        expected_checksum = bytes(f"{calc_checksum:04X}"[-2:], 'ascii')
+
+        if response[-2:] != expected_checksum:
+            raise ValueError(f"校验失败: 收到{response[-2:]} vs 计算{expected_checksum}")
+
+        # 提取数据部分（例如：b'3231' 或 b'32393830'）
+        data_part = response[1:-3]
+        print(f"数据部分(ASCII): {data_part.decode('ascii')}")
+
+        # 将ASCII数据转换为十六进制字节数组
+        hex_str = data_part.decode('ascii')
+        if len(hex_str) % 2 != 0:
+            raise ValueError(f"数据部分长度必须为偶数: {hex_str}")
+
+        # 分割为2个字符一组，转换为十六进制字节
+        byte_values = []
+        for i in range(0, len(hex_str), 2):
+            byte_hex = hex_str[i:i+2]
+            byte_value = int(byte_hex, 16)
+            byte_values.append(byte_value)
+            print(f"字节{i//2+1}: 0x{byte_hex} -> {byte_value} (二进制: {bin(byte_value)[2:].zfill(8)})")
+
+        # 解析每个字节的8个比特位，对应M寄存器的状态
+        register_states = []
+        for byte_index, byte_value in enumerate(byte_values):
+            for bit_index in range(8):
+                # 获取该位的状态（True表示置1，False表示置0）
+                # 注意：这里是从最低位开始检查，对应Mxxxx到Mxxxx+7
+                bit_state = (byte_value & (1 << bit_index)) != 0
+                register_states.append(bit_state)
+
+        return register_states
 
 
 # 添加PLC数据工作线程类
@@ -190,7 +277,7 @@ class PlcDataWorker(QObject):
 
                     for table_name, groups in self.groups_config:
                         for start_addr, reg_count, fields in groups:
-                            values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)
+                            values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)  # type: ignore
                             print(f'values:{values}---reg_count:{reg_count}')
                             # 添加数据有效性检查
                             if len(values) < reg_count / 2:
@@ -240,96 +327,6 @@ class PlcDataWorker(QObject):
 
 plc_data_manager = PlcDataManager()
 
-# ---------------------------------数据库异步，工作线程类---------------------------------
-class InsertWorker(QObject):
-    """执行实际插入操作的工作类（必须在主线程外运行）"""
-    # 定义完成信号（无参数）
-    finished = pyqtSignal()
-
-    def __init__(self, groups, ip, port=502):
-        """构造函数（参数来自_start_insert_thread）"""
-        super().__init__()  # 必须调用父类构造函数
-        # self.table_name = table_name  # 要操作的数据表名
-        self.groups = groups  # 组配置参数
-        self.ip = ip  # 网络设备IP地址
-        self.port = port
-        self.sock = None  # 持久化socket连接
-        self.keep_running = True
-        self.inserter = inserter
-        self.int_inserter = inserter
-
-
-    # 新增连接初始化方法
-    def init_connection(self):
-        if not self.sock:
-            try:
-                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-                self.sock.settimeout(5)
-                self.sock.connect((self.ip, self.port))
-                print(f"成功建立到 {self.ip}:{self.port} 的持久连接\n")
-                return True
-            except Exception as e:
-                print(f"连接建立失败: {str(e)}")
-                self.sock = None
-                return False
-        return True
-    def run(self):# 定义线程运行方法(处理整数数据)
-        # 导入sleep函数用于线程休眠
-        from time import sleep
-        # 开始异常捕获(最外层)
-        try:
-            while self.keep_running:    # 主循环，当keep_running为True时持续运行
-                try:    # 中层异常捕获(连接和数据采集)
-                    if not self.init_connection():  # 尝试初始化连接
-                        sleep(1)  # 连接失败则休眠1秒
-                        continue  # 跳过本次循环，重新尝试
-
-                    # 新调用方式（一次处理所有表）
-                    success = self.inserter.insert_multiple_tables_data(
-                        table_groups=self.groups,   # 寄存器组配置
-                        sock=self.sock  # 已建立的socket连接
-                    )
-                    # sleep(0.1)
-
-                    if not success:  # 如果插入失败
-                        self.reconnect()  # 执行重连
-                        sleep(0.5)
-
-                except (socket.timeout, ConnectionResetError) as e:
-                    print(f"连接异常: {str(e)}")
-                    self.reconnect()
-                    sleep(1)
-                    # break  # 跳出当前组循环，重新开始
-                except Exception as e:
-                    print(f"运行时异常: {str(e)}")
-                    sleep(1)
-
-        finally:    # 无论是否发生异常都会执行的代码块
-            self.cleanup()  # 清理socket连接等资源
-            self.finished.emit()    # type: ignore[attr-defined]# 发射完成信号通知主线程
-
-    def reconnect(self):
-        if self.sock:
-            try:
-                self.sock.close()
-            except:
-                pass
-            self.sock = None
-        print("尝试重新连接...")
-        self.init_connection()
-
-    def cleanup(self):
-        if self.sock:
-            try:
-                self.sock.close()
-            except:
-                pass
-            self.sock = None
-
-    def stop(self):
-        self.keep_running = False
-        self.cleanup()
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -341,14 +338,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_1.currentIndexChanged.connect(lambda: self.restart_thread('thread1', self.comboBox_1))
         self.comboBox_2.currentIndexChanged.connect(lambda: self.restart_thread('thread2', self.comboBox_2))
         self.comboBox_3.currentIndexChanged.connect(lambda: self.restart_thread('thread3', self.comboBox_3))
-        # self.comboBox_4.currentIndexChanged.connect(lambda: self.get_com(self.comboBox_4)) #预留放卷机
+        self.comboBox_4.currentIndexChanged.connect(lambda: self.restart_thread('thread4', self.comboBox_4))
+
         self.threads = {}
         # 启动三个独立的数据采集线程
         self.start_plc_threads()
-        # 启动对触摸屏的数据采集线程
-        self._start_insert_threads()
 
-    def get_com(self, combo_box):
+    @staticmethod
+    def get_com(combo_box):
         """获取ComboBox当前选中的COM口"""
         try:
             com = combo_box.currentText()
@@ -460,50 +457,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.start_single_thread('thread3', self.get_com(self.comboBox_3))
         # 启动线程4
         self.start_single_thread('thread4', self.get_com(self.comboBox_4))
-
-    def _start_insert_threads(self):
-        """启动所有数据采集线程"""
-        # 工厂1设备1产量数据采集
-        self._start_insert_thread(
-            groups=[
-                ("factory2_4_alarm_data", [
-                    (300, 1, ["alarm"])
-                ])
-            ],
-            ip="192.168.10.60"
-        )
-
-    # ------------------------- 线程启动方法 -------------------------
-    def _start_insert_thread(self, groups, ip):
-        """启动异步插入线程的方法（工厂方法）"""
-        # 创建唯一标识符（示例使用第一个表名）
-        table_names = [g[0] for g in groups]
-        key = "_".join(table_names)
-
-        # 检查是否已存在相同线程
-        if key in self.threads:
-            return
-        # 创建线程对象（QThread实例）
-        thread = QThread()
-        # 创建工作线程实例，传递表名、组配置和IP地址
-        worker = InsertWorker(groups, ip)
-
-        # 将工作对象移动到新线程（关键步骤：让worker在子线程运行）
-        worker.moveToThread(thread)
-
-        # 信号连接（线程启动时触发工作对象的run方法）
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        # 工作完成时退出线程（finished信号来自worker）
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        # 工作完成后销毁worker对象
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        # 线程退出后销毁线程对象
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
-
-        # 存储线程引用（防止被Python垃圾回收）
-        self.threads[key] = (thread, worker) # 使用字符串作为键
-        # 启动线程（开始执行事件循环）
-        thread.start()
 
     def closeEvent(self, event):
         """窗口关闭时清理所有线程"""
