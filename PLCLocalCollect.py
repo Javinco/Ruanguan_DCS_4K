@@ -277,10 +277,9 @@ class PlcDataWorker(QObject):
                         sleep(1)  # 连接失败则休眠1秒
                         continue  # 跳过本次循环，重新尝试
 
-                    combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-
                     for register_type, table_name, groups in self.groups_config:
                         start_addr, reg_count, fields = groups
+                        combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
                         if register_type == 'D':
                             values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)  # type: ignore
                         elif register_type == 'M':
@@ -417,23 +416,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
             )
+            ],
+            'thread2': [(
+                "D",
+                "factory2_4_plc1",
+                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7"])
+            ),
+            (
+                "M",
+                "plc1_read_m",
+                (1000, 16, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            )
+            ],
+            'thread3': [(
+                "D",
+                "factory2_4_plc2",
+                (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                            "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                            "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            ),
+            (
+                "M",
+                "plc2_read_m",
+                (1000, 16, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            )
+            ],
+            'thread4': [(
+                "D",
+                "factory2_4_plc3",
+                (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7"])
+            ),
+            (
+                "M",
+                "plc3_read_m",
+                (1000, 16, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
+                           "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
+                           "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
+            )
             ]
-            # 'thread2': (
-            #     "factory2_4_plc1",
-            #     (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-            #                "parameter6", "parameter7"])
-            # ),
-            # 'thread3': (
-            #     "factory2_4_plc2",
-            #     (1000, 32, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-            #                 "parameter6", "parameter7", "parameter8", "parameter9", "parameter10",
-            #                 "parameter11", "parameter12", "parameter13", "parameter14", "parameter15", "parameter16"])
-            # ),
-            # 'thread4': (
-            #     "factory2_4_plc3",
-            #     (900, 14, ["parameter1", "parameter2", "parameter3", "parameter4", "parameter5",
-            #                "parameter6", "parameter7"])
-            # )
         }
 
         if thread_name not in configs:
@@ -465,12 +491,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """启动三个PLC数据采集线程"""
         # 启动线程1
         self.start_single_thread('thread1', self.get_com(self.comboBox_1))
-        # # 启动线程2
-        # self.start_single_thread('thread2', self.get_com(self.comboBox_2))
-        # # 启动线程3
-        # self.start_single_thread('thread3', self.get_com(self.comboBox_3))
-        # # 启动线程4
-        # self.start_single_thread('thread4', self.get_com(self.comboBox_4))
+        # 启动线程2
+        self.start_single_thread('thread2', self.get_com(self.comboBox_2))
+        # 启动线程3
+        self.start_single_thread('thread3', self.get_com(self.comboBox_3))
+        # 启动线程4
+        self.start_single_thread('thread4', self.get_com(self.comboBox_4))
 
     def closeEvent(self, event):
         """窗口关闭时清理所有线程"""
