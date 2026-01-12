@@ -1882,17 +1882,42 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
-        super().show()  # 调用父类 show 方法
+        super().show()
+        current = self.threads.get('data_update_alarm')
+        if current:
+            thread, _ = current
+            try:
+                if thread.isRunning():
+                    return
+            except Exception as e:
+                print(f"报警线程异常: {e}")
         self._start_data_update_thread(self.alarm_tables)
-        print("启动数据更新线程")
+        print("启动报警线程")
 
-    # def closeEvent(self, event):
-    #     # 停止所有报警相关线程
-    #     if hasattr(self, 'threads'):
-    #         for key, (thread, worker) in self.threads.items():
-    #             if hasattr(worker, 'stop'):
-    #                 worker.stop()
-    #     super().closeEvent(event)
+    def _stop_threads(self):
+        if not hasattr(self, 'threads'):
+            return
+
+        for _, (thread, worker) in list(self.threads.items()):
+            if hasattr(worker, 'stop'):
+                try:
+                    worker.stop()
+                except Exception as e:
+                    print(f"报警线程停止异常: {e}")
+            try:
+                thread.quit()
+            except Exception as e:
+                print(f"报警线程退出异常: {e}")
+            try:
+                thread.wait(1000)
+            except Exception as e:
+                print(f"报警线程等待异常: {e}")
+
+        self.threads.clear()
+
+    def closeEvent(self, event):
+        self._stop_threads()
+        super().closeEvent(event)
 
 
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
