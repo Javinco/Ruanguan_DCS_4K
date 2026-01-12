@@ -1659,7 +1659,28 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             'factory1_3_alarm_data'
         ]
 
-        # 存储每个表最后一次的报警值，用于比较变化
+        self.alarm_field_map = {
+            'P0M43': '尺寸下限报警',
+            'P0M45': '尺寸上限报警',
+            'P0M46': '尺寸下限预警',
+            'P0M48': '尺寸上限预警',
+            'P0M41': '温度未达标！',
+            'P0X21': '螺旋伺服报警！',
+            'P0X20': '牵引伺服报警！',
+            'P0M31': '切刀护罩打开！',
+            'P0M6': '切刀伺服异常报警或未上电！',
+            'P0M22': '切刀异常！',
+            'P1FJSF_ALM': '分拣伺服异常！',
+            'P2D8030': '温区1传感器断线或损坏！',
+            'P2D8031': '温区2传感器断线或损坏！',
+            'P2D8032': '温区3传感器断线或损坏！',
+            'P2D8033': '温区4传感器断线或损坏！',
+            'P2D8036': '温区5传感器断线或损坏！',
+            'P2M98': '变频器通讯中断！',
+            'P2X12': '变频器报警！',
+            'P2M99': '变频器通讯中断!'
+        }
+        self.alarm_fields = list(self.alarm_field_map.keys())
         self.last_alarm_values = {}
 
         # 前端根据报警表名自动生成包含所有表名的本地缓存版本字典
@@ -1706,6 +1727,39 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 启动线程
         thread.start()
 
+    @staticmethod
+    def _format_record_time(value):
+        if isinstance(value, datetime):
+            return value.strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(value, str):
+            return value.replace("T", " ")
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    @staticmethod
+    def _parse_device_id(table_name):
+        parts = table_name.split('_')
+        if len(parts) >= 2 and parts[1].isdigit():
+            return parts[1]
+        return "未知"
+
+    def _append_realtime_alarm_row(self, alarm_text):
+        rows = []
+        for row in range(self.tableWidget_realtime_alarm.rowCount()):
+            if item := self.tableWidget_realtime_alarm.item(row, 0):
+                rows.append(item.text())
+
+        if len(rows) >= 9:
+            rows.pop(0)
+
+        rows.append(alarm_text)
+
+        self.tableWidget_realtime_alarm.clearContents()
+        for row, text in enumerate(rows):
+            self.tableWidget_realtime_alarm.setItem(row, 0, QTableWidgetItem(text))
+            self.tableWidget_realtime_alarm.item(row, 0).setBackground(Qt.red)
+
+        self.tableWidget_realtime_alarm.scrollToBottom()
+
     # 添加新方法：处理报警数据更新
     def _handle_alarm_update(self, table_name, data):
         """处理从子线程接收到的报警数据更新
@@ -1713,77 +1767,38 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             table_name: 表名
             data: 数据字典
         """
-        # 数据有效性检查
-        if not data or 'alarm' not in data:
-            print("Invalid data or missing 'alarm' field.")
+        if not data:
             return
 
-        # 获取报警值
-        alarm_value = data.get('alarm', '')
-
-        # 检查报警值是否有变化
-        if table_name in self.last_alarm_values and self.last_alarm_values[table_name] == alarm_value:
-            # 报警值没有变化，不需要更新界面
+        present_fields = [k for k in self.alarm_fields if k in data]
+        if not present_fields:
             return
 
-        # 更新最后一次的报警值
-        self.last_alarm_values[table_name] = alarm_value
+        current_status = {}
+        for field in present_fields:
+            v = data.get(field)
+            try:
+                current_status[field] = int(v) if v is not None else 0
+            except Exception:
+                current_status[field] = 0
 
-        # 如果报警值为0或空，则不处理
-        if not alarm_value:
-            print("No alarm value or empty value（报警值为0或空）.")
+        prev_status = self.last_alarm_values.get(table_name)
+        if prev_status is None:
+            self.last_alarm_values[table_name] = current_status
             return
 
-        # 从数据库获取时间戳，而不是使用当前时间
-        record_time = data.get('timestamp')
-        # 如果timestamp是datetime对象，则格式化为字符串
-        if isinstance(record_time, datetime):
-            record_time = record_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 如果timestamp是字符串，可能包含"T"字符，需要替换
-        elif isinstance(record_time, str):
-            # 替换ISO格式中的"T"为空格
-            record_time = record_time.replace("T", " ")
-        # 如果没有timestamp或格式不正确，则使用当前时间作为备选
-        else:
-            record_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print("警告: 数据库中缺少timestamp字段或格式不正确，使用当前时间作为替代")
+        device_id = self._parse_device_id(table_name)
+        record_time = self._format_record_time(data.get('timestamp'))
 
-        # 解析表名获取工厂和设备信息
-        parts = table_name.split('_')
-        factory = parts[0]
-        device = parts[1] if len(parts) > 1 else "未知设备"
+        for field in present_fields:
+            prev_v = int(prev_status.get(field, 0) or 0)
+            cur_v = int(current_status.get(field, 0) or 0)
+            if prev_v == 0 and cur_v == 1:
+                alarm_content = self.alarm_field_map.get(field, field)
+                alarm_text = f"[{record_time}] 设备{device_id}: {alarm_content}"
+                self._append_realtime_alarm_row(alarm_text)
 
-        # 根据报警值获取报警内容
-        alarm_content = self._get_alarm_content(alarm_value)
-
-        # 构建报警显示文本
-        alarm_text = f"[{record_time}] {factory}-{device}: {alarm_content}"
-
-        # 获取当前所有行数据
-        rows = []
-        for row in range(self.tableWidget_realtime_alarm.rowCount()):
-            if item := self.tableWidget_realtime_alarm.item(row, 0):
-                rows.append(item.text())
-
-        # 如果已有9条报警，移除最早的一条
-        if len(rows) >= 9:
-            rows.pop(0)  #type: ignore[arg-type]
-
-        # 添加新报警到列表末尾
-        rows.append(alarm_text)
-
-        # 清空表格
-        self.tableWidget_realtime_alarm.clearContents()
-
-        # 重新填充表格
-        for row, text in enumerate(rows):
-            self.tableWidget_realtime_alarm.setItem(row, 0, QTableWidgetItem(text))
-            self.tableWidget_realtime_alarm.item(row, 0).setBackground(Qt.red)
-
-        # 滚动到最后一行
-        self.tableWidget_realtime_alarm.scrollToBottom()
-
-        print(f"新报警: {factory} {device} - {alarm_content}")
+        self.last_alarm_values[table_name] = current_status
 
     def right_down_dialog(self):
         """将弹窗居中显示的方法"""
@@ -2450,61 +2465,109 @@ class AlarmHistoryQueryWorker(QObject, PublicDataUpdate):
         self.end_time_str = end_time_str
         # 创建历史数据管理器实例
         self.hist_data_manager = historical_data_manager
+        self.alarm_field_map = {
+            'P0M43': '尺寸下限报警',
+            'P0M45': '尺寸上限报警',
+            'P0M46': '尺寸下限预警',
+            'P0M48': '尺寸上限预警',
+            'P0M41': '温度未达标！',
+            'P0X21': '螺旋伺服报警！',
+            'P0X20': '牵引伺服报警！',
+            'P0M31': '切刀护罩打开！',
+            'P0M6': '切刀伺服异常报警或未上电！',
+            'P0M22': '切刀异常！',
+            'P1FJSF_ALM': '分拣伺服异常！',
+            'P2D8030': '温区1传感器断线或损坏！',
+            'P2D8031': '温区2传感器断线或损坏！',
+            'P2D8032': '温区3传感器断线或损坏！',
+            'P2D8033': '温区4传感器断线或损坏！',
+            'P2D8036': '温区5传感器断线或损坏！',
+            'P2M98': '变频器通讯中断！',
+            'P2X12': '变频器报警！',
+            'P2M99': '变频器通讯中断!'
+        }
+        self.alarm_fields = list(self.alarm_field_map.keys())
+
+    @staticmethod
+    def _format_record_time(value):
+        if isinstance(value, datetime):
+            return value.strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(value, str):
+            return value.replace("T", " ")
+        return str(value) if value is not None else ""
+
+    @staticmethod
+    def _parse_device_id(table_name):
+        parts = table_name.split('_')
+        if len(parts) >= 2 and parts[1].isdigit():
+            return parts[1]
+        return "未知"
+
+    def _get_prev_record_before_start(self, table_name):
+        conn = self.hist_data_manager.connection_pool.get_connection()
+        try:
+            cursor = conn.cursor(dictionary=True)
+            query = f"""SELECT * FROM {table_name} WHERE timestamp < %s ORDER BY timestamp DESC LIMIT 1"""
+            cursor.execute(query, (self.start_time_str,))
+            return cursor.fetchone()
+        finally:
+            try:
+                if conn.is_connected():
+                    conn.close()
+            except Exception:
+                pass
 
     def run(self):
         """执行报警历史数据查询任务"""
         try:
-            # 存储所有查询到的报警记录
             all_alarms = []
 
-            # 遍历所有报警表
             for table_name in self.alarm_tables:
-                # 查询指定时间段内的报警数据
                 alarm_data = self.hist_data_manager.get_historical_data(
                     table_name,
                     self.start_time_str,
                     self.end_time_str
                 )
 
-                # 如果查询到数据
-                if alarm_data:
-                    for record in alarm_data:
-                        # 获取报警值
-                        alarm_value = record.get('alarm')
+                if not alarm_data:
+                    continue
 
-                        # 如果报警值为0或空，则跳过
-                        if not alarm_value:
+                prev = self._get_prev_record_before_start(table_name) or {}
+                device_id = self._parse_device_id(table_name)
+
+                for record in alarm_data:
+                    record_time = self._format_record_time(record.get('timestamp', self.start_time_str))
+
+                    for field in self.alarm_fields:
+                        if field not in record and field not in prev:
                             continue
 
-                        # 获取记录时间
-                        record_time = record.get('timestamp', self.start_time_str)
-                        if isinstance(record_time, datetime):
-                            record_time = record_time.strftime("%Y-%m-%d %H:%M:%S")
+                        prev_raw = prev.get(field, 0)
+                        cur_raw = record.get(field, 0)
 
-                        # 解析表名获取工厂和设备信息
-                        parts = table_name.split('_')
-                        factory = parts[0]
-                        device = parts[1] if len(parts) > 1 else "未知设备"
+                        try:
+                            prev_v = int(prev_raw) if prev_raw is not None else 0
+                        except Exception:
+                            prev_v = 0
 
-                        # 根据报警值获取报警内容
-                        alarm_content = self._get_alarm_content(alarm_value)
+                        try:
+                            cur_v = int(cur_raw) if cur_raw is not None else 0
+                        except Exception:
+                            cur_v = 0
 
-                        # 构建报警显示文本
-                        alarm_text = f"[{record_time}] {factory}-{device}: {alarm_content}"
+                        if prev_v == 0 and cur_v == 1:
+                            alarm_content = self.alarm_field_map.get(field, field)
+                            alarm_text = f"[{record_time}] 设备{device_id}: {alarm_content}"
+                            all_alarms.append((record_time, alarm_text))
 
-                        # 添加到报警列表
-                        all_alarms.append((record_time, alarm_text))
+                    prev = record
 
-            # 按时间排序报警记录（从新到旧）
             all_alarms.sort(key=lambda x: x[0], reverse=True)
-
-            # 发送查询结果信号
             self.data_ready.emit(all_alarms)  # type: ignore[attr-defined]
         except Exception as e:
             print(f"报警历史数据查询异常: {str(e)}")
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
-            # 发送完成信号
             self.finished.emit()  # type: ignore[attr-defined]
 
 
