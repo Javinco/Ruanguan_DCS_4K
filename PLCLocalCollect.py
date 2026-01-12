@@ -11,7 +11,7 @@ from Ui_LocalCollectParameter import Ui_MainWindow
 from Data_Manager import inserter
 
 class PlcDataManager:
-    def __init__(self, pool_name='plc_pool', pool_size=20):
+    def __init__(self, pool_name='plc_pool', pool_size=6):
         self.config = {
             'host': 'localhost',
             'user': 'root',
@@ -221,6 +221,7 @@ class PlcDataManager:
 
         return register_states
 
+plc_data_manager = PlcDataManager()
 
 # 添加PLC数据工作线程类
 class PlcDataWorker(QObject):
@@ -333,7 +334,7 @@ class PlcDataWorker(QObject):
         print(f"停止 {self.com} 数据采集线程")
 
 
-plc_data_manager = PlcDataManager()
+
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
