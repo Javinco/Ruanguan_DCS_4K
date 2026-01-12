@@ -9,10 +9,9 @@ from PyQt5.QtCore import QObject, pyqtSignal, QThread, Qt
 from PyQt5.QtWidgets import QApplication, QComboBox, QWidget, QVBoxLayout, QMainWindow
 from Ui_LocalCollectParameter import Ui_MainWindow
 from Data_Manager import inserter
-import socket
 
 class PlcDataManager:
-    def __init__(self, pool_name='plc_pool', pool_size=3):
+    def __init__(self, pool_name='plc_pool', pool_size=20):
         self.config = {
             'host': 'localhost',
             'user': 'root',
@@ -277,9 +276,10 @@ class PlcDataWorker(QObject):
                         sleep(1)  # 连接失败则休眠1秒
                         continue  # 跳过本次循环，重新尝试
 
+                    combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
                     for register_type, table_name, groups in self.groups_config:
                         start_addr, reg_count, fields = groups
-                        combined_data = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
                         if register_type == 'D':
                             values = self.data_manager.read_d(start_addr, reg_count, self.serial_port)  # type: ignore
                         elif register_type == 'M':
