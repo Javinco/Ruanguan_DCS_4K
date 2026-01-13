@@ -1664,6 +1664,16 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         # 连接查询按钮的点击信号到查询方法
         self.pushButton_query.clicked.connect(self.query_historical_alarms)
 
+        # 启动报警数据更新线程（初始化即启动，窗口未打开也监控）
+        self._start_data_update_thread(self.alarm_tables)
+
+    def show_and_activate(self):
+        """显示并激活窗口，确保窗口在最前端"""
+        if not self.isVisible():
+            self.show()
+        self.activateWindow()
+        self.raise_()
+
     # 添加新方法：启动所有数据采集线程
     # 添加新方法：启动数据更新线程 - 复用DataUpdateWorker
     def _start_data_update_thread(self, tables_to_monitor):
@@ -1763,6 +1773,7 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         device_id = self._parse_device_id(table_name)
         record_time = self._format_record_time(data.get('timestamp'))
 
+        new_alarm = False
         for field in present_fields:
             prev_v = int(prev_status.get(field, 0) or 0)
             cur_v = int(current_status.get(field, 0) or 0)
@@ -1770,6 +1781,11 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
                 info = self.alarm_field_map.get(field, {'text': field, 'level': 'alarm'})
                 alarm_text = f"[{record_time}] 设备{device_id}: {info['text']}"
                 self._append_realtime_alarm_row(alarm_text, info.get('level', 'alarm'))
+                new_alarm = True
+
+        # 如果有新报警，显示并激活窗口
+        if new_alarm:
+            self.show_and_activate()
 
         self.last_alarm_values[table_name] = current_status
 
@@ -1858,19 +1874,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         print(f"共查询到 {len(all_alarms)} 条历史报警记录")
 
-    # 重写 show 函数,讲数据更新线程启动放在show函数中
-    def show(self):
-        super().show()
-        current = self.threads.get('data_update_alarm')
-        if current:
-            thread, _ = current
-            try:
-                if thread.isRunning():
-                    return
-            except Exception as e:
-                print(f"报警线程异常: {e}")
-        self._start_data_update_thread(self.alarm_tables)
-        print("启动报警线程")
 
     def _stop_threads(self):
         if not hasattr(self, 'threads'):
@@ -1894,8 +1897,12 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.threads.clear()
 
     def closeEvent(self, event):
-        self._stop_threads()
-        super().closeEvent(event)
+        # 用户关闭时改为隐藏，保持后台监控线程运行
+        if self.threads:
+            self.hide()
+            event.ignore()
+        else:
+            super().closeEvent(event)
 
 
 # ---------------------------------主窗口类（继承QMainWindow和UI类）---------------------------------
@@ -2136,8 +2143,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if hasattr(self, 'dialog_historical_factory1_3'):
             self.dialog_historical_factory1_3.close()
 
-        # 关闭报警弹窗
+        # 关闭报警弹窗（先停止线程再关闭）
         if hasattr(self, 'pop_alarm_dialog'):
+            if hasattr(self.pop_alarm_dialog, '_stop_threads'):
+                self.pop_alarm_dialog._stop_threads() # type: ignore[attr-defined]
             self.pop_alarm_dialog.close()
 
         # 关闭主窗口

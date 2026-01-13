@@ -14,16 +14,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog_alarm(object):
     def setupUi(self, Dialog_alarm):
         Dialog_alarm.setObjectName("Dialog_alarm")
-        Dialog_alarm.resize(800, 590)
+        Dialog_alarm.resize(800, 570)
         self.widget = QtWidgets.QWidget(Dialog_alarm)
-        self.widget.setGeometry(QtCore.QRect(0, 0, 800, 590))
+        self.widget.setGeometry(QtCore.QRect(0, 0, 800, 570))
         self.widget.setStyleSheet("#widget{\n"
 "background-color: rgb(192, 192, 192);\n"
 "}\n"
 "")
         self.widget.setObjectName("widget")
         self.tabWidget = QtWidgets.QTabWidget(self.widget)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 20, 800, 570))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 800, 570))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(32)
         sizePolicy.setVerticalStretch(32)
@@ -535,7 +535,7 @@ class Ui_Dialog_alarm(object):
         self.pushButton_query.setObjectName("pushButton_query")
         self.tabWidget.addTab(self.tab, "")
         self.pushButton_close = QtWidgets.QPushButton(self.widget)
-        self.pushButton_close.setGeometry(QtCore.QRect(750, 10, 32, 32))
+        self.pushButton_close.setGeometry(QtCore.QRect(750, 2, 28, 28))
         self.pushButton_close.setStyleSheet("border-image: url(:/logo/close.png);")
         self.pushButton_close.setText("")
         self.pushButton_close.setObjectName("pushButton_close")
