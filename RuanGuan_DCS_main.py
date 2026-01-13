@@ -1747,7 +1747,9 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         rows = []
         for row in range(self.tableWidget_realtime_alarm.rowCount()):
             if item := self.tableWidget_realtime_alarm.item(row, 0):
-                rows.append(item.text())
+                text = item.text()
+                if text.strip():
+                    rows.append(text)
 
         if len(rows) >= 9:
             rows.pop(0)
