@@ -7,6 +7,7 @@ import threading
 # 从PyQt5导入需要的组件
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QTableWidgetItem
 from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal, QThread
+from PyQt5.QtGui import QColor
 # 导入自动生成的UI界面类
 from Ui_MainWindow import Ui_MainWindow
 from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
@@ -174,41 +175,6 @@ class PublicDataUpdate:
         self.label_115.setText(str(data.get('tension_percentage', '')))
         self.label_121.setText(str(data.get('lower_limit_warning', '')))
         self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-
-    @staticmethod
-    def _get_alarm_content(alarm_code):
-        """根据报警代码获取报警内容描述"""
-        # 报警代码与内容的映射字典
-        alarm_dict = {
-            1: "急停按下或挤出变频报警！",
-            2: "尺寸超上下限过久！",
-            3: "尺寸下限报警",
-            4: "尺寸上限报警",
-            5: "尺寸下限预警",
-            6: "尺寸上限预警",
-            7: "温度未达标！",
-            8: "螺旋伺服报警！",
-            9: "牵引伺服报警！",
-            10: "温区1传感器断线或损坏！",
-            11: "温区2传感器断线或损坏！",
-            12: "温区3传感器断线或损坏！",
-            13: "温区4传感器断线或损坏！",
-            14: "温区5传感器断线或损坏！",
-            15: "AD偏移增益错误",
-            16: "AD电源故障",
-            17: "AD硬件错误",
-            18: "变频器通讯中断！",
-            19: "变频器报警！",
-            20: "AD模块异常",
-            21: "切刀护罩打开！",
-            22: "切刀伺服异常报警或未上电！",
-            23: "变频器通讯中断!",
-            24: "分拣伺服异常！",
-            25: "切刀异常！"
-        }
-
-        # 返回对应的报警内容，如果没有对应的内容则返回默认文本
-        return alarm_dict.get(alarm_code, f"未知报警(代码:{alarm_code})")
 
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
@@ -1660,26 +1626,26 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         ]
 
         self.alarm_field_map = {
-            'P0M43': '尺寸下限报警',
-            'P0M45': '尺寸上限报警',
-            'P0M46': '尺寸下限预警',
-            'P0M48': '尺寸上限预警',
-            'P0M41': '温度未达标！',
-            'P0X21': '螺旋伺服报警！',
-            'P0X20': '牵引伺服报警！',
-            'P0M31': '切刀护罩打开！',
-            'P0M6': '切刀伺服异常报警或未上电！',
-            'P0M22': '切刀异常！',
-            'JT': '急停按下！',
-            'P1FJSF_ALM': '分拣伺服异常！',
-            'P2D8030': '温区1传感器断线或损坏！',
-            'P2D8031': '温区2传感器断线或损坏！',
-            'P2D8032': '温区3传感器断线或损坏！',
-            'P2D8033': '温区4传感器断线或损坏！',
-            'P2D8036': '温区5传感器断线或损坏！',
-            'P2M98': '变频器通讯中断！',
-            'P2X12': '变频器报警！',
-            'P2M99': '变频器通讯中断!'
+            'P0M43': {'text': '尺寸下限报警', 'level': 'alarm'},
+            'P0M45': {'text': '尺寸上限报警', 'level': 'alarm'},
+            'P0M46': {'text': '尺寸下限预警', 'level': 'warning'},
+            'P0M48': {'text': '尺寸上限预警', 'level': 'warning'},
+            'P0M41': {'text': '温度未达标！', 'level': 'alarm'},
+            'P0X21': {'text': '螺旋伺服报警！', 'level': 'alarm'},
+            'P0X20': {'text': '牵引伺服报警！', 'level': 'alarm'},
+            'P0M31': {'text': '切刀护罩打开！', 'level': 'alarm'},
+            'P0M6': {'text': '切刀伺服异常报警或未上电！', 'level': 'alarm'},
+            'P0M22': {'text': '切刀异常！', 'level': 'alarm'},
+            'JT': {'text': '急停按下！', 'level': 'alarm'},
+            'P1FJSF_ALM': {'text': '分拣伺服异常！', 'level': 'alarm'},
+            'P2D8030': {'text': '温区1传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8031': {'text': '温区2传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8032': {'text': '温区3传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8033': {'text': '温区4传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8036': {'text': '温区5传感器断线或损坏！', 'level': 'alarm'},
+            'P2M98': {'text': '变频器通讯中断！', 'level': 'alarm'},
+            'P2X12': {'text': '变频器报警！', 'level': 'alarm'},
+            'P2M99': {'text': '变频器通讯中断!', 'level': 'alarm'}
         }
         self.alarm_fields = list(self.alarm_field_map.keys())
         self.last_alarm_values = {}
@@ -1743,23 +1709,27 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             return parts[1]
         return "未知"
 
-    def _append_realtime_alarm_row(self, alarm_text):
+    def _append_realtime_alarm_row(self, alarm_text, level):
         rows = []
         for row in range(self.tableWidget_realtime_alarm.rowCount()):
-            if item := self.tableWidget_realtime_alarm.item(row, 0):
-                text = item.text()
-                if text.strip():
-                    rows.append(text)
+            item = self.tableWidget_realtime_alarm.item(row, 0)
+            if item:
+                text = item.text().strip()
+                if text:
+                    c = item.background().color()
+                    lvl = 'warning' if c == QColor(Qt.yellow) else 'alarm'
+                    rows.append((text, lvl))
 
         if len(rows) >= 9:
             rows.pop(0)
 
-        rows.append(alarm_text)
+        rows.append((alarm_text, level))
 
         self.tableWidget_realtime_alarm.clearContents()
-        for row, text in enumerate(rows):
+        for row, (text, lvl) in enumerate(rows):
             self.tableWidget_realtime_alarm.setItem(row, 0, QTableWidgetItem(text))
-            self.tableWidget_realtime_alarm.item(row, 0).setBackground(Qt.red)
+            color = Qt.yellow if lvl == 'warning' else Qt.red
+            self.tableWidget_realtime_alarm.item(row, 0).setBackground(color)
 
         self.tableWidget_realtime_alarm.scrollToBottom()
 
@@ -1797,9 +1767,9 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
             prev_v = int(prev_status.get(field, 0) or 0)
             cur_v = int(current_status.get(field, 0) or 0)
             if prev_v == 0 and cur_v == 1:
-                alarm_content = self.alarm_field_map.get(field, field)
-                alarm_text = f"[{record_time}] 设备{device_id}: {alarm_content}"
-                self._append_realtime_alarm_row(alarm_text)
+                info = self.alarm_field_map.get(field, {'text': field, 'level': 'alarm'})
+                alarm_text = f"[{record_time}] 设备{device_id}: {info['text']}"
+                self._append_realtime_alarm_row(alarm_text, info.get('level', 'alarm'))
 
         self.last_alarm_values[table_name] = current_status
 
@@ -1867,10 +1837,15 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         self.tableWidget_historical_alarm.setRowCount(row_count)
 
         # 填充表格
-        for row, (_, alarm_text) in enumerate(all_alarms[:50]):  # 最多显示50条
+        for row, entry in enumerate(all_alarms[:50]):  # 最多显示50条
+            if len(entry) >= 3:
+                _, alarm_text, level = entry
+            else:
+                _, alarm_text = entry
+                level = 'alarm'
             self.tableWidget_historical_alarm.setItem(row, 0, QTableWidgetItem(alarm_text))
-            # 设置背景色为黄色（区别于实时报警的红色）
-            self.tableWidget_historical_alarm.item(row, 0).setBackground(Qt.yellow)
+            color = Qt.yellow if level == 'warning' else Qt.red
+            self.tableWidget_historical_alarm.item(row, 0).setBackground(color)
 
         # 如果没有查询到报警记录
         if not all_alarms:
@@ -2494,26 +2469,26 @@ class AlarmHistoryQueryWorker(QObject, PublicDataUpdate):
         # 创建历史数据管理器实例
         self.hist_data_manager = historical_data_manager
         self.alarm_field_map = {
-            'P0M43': '尺寸下限报警',
-            'P0M45': '尺寸上限报警',
-            'P0M46': '尺寸下限预警',
-            'P0M48': '尺寸上限预警',
-            'P0M41': '温度未达标！',
-            'P0X21': '螺旋伺服报警！',
-            'P0X20': '牵引伺服报警！',
-            'P0M31': '切刀护罩打开！',
-            'P0M6': '切刀伺服异常报警或未上电！',
-            'P0M22': '切刀异常！',
-            'JT': '急停按下！',
-            'P1FJSF_ALM': '分拣伺服异常！',
-            'P2D8030': '温区1传感器断线或损坏！',
-            'P2D8031': '温区2传感器断线或损坏！',
-            'P2D8032': '温区3传感器断线或损坏！',
-            'P2D8033': '温区4传感器断线或损坏！',
-            'P2D8036': '温区5传感器断线或损坏！',
-            'P2M98': '变频器通讯中断！',
-            'P2X12': '变频器报警！',
-            'P2M99': '变频器通讯中断!'
+            'P0M43': {'text': '尺寸下限报警', 'level': 'alarm'},
+            'P0M45': {'text': '尺寸上限报警', 'level': 'alarm'},
+            'P0M46': {'text': '尺寸下限预警', 'level': 'warning'},
+            'P0M48': {'text': '尺寸上限预警', 'level': 'warning'},
+            'P0M41': {'text': '温度未达标！', 'level': 'alarm'},
+            'P0X21': {'text': '螺旋伺服报警！', 'level': 'alarm'},
+            'P0X20': {'text': '牵引伺服报警！', 'level': 'alarm'},
+            'P0M31': {'text': '切刀护罩打开！', 'level': 'alarm'},
+            'P0M6': {'text': '切刀伺服异常报警或未上电！', 'level': 'alarm'},
+            'P0M22': {'text': '切刀异常！', 'level': 'alarm'},
+            'JT': {'text': '急停按下！', 'level': 'alarm'},
+            'P1FJSF_ALM': {'text': '分拣伺服异常！', 'level': 'alarm'},
+            'P2D8030': {'text': '温区1传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8031': {'text': '温区2传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8032': {'text': '温区3传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8033': {'text': '温区4传感器断线或损坏！', 'level': 'alarm'},
+            'P2D8036': {'text': '温区5传感器断线或损坏！', 'level': 'alarm'},
+            'P2M98': {'text': '变频器通讯中断！', 'level': 'alarm'},
+            'P2X12': {'text': '变频器报警！', 'level': 'alarm'},
+            'P2M99': {'text': '变频器通讯中断!', 'level': 'alarm'}
         }
         self.alarm_fields = list(self.alarm_field_map.keys())
 
@@ -2585,9 +2560,9 @@ class AlarmHistoryQueryWorker(QObject, PublicDataUpdate):
                             cur_v = 0
 
                         if prev_v == 0 and cur_v == 1:
-                            alarm_content = self.alarm_field_map.get(field, field)
-                            alarm_text = f"[{record_time}] 设备{device_id}: {alarm_content}"
-                            all_alarms.append((record_time, alarm_text))
+                            info = self.alarm_field_map.get(field, {'text': field, 'level': 'alarm'})
+                            alarm_text = f"[{record_time}] 设备{device_id}: {info['text']}"
+                            all_alarms.append((record_time, alarm_text, info.get('level', 'alarm')))
 
                     prev = record
 
