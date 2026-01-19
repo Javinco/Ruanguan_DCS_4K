@@ -3668,7 +3668,7 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widget_historical_title" native="true">
+   <widget class="QWidget" name="widget_title" native="true">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -3684,7 +3684,7 @@ border-bottom: 0.5px solid  rgb(0, 0, 0);
      </sizepolicy>
     </property>
     <property name="styleSheet">
-     <string notr="true">#widget_historical_title{
+     <string notr="true">#widget_title{
 border-top-left-radius: 20px;   /* 设置左上角的圆角半径 */
 border-top-right-radius: 20px;  /* 设置右上角的圆角半径 */
 border-bottom-left-radius: 0px; /* 保持左下角的圆角半径为 0 */
@@ -4667,7 +4667,7 @@ border-right: 0.5px solid  rgb(0, 0, 0);
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <zorder>widget_historical_title</zorder>
+   <zorder>widget_title</zorder>
    <zorder>frame_historical_parameter</zorder>
    <zorder>widget_pop_historical_parameter_curve1</zorder>
    <zorder>label_94</zorder>

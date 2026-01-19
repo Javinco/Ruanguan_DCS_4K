@@ -175,7 +175,99 @@ class PublicDataUpdate:
         self.label_115.setText(str(data.get('tension_percentage', '')))
         self.label_121.setText(str(data.get('lower_limit_warning', '')))
         self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
+        
+    def show_dialog_pop_historical_parameter(self):
+        """显示历史参数弹窗的方法"""
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
+        # 检查历史参数弹窗是否已存在
+        if self.dialog_historical:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.dialog_historical.isMinimized():
+                self.dialog_historical.showNormal()  # 从最小化状态恢复
+            elif not self.dialog_historical.isVisible():
+                self.dialog_historical.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
+            self.dialog_historical.raise_()  # 提升窗口层级
 
+    def center_dialog(self):
+        """将弹窗居中显示的方法"""
+        # 获取主屏幕尺寸
+        screen = QApplication.primaryScreen().geometry()
+        # 计算居中坐标（屏幕宽度-窗口宽度）/2
+        x = (screen.width() - self.width()) // 2
+        y = (screen.height() - self.height()) // 2
+        # 移动窗口到计算位置
+        self.move(x, y)
+
+    def dialog_mouse_press(self, event):
+        """处理鼠标按下事件（用于窗口拖动）"""
+        # 判断点击位置是否在标题栏区域内
+        point_in_title = self.widget_title.rect().contains(event.pos())
+        # 当左键点击且位置在标题栏时
+        if event.button() == Qt.LeftButton and point_in_title:
+            # 记录全局鼠标位置（屏幕坐标系）
+            self.drag_start_pos = event.globalPos()
+            # 保存窗口当前位置
+            self.dialog_original_pos = self.pos()
+            # 接受事件，阻止事件传递
+            event.accept()
+        else:
+            # 忽略非标题栏区域的点击
+            event.ignore()
+
+    def dialog_mouse_move(self, event):
+        """处理鼠标移动事件（实现窗口拖动）"""
+        # 当满足三个条件时处理拖动：
+        # 1. 左键保持按下状态
+        # 2. 存在初始拖动位置记录
+        # 3. 鼠标在标题栏区域
+        if (event.buttons() & Qt.LeftButton and
+                hasattr(self, 'drag_start_pos') and
+                self.widget_title.rect().contains(event.pos())):
+
+            # 计算位置偏移量（当前鼠标位置 - 起始位置）
+            delta = event.globalPos() - self.drag_start_pos
+            # 移动窗口到新位置（原始位置 + 偏移量）
+            self.move(self.dialog_original_pos + delta)
+            # 接受事件，确保操作流畅
+            event.accept()
+        else:
+            # 忽略无效拖动操作
+            event.ignore()
+
+    def on_time_interval_changed(self):
+        """当时间间隔输入框内容改变时调用"""
+        try:
+            # 获取输入的时间间隔值
+            time_interval = self.lineEdit_SetTime.text().strip()
+            if time_interval:  # 如果输入不为空
+                minutes = int(time_interval)
+                if minutes > 0:  # 确保是正数
+                    # 更新两个曲线绘制器的时间间隔
+                    if hasattr(self, 'curve_plotter'):
+                        self.curve_plotter.set_time_interval(minutes)
+                    if hasattr(self, 'curve_jcj'):
+                        self.curve_jcj.set_time_interval(minutes)
+        except ValueError:
+            # 如果输入无效，忽略错误
+            pass
+        
+    def show_dialog_pop_parameter(self):
+        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
+        # self.hide()  # 隐藏当前窗口
+        self.showMinimized()
+        # 检查实时参数弹窗是否已存在
+        if self.dialog_realtime:
+            # 如果弹窗已最小化或隐藏，则恢复显示
+            if self.dialog_realtime.isMinimized():
+                self.dialog_realtime.showNormal()  # 从最小化状态恢复
+            elif not self.dialog_realtime.isVisible():
+                self.dialog_realtime.show()  # 如果不可见则显示
+            # 如果已经可见，则将其置于前台
+            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
+            self.dialog_realtime.raise_()  # 提升窗口层级
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
 class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
@@ -302,84 +394,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
                     method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
@@ -530,84 +544,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
             else:
                 strategy(data)  # type: ignore[attr-defined]
 
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
-
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
         super().show()  # 调用父类 show 方法
@@ -755,84 +691,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
                     method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-
-    def show_dialog_pop_historical_parameter(self):
-        """显示历史参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查历史参数弹窗是否已存在
-        if self.dialog_historical:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_historical.isMinimized():
-                self.dialog_historical.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_historical.isVisible():
-                self.dialog_historical.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_historical.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_historical.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
-    def on_time_interval_changed(self):
-        """当时间间隔输入框内容改变时调用"""
-        try:
-            # 获取输入的时间间隔值
-            time_interval = self.lineEdit_SetTime.text().strip()
-            if time_interval:  # 如果输入不为空
-                minutes = int(time_interval)
-                if minutes > 0:  # 确保是正数
-                    # 更新两个曲线绘制器的时间间隔
-                    if hasattr(self, 'curve_plotter'):
-                        self.curve_plotter.set_time_interval(minutes)
-                    if hasattr(self, 'curve_jcj'):
-                        self.curve_jcj.set_time_interval(minutes)
-        except ValueError:
-            # 如果输入无效，忽略错误
-            pass
 
     # 重写 show 函数,讲数据更新线程启动放在show函数中
     def show(self):
@@ -1035,67 +893,6 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
             else:
                 strategy(data)  # type: ignore[attr-defined]
 
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
-
     def on_time_interval_changed(self):
         """当时间间隔输入框内容改变时调用"""
         try:
@@ -1296,67 +1093,6 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                     method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
 
     def on_time_interval_changed(self):
         """当时间间隔输入框内容改变时调用"""
@@ -1559,67 +1295,6 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                     method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
-
-    def show_dialog_pop_parameter(self):
-        """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
-        # self.hide()  # 隐藏当前窗口
-        self.showMinimized()
-        # 检查实时参数弹窗是否已存在
-        if self.dialog_realtime:
-            # 如果弹窗已最小化或隐藏，则恢复显示
-            if self.dialog_realtime.isMinimized():
-                self.dialog_realtime.showNormal()  # 从最小化状态恢复
-            elif not self.dialog_realtime.isVisible():
-                self.dialog_realtime.show()  # 如果不可见则显示
-            # 如果已经可见，则将其置于前台
-            self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
-            self.dialog_realtime.raise_()  # 提升窗口层级
-
-    def center_dialog(self):
-        """将弹窗居中显示的方法"""
-        # 获取主屏幕尺寸
-        screen = QApplication.primaryScreen().geometry()
-        # 计算居中坐标（屏幕宽度-窗口宽度）/2
-        x = (screen.width() - self.width()) // 2
-        y = (screen.height() - self.height()) // 2
-        # 移动窗口到计算位置
-        self.move(x, y)
-
-    def dialog_mouse_press(self, event):
-        """处理鼠标按下事件（用于窗口拖动）"""
-        # 判断点击位置是否在标题栏区域内
-        point_in_title = self.widget_historical_title.rect().contains(event.pos())
-        # 当左键点击且位置在标题栏时
-        if event.button() == Qt.LeftButton and point_in_title:
-            # 记录全局鼠标位置（屏幕坐标系）
-            self.drag_start_pos = event.globalPos()
-            # 保存窗口当前位置
-            self.dialog_original_pos = self.pos()
-            # 接受事件，阻止事件传递
-            event.accept()
-        else:
-            # 忽略非标题栏区域的点击
-            event.ignore()
-
-    def dialog_mouse_move(self, event):
-        """处理鼠标移动事件（实现窗口拖动）"""
-        # 当满足三个条件时处理拖动：
-        # 1. 左键保持按下状态
-        # 2. 存在初始拖动位置记录
-        # 3. 鼠标在标题栏区域
-        if (event.buttons() & Qt.LeftButton and
-                hasattr(self, 'drag_start_pos') and
-                self.widget_historical_title.rect().contains(event.pos())):
-
-            # 计算位置偏移量（当前鼠标位置 - 起始位置）
-            delta = event.globalPos() - self.drag_start_pos
-            # 移动窗口到新位置（原始位置 + 偏移量）
-            self.move(self.dialog_original_pos + delta)
-            # 接受事件，确保操作流畅
-            event.accept()
-        else:
-            # 忽略无效拖动操作
-            event.ignore()
 
     def on_time_interval_changed(self):
         """当时间间隔输入框内容改变时调用"""
