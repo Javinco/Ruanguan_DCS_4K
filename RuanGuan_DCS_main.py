@@ -890,6 +890,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
+        # 添加线程运行状态标志
+        self.query_in_progress = False
 
     def _init_historical_curves(self):
         """初始化历史曲线组件"""
@@ -935,12 +937,24 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
 
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
+        # 检查是否已有查询在进行中，避免重复点击
+        if self.query_in_progress:
+            print("查询正在进行中，请稍候...")
+            return
+        # 设置查询进行标志
+        self.query_in_progress = True
+
         # 获取界面选择的时间（转换为Python datetime对象）
         query_time = self.dateTimeEdit.dateTime().toPyDateTime()
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
+
+        # 更新两条历史曲线（触发重绘）
+        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
+        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
+
         # 定义需要查询的数据表列表
         tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
                   "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
@@ -967,12 +981,21 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
 
         # 连接数据更新信号到处理方法
         worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        # 连接完成信号，清除查询标志
+        worker.finished.connect(self._on_query_finished)
 
+        # 存储线程引用（使用唯一的键名）
+        thread_key = f'historical_query{id(self)}'
+        print(f'启动历史查询线程：{thread_key}')
         # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
+        self.threads[thread_key] = (thread, worker)
 
         # 启动线程
         thread.start()
+
+    def _on_query_finished(self):
+        """查询完成时的回调方法"""
+        self.query_in_progress = False
 
     def _handle_historical_data(self, result_data):
         """处理从子线程接收到的历史数据
@@ -1091,7 +1114,6 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
     # 历史参数弹窗类新增关闭事件处理
     # 重写窗口关闭事件处理方法（当窗口被关闭时自动触发）
     def closeEvent(self, event):
-        """处理关闭事件：关闭关联的实时参数弹窗"""
         # 检查是否存在实时参数弹窗实例
         if self.dialog_realtime:  # 判断dialog_realtime是否已初始化
             self.dialog_realtime.close()  # 调用实时弹窗的关闭方法
@@ -1130,6 +1152,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
+        # 添加线程运行状态标志
+        self.query_in_progress = False
 
     def _init_historical_curves(self):
         """初始化历史曲线组件"""
@@ -1175,12 +1199,24 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
 
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
+        # 检查是否已有查询在进行中，避免重复点击
+        if self.query_in_progress:
+            print("查询正在进行中，请稍候...")
+            return
+        # 设置查询进行标志
+        self.query_in_progress = True
+
         # 获取界面选择的时间（转换为Python datetime对象）
         query_time = self.dateTimeEdit.dateTime().toPyDateTime()
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
+
+        # 更新两条历史曲线（触发重绘）
+        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
+        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
+
         # 定义需要查询的数据表列表
         tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
                   "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
@@ -1207,12 +1243,21 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
 
         # 连接数据更新信号到处理方法
         worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        # 连接完成信号，清除查询标志
+        worker.finished.connect(self._on_query_finished)
 
+        # 存储线程引用（使用唯一的键名）
+        thread_key = f'historical_query{id(self)}'
+        print(f'启动历史查询线程：{thread_key}')
         # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
+        self.threads[thread_key] = (thread, worker)
 
         # 启动线程
         thread.start()
+
+    def _on_query_finished(self):
+        """查询完成时的回调方法"""
+        self.query_in_progress = False
 
     def _handle_historical_data(self, result_data):
         """处理从子线程接收到的历史数据
@@ -1370,6 +1415,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.time_interval_minutes = 10
         # 初始化历史曲线
         self._init_historical_curves()
+        # 添加线程运行状态标志
+        self.query_in_progress = False
 
     def _init_historical_curves(self):
         """初始化历史曲线组件"""
@@ -1415,12 +1462,24 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
 
     def handle_historical_query(self):
         """处理历史查询按钮点击事件的核心方法"""
+        # 检查是否已有查询在进行中，避免重复点击
+        if self.query_in_progress:
+            print("查询正在进行中，请稍候...")
+            return
+        # 设置查询进行标志
+        self.query_in_progress = True
+
         # 获取界面选择的时间（转换为Python datetime对象）
         query_time = self.dateTimeEdit.dateTime().toPyDateTime()
         # 计算结束时间（格式化成SQL可识别的字符串）
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
+
+        # 更新两条历史曲线（触发重绘）
+        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
+        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
+
         # 定义需要查询的数据表列表
         tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
                   "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
@@ -1447,12 +1506,21 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
 
         # 连接数据更新信号到处理方法
         worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        # 连接完成信号，清除查询标志
+        worker.finished.connect(self._on_query_finished)
 
+        # 存储线程引用（使用唯一的键名）
+        thread_key = f'historical_query{id(self)}'
+        print(f'启动历史查询线程：{thread_key}')
         # 存储线程引用
-        self.threads['historical_query'] = (thread, worker)
+        self.threads[thread_key] = (thread, worker)
 
         # 启动线程
         thread.start()
+
+    def _on_query_finished(self):
+        """查询完成时的回调方法"""
+        self.query_in_progress = False
 
     def _handle_historical_data(self, result_data):
         """处理从子线程接收到的历史数据
@@ -2408,16 +2476,6 @@ class HistoricalDataQueryAndPlotWorker(QObject):
     def run(self):
         """执行历史数据查询和曲线更新任务"""
         try:
-            # 更新历史曲线（在子线程中执行）
-            # 注意：由于历史曲线的绘制方法可能需要在主线程中执行，
-            # 我们可以考虑将绘图操作移到主线程，这里只处理数据查询
-            # 但在实际实现中，我们保持一致性，让绘图也在子线程中完成
-
-            # 先更新曲线
-            self.hist_curve1.update_plot(self.start_time, self.end_time)  # 更新管径曲线
-            self.hist_curve2.update_plot(self.start_time, self.end_time)  # 更新挤出机曲线
-
-            # 然后查询数据
             # 存储所有查询结果的字典
             result_data = {}
 
