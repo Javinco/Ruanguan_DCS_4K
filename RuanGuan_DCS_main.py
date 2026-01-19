@@ -941,29 +941,20 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
         # 定义需要查询的数据表列表
         tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
                   "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
-
         # 创建线程对象
         thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        # 创建工作线程实例，传递时间参数和曲线对象
+        worker = HistoricalDataQueryAndPlotWorker(
+            tables,
+            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time=start_time,
+            end_time=end_time,
+            hist_curve1=self.hist_curve1,
+            hist_curve2=self.hist_curve2
+        )
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1190,29 +1181,20 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
         # 定义需要查询的数据表列表
         tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
                   "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
-
         # 创建线程对象
         thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        # 创建工作线程实例，传递时间参数和曲线对象
+        worker = HistoricalDataQueryAndPlotWorker(
+            tables,
+            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time=start_time,
+            end_time=end_time,
+            hist_curve1=self.hist_curve1,
+            hist_curve2=self.hist_curve2
+        )
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
@@ -1439,41 +1421,32 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
         # 计算起始时间（当前查询时间前推10分钟）
         start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 更新参数显示（精确到秒的查询）
-        self._update_parameters(
-        query_time.strftime("%Y-%m-%d %H:%M:%S"),
-        start_time,
-        end_time)
-
-    def _update_parameters(self, exact_time, start_time, end_time):
-        """更新指定时间点的参数显示
-        Args:
-            exact_time: 精确时间字符串（格式：YYYY-MM-DD HH:MM:SS）
-        """
         # 定义需要查询的数据表列表
         tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
                   "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
-
         # 创建线程对象
         thread = QThread()
-        # 创建工作线程实例
-        worker = HistoricalDataQueryWorker(tables, exact_time, start_time, end_time)
+        # 创建工作线程实例，传递时间参数和曲线对象
+        worker = HistoricalDataQueryAndPlotWorker(
+            tables,
+            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time=start_time,
+            end_time=end_time,
+            hist_curve1=self.hist_curve1,
+            hist_curve2=self.hist_curve2
+        )
 
         # 将工作对象移动到新线程
         worker.moveToThread(thread)
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['historical_query'] = (thread, worker)
@@ -2405,32 +2378,46 @@ class InsertWorker(QObject):
 
 
 # ---------------------------------参数弹窗历史数据查询工作线程类---------------------------------
-class HistoricalDataQueryWorker(QObject):
-    """执行历史数据查询的工作线程类"""
+class HistoricalDataQueryAndPlotWorker(QObject):
+    """执行历史数据查询和曲线更新的工作线程类"""
     # 定义信号，用于将查询结果传递给主线程
     data_ready = pyqtSignal(dict)
     finished = pyqtSignal()
     error = pyqtSignal(str)
 
-    def __init__(self, tables, exact_time, start_time, end_time):
-        """初始化历史数据查询工作线程
+    def __init__(self, tables, exact_time, start_time, end_time, hist_curve1, hist_curve2):
+        """初始化历史数据查询和绘制工作线程
         Args:
             tables: 要查询的表名列表
             exact_time: 精确时间点
             start_time: 查询开始时间
             end_time: 查询结束时间
+            hist_curve1: 第一个历史曲线对象
+            hist_curve2: 第二个历史曲线对象
         """
         super().__init__()
         self.tables = tables
         self.exact_time = exact_time
         self.start_time = start_time
         self.end_time = end_time
+        self.hist_curve1 = hist_curve1
+        self.hist_curve2 = hist_curve2
         # 创建历史数据管理器实例
         self.hist_data_manager = historical_data_manager
 
     def run(self):
-        """执行历史数据查询任务"""
+        """执行历史数据查询和曲线更新任务"""
         try:
+            # 更新历史曲线（在子线程中执行）
+            # 注意：由于历史曲线的绘制方法可能需要在主线程中执行，
+            # 我们可以考虑将绘图操作移到主线程，这里只处理数据查询
+            # 但在实际实现中，我们保持一致性，让绘图也在子线程中完成
+
+            # 先更新曲线
+            self.hist_curve1.update_plot(self.start_time, self.end_time)  # 更新管径曲线
+            self.hist_curve2.update_plot(self.start_time, self.end_time)  # 更新挤出机曲线
+
+            # 然后查询数据
             # 存储所有查询结果的字典
             result_data = {}
 
@@ -2447,13 +2434,13 @@ class HistoricalDataQueryWorker(QObject):
                 result_data[table] = data
 
             # 发送查询结果信号
-            self.data_ready.emit(result_data) # type: ignore[attr-defined]
+            self.data_ready.emit(result_data)  # type: ignore[attr-defined]
         except Exception as e:
             print(f"历史数据查询异常: {str(e)}")
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
             # 发送完成信号
-            self.finished.emit()    # type: ignore[attr-defined]
+            self.finished.emit()  # type: ignore[attr-defined]
 
 
 # ---------------------------------报警历史查询工作线程类---------------------------------
