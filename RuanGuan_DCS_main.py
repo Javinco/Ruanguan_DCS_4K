@@ -175,7 +175,8 @@ class PublicDataUpdate:
         self.label_115.setText(str(data.get('tension_percentage', '')))
         self.label_121.setText(str(data.get('lower_limit_warning', '')))
         self.label_122.setText(str(data.get('lower_limit_alarm', '')))  # 使用get方法提供默认值
-        
+
+    # ---------------------------------原所有实时参数弹窗类重复方法---------------------------------
     def show_dialog_pop_historical_parameter(self):
         """显示历史参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -253,7 +254,8 @@ class PublicDataUpdate:
         except ValueError:
             # 如果输入无效，忽略错误
             pass
-        
+
+    # ---------------------------------原所有历史参数弹窗类重复方法---------------------------------
     def show_dialog_pop_parameter(self):
         """隐藏当前历史数据窗口，显示实时参数弹窗的方法"""
         # self.hide()  # 隐藏当前窗口
@@ -268,6 +270,84 @@ class PublicDataUpdate:
             # 如果已经可见，则将其置于前台
             self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
             self.dialog_realtime.raise_()  # 提升窗口层级
+            
+    def set_time_interval(self, minutes):
+        """设置曲线显示的时间间隔（分钟）"""
+        try:
+            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
+        except (ValueError, TypeError):
+            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
+
+    def handle_historical_query(self):
+        """处理历史查询按钮点击事件的核心方法"""
+        # 检查是否已有查询在进行中，避免重复点击
+        if self.query_in_progress:
+            print("查询正在进行中，请稍候...")
+            return
+        # 设置查询进行标志
+        self.query_in_progress = True
+
+        # 获取界面选择的时间（转换为Python datetime对象）
+        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
+        # 计算结束时间（格式化成SQL可识别的字符串）
+        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
+        # 计算起始时间（当前查询时间前推10分钟）
+        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
+
+        # 更新两条历史曲线（触发重绘）
+        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
+        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
+
+        # 创建线程对象
+        thread = QThread()
+        # 创建工作线程实例，传递时间参数和曲线对象
+        worker = HistoricalDataQueryAndPlotWorker(
+            self.tables,
+            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
+            start_time=start_time,
+            end_time=end_time,
+            hist_curve1=self.hist_curve1,
+            hist_curve2=self.hist_curve2
+        )
+
+        # 将工作对象移动到新线程
+        worker.moveToThread(thread)
+
+        # 信号连接
+        thread.started.connect(worker.run)  # type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
+
+        # 连接数据更新信号到处理方法
+        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        # 连接完成信号，清除查询标志
+        worker.finished.connect(self._on_query_finished)
+
+        # 存储线程引用（使用唯一的键名）
+        thread_key = f'historical_query{id(self)}'
+        print(f'启动历史查询线程：{thread_key}')
+        # 存储线程引用
+        self.threads[thread_key] = (thread, worker)
+
+        # 启动线程
+        thread.start()
+
+    def _on_query_finished(self):
+        """查询完成时的回调方法"""
+        self.query_in_progress = False
+
+    def _handle_historical_data(self, result_data):
+        """处理从子线程接收到的历史数据
+        Args:
+            result_data: 包含表名和数据的字典 {table_name: data}
+        """
+        # 遍历所有返回的数据
+        for table_name, data in result_data.items():
+            # 如果有返回数据（即使只有一条）
+            if data:
+                # 更新界面标签（取第一条/唯一一条数据）
+                self._update_ui_labels(table_name, data)
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
 class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
@@ -738,6 +818,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
         self.dateTimeEdit.setDateTime(datetime.now())
+        # 定义需要查询的数据表列表
+        self.tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
+                  "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
         # 连接时间设置输入框的信号
@@ -785,87 +868,6 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
             colors=CLASS_COLORS2, #曲线颜色配置
             y_limits = (0, 200)  # Y轴最大范围200
         )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 检查是否已有查询在进行中，避免重复点击
-        if self.query_in_progress:
-            print("查询正在进行中，请稍候...")
-            return
-        # 设置查询进行标志
-        self.query_in_progress = True
-
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 定义需要查询的数据表列表
-        tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
-                  "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例，传递时间参数和曲线对象
-        worker = HistoricalDataQueryAndPlotWorker(
-            tables,
-            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
-            start_time=start_time,
-            end_time=end_time,
-            hist_curve1=self.hist_curve1,
-            hist_curve2=self.hist_curve2
-        )
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
-        # 连接完成信号，清除查询标志
-        worker.finished.connect(self._on_query_finished)
-
-        # 存储线程引用（使用唯一的键名）
-        thread_key = f'historical_query{id(self)}'
-        print(f'启动历史查询线程：{thread_key}')
-        # 存储线程引用
-        self.threads[thread_key] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _on_query_finished(self):
-        """查询完成时的回调方法"""
-        self.query_in_progress = False
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
 
     # 添加新方法：处理数据更新
     def _update_ui_labels(self, table_name, data):
@@ -939,6 +941,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
         self.dateTimeEdit.setDateTime(datetime.now())
+        # 定义需要查询的数据表列表
+        self.tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
+                  "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
         # 连接时间设置输入框的信号
@@ -986,87 +991,6 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
             colors=CLASS_COLORS2, #曲线颜色配置
             y_limits = (0, 200)  # Y轴最大范围200
         )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 检查是否已有查询在进行中，避免重复点击
-        if self.query_in_progress:
-            print("查询正在进行中，请稍候...")
-            return
-        # 设置查询进行标志
-        self.query_in_progress = True
-
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 定义需要查询的数据表列表
-        tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
-                  "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例，传递时间参数和曲线对象
-        worker = HistoricalDataQueryAndPlotWorker(
-            tables,
-            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
-            start_time=start_time,
-            end_time=end_time,
-            hist_curve1=self.hist_curve1,
-            hist_curve2=self.hist_curve2
-        )
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
-        # 连接完成信号，清除查询标志
-        worker.finished.connect(self._on_query_finished)
-
-        # 存储线程引用（使用唯一的键名）
-        thread_key = f'historical_query{id(self)}'
-        print(f'启动历史查询线程：{thread_key}')
-        # 存储线程引用
-        self.threads[thread_key] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _on_query_finished(self):
-        """查询完成时的回调方法"""
-        self.query_in_progress = False
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
 
     # 添加新方法：处理数据更新
     def _update_ui_labels(self, table_name, data):
@@ -1141,6 +1065,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
         self.dateTimeEdit.setDateTime(datetime.now())
+        # 定义需要查询的数据表列表
+        self.tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
+                  "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
         # 连接时间设置输入框的信号
@@ -1188,87 +1115,6 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
             colors=CLASS_COLORS2, #曲线颜色配置
             y_limits = (0, 200)  # Y轴最大范围200
         )
-
-    def set_time_interval(self, minutes):
-        """设置曲线显示的时间间隔（分钟）"""
-        try:
-            self.time_interval_minutes = max(1, int(minutes))  # 确保至少1分钟
-        except (ValueError, TypeError):
-            self.time_interval_minutes = 10  # 如果转换失败，使用默认值
-
-    def handle_historical_query(self):
-        """处理历史查询按钮点击事件的核心方法"""
-        # 检查是否已有查询在进行中，避免重复点击
-        if self.query_in_progress:
-            print("查询正在进行中，请稍候...")
-            return
-        # 设置查询进行标志
-        self.query_in_progress = True
-
-        # 获取界面选择的时间（转换为Python datetime对象）
-        query_time = self.dateTimeEdit.dateTime().toPyDateTime()
-        # 计算结束时间（格式化成SQL可识别的字符串）
-        end_time = query_time.strftime("%Y-%m-%d %H:%M:%S")
-        # 计算起始时间（当前查询时间前推10分钟）
-        start_time = (query_time - timedelta(minutes=self.time_interval_minutes)).strftime("%Y-%m-%d %H:%M:%S")
-
-        # 更新两条历史曲线（触发重绘）
-        self.hist_curve1.update_plot(start_time, end_time)  # 更新管径曲线
-        self.hist_curve2.update_plot(start_time, end_time)  # 更新挤出机曲线
-
-        # 定义需要查询的数据表列表
-        tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
-                  "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
-        # 创建线程对象
-        thread = QThread()
-        # 创建工作线程实例，传递时间参数和曲线对象
-        worker = HistoricalDataQueryAndPlotWorker(
-            tables,
-            exact_time=query_time.strftime("%Y-%m-%d %H:%M:%S"),
-            start_time=start_time,
-            end_time=end_time,
-            hist_curve1=self.hist_curve1,
-            hist_curve2=self.hist_curve2
-        )
-
-        # 将工作对象移动到新线程
-        worker.moveToThread(thread)
-
-        # 信号连接
-        thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
-
-        # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
-        # 连接完成信号，清除查询标志
-        worker.finished.connect(self._on_query_finished)
-
-        # 存储线程引用（使用唯一的键名）
-        thread_key = f'historical_query{id(self)}'
-        print(f'启动历史查询线程：{thread_key}')
-        # 存储线程引用
-        self.threads[thread_key] = (thread, worker)
-
-        # 启动线程
-        thread.start()
-
-    def _on_query_finished(self):
-        """查询完成时的回调方法"""
-        self.query_in_progress = False
-
-    def _handle_historical_data(self, result_data):
-        """处理从子线程接收到的历史数据
-        Args:
-            result_data: 包含表名和数据的字典 {table_name: data}
-        """
-        # 遍历所有返回的数据
-        for table_name, data in result_data.items():
-            # 如果有返回数据（即使只有一条）
-            if data:
-                # 更新界面标签（取第一条/唯一一条数据）
-                self._update_ui_labels(table_name, data)
 
     # 添加新方法：处理数据更新
     def _update_ui_labels(self, table_name, data):
