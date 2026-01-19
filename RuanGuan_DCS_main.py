@@ -375,8 +375,6 @@ class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.data_manager = data_manager
-
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -524,8 +522,6 @@ class ParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
 
-        self.data_manager = data_manager
-
         # 创建线程管理器字典
         self.threads = {}
         # 需要监控的表名列表
@@ -671,8 +667,6 @@ class ParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Parameter_Factory1De
         self.mouseMoveEvent = self.dialog_mouse_move  # 移动事件处理
         # 设置窗口居中属性
         self.center_dialog()  # 初始居中显示
-
-        self.data_manager = data_manager
 
         # 创建线程管理器字典
         self.threads = {}
