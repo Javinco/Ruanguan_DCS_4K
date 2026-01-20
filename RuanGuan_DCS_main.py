@@ -22,6 +22,8 @@ from Ruanguan_Curve import RealTimeMainWindowCurve1
 # from Ruanguan_Historical import HistoricalCurvePlotter
 from RealtimeCurve import RealTimeCurvePlotter
 from HistoricalCurve import HistoricalCurvePlotter
+from license_manager import license_manager
+from license_expired_dialog import LicenseExpiredDialog
 
 CLASS_COLORS1 = ['#FF0000', '#FFFF00', '#00FFFF', '#00FF00', '#FFFF00', '#FF0000', '#FFA500',
                  '#800080', '#008000', '#000080', '#808000', '#800000', '#008080', '#C0C0C0',
@@ -1466,6 +1468,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         # 调用父类构造方法
         super().__init__()
+        
+        # 首先检查授权
+        self.license_expired_dialog = None
+        self.check_license_at_startup()
+        
         # 初始化UI界面
         self.setupUi(self)
         # 设置窗口全屏显示
@@ -1563,6 +1570,60 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve_plotter3.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
 
         self._start_data_update_thread(self.tables_to_monitor)
+
+        # 添加许可证状态检查定时器
+        self.license_check_timer = QTimer(self)
+        self.license_check_timer.timeout.connect(self.check_license_status)
+        self.license_check_timer.start(5000)  # 每5秒检查一次许可证状态
+
+    def check_license_at_startup(self):
+        """启动时检查许可证"""
+        # 创建初始许可证（如果不存在）
+        license_manager.create_initial_license()
+
+        # 检查许可证有效性
+        is_valid, message = license_manager.check_license_validity()
+
+        if not is_valid:
+            print(f"许可证检查失败: {message}")
+            # 显示不可关闭的授权过期对话框
+            self.license_expired_dialog = LicenseExpiredDialog(self, license_manager)
+            self.license_expired_dialog.show()
+        else:
+            print(f"许可证检查通过: {message}")
+
+    def check_license_after_activation(self):
+        """激活码应用后检查许可证状态"""
+        is_valid, message = license_manager.check_license_validity()
+        if is_valid:
+            print(f"许可证激活成功: {message}")
+            # 如果有许可证过期对话框，关闭它
+            if hasattr(self, 'license_expired_dialog') and self.license_expired_dialog:
+                try:
+                    self.license_expired_dialog.close()
+                except  Exception as e:
+                    print(f"Error closing license_expired_dialog: {e}")
+                self.license_expired_dialog = None
+        else:
+            print(f"许可证仍然无效: {message}")
+
+    def check_license_status(self):
+        """定期检查许可证状态"""
+        is_valid, message = license_manager.check_license_validity()
+
+        if not is_valid and not self.license_expired_dialog:
+            # 许可证无效且过期对话框未显示，创建并显示对话框
+            print(f"许可证过期: {message}")
+            self.license_expired_dialog = LicenseExpiredDialog(self, license_manager)
+            self.license_expired_dialog.show()
+        elif is_valid and self.license_expired_dialog:
+            # 许可证有效但过期对话框正在显示，关闭对话框
+            print(f"许可证恢复有效: {message}")
+            try:
+                self.license_expired_dialog.close()
+            except  Exception as e:
+                print(f"Error closing license_expired_dialog: {e}")
+            self.license_expired_dialog = None
 
     # 添加新方法：启动数据更新线程
     def _start_data_update_thread(self, tables_to_monitor):
@@ -1789,39 +1850,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 添加closeEvent方法，确保通过系统关闭按钮关闭时也能级联关闭所有窗口
     def closeEvent(self, event):
         """处理关闭事件：关闭所有已打开的窗口"""
-        # 停止所有线程
-        if hasattr(self, 'threads'):
-            for key, (thread, worker) in self.threads.items():
-                if hasattr(worker, 'stop'):
-                    try:
-                        worker.stop()  # 停止工作线程
-                    except Exception as e:
-                        print(f"停止线程时出错: {e}")
-                thread.quit()  # 退出线程
-                thread.wait(1000)  # 等待线程退出，最多等待1秒
-
-        # 关闭所有参数弹窗
-        if hasattr(self, 'pop_dialog'):
-            self.pop_dialog.close()
-        if hasattr(self, 'pop_dialog_factory1_2'):
-            self.pop_dialog_factory1_2.close()
-        if hasattr(self, 'pop_dialog_factory1_3'):
-            self.pop_dialog_factory1_3.close()
-
-        # 关闭所有历史参数弹窗
-        if hasattr(self, 'dialog_historical'):
-            self.dialog_historical.close()
-        if hasattr(self, 'dialog_historical_factory1_2'):
-            self.dialog_historical_factory1_2.close()
-        if hasattr(self, 'dialog_historical_factory1_3'):
-            self.dialog_historical_factory1_3.close()
-
-        # 关闭报警弹窗
-        if hasattr(self, 'pop_alarm_dialog'):
-            self.pop_alarm_dialog.close()
-
-        # 调用父类的关闭事件处理
-        super().closeEvent(event)
+        # 检查许可证状态，如果已过期，强制关闭所有窗口
+        is_valid, message = license_manager.check_license_validity()
+        if not is_valid:
+            # 如果许可证已过期，直接关闭
+            super().closeEvent(event)
+        else:
+            # 停止所有线程
+            if hasattr(self, 'threads'):
+                for key, (thread, worker) in self.threads.items():
+                    if hasattr(worker, 'stop'):
+                        try:
+                            worker.stop()  # 停止工作线程
+                        except Exception as e:
+                            print(f"停止线程时出错: {e}")
+                    thread.quit()  # 退出线程
+                    thread.wait(1000)  # 等待线程退出，最多等待1秒
+    
+            # 关闭所有参数弹窗
+            if hasattr(self, 'pop_dialog'):
+                self.pop_dialog.close()
+            if hasattr(self, 'pop_dialog_factory1_2'):
+                self.pop_dialog_factory1_2.close()
+            if hasattr(self, 'pop_dialog_factory1_3'):
+                self.pop_dialog_factory1_3.close()
+    
+            # 关闭所有历史参数弹窗
+            if hasattr(self, 'dialog_historical'):
+                self.dialog_historical.close()
+            if hasattr(self, 'dialog_historical_factory1_2'):
+                self.dialog_historical_factory1_2.close()
+            if hasattr(self, 'dialog_historical_factory1_3'):
+                self.dialog_historical_factory1_3.close()
+    
+            # 关闭报警弹窗
+            if hasattr(self, 'pop_alarm_dialog'):
+                self.pop_alarm_dialog.close()
+    
+            # 调用父类的关闭事件处理
+            super().closeEvent(event)
 
 # ---------------------------------数据更新工作线程类---------------------------------
 class DataUpdateWorker(QObject):
