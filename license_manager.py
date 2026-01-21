@@ -2,6 +2,7 @@
 import os
 import json
 from datetime import datetime, timedelta
+import base64
 
 
 class LicenseManager:
@@ -73,8 +74,25 @@ class LicenseManager:
         # 确保许可证文件存在
         self.ensure_license_file()
 
+    @staticmethod
+    def encode_license_data(data):
+        """将许可证数据编码为非明文格式"""
+        json_str = json.dumps(data, separators=(',', ':'))
+        encoded_bytes = base64.b64encode(json_str.encode('utf-8'))
+        return encoded_bytes.decode('utf-8')
+
+    @staticmethod
+    def decode_license_data(encoded_str):
+        """解码许可证数据"""
+        try:
+            decoded_bytes = base64.b64decode(encoded_str.encode('utf-8'))
+            json_str = decoded_bytes.decode('utf-8')
+            return json.loads(json_str)
+        except:
+            return None
+
     def ensure_license_file(self):
-        """确保许可证文件存在并具有正确的JSON格式"""
+        """确保许可证文件存在并具有正确的格式"""
         if not os.path.exists(self.license_file):
             initial_date = datetime.now()
             license_data = {
@@ -84,8 +102,11 @@ class LicenseManager:
                 'permanent': False  # 是否永久授权
             }
 
+            # 将许可证数据编码后保存
+            encoded_data = self.encode_license_data(license_data)
+
             with open(self.license_file, 'w', encoding='utf-8') as f:
-                json.dump(license_data, f)
+                json.dump({'license': encoded_data}, f)
 
     def create_initial_license(self):
         """创建初始许可证（首次运行时）"""
@@ -98,7 +119,14 @@ class LicenseManager:
 
         try:
             with open(self.license_file, 'r', encoding='utf-8') as f:
-                license_info = json.load(f)
+                file_content = json.load(f)
+
+            # 解码许可证数据
+            encoded_data = file_content.get('license', '')
+            license_info = self.decode_license_data(encoded_data)
+
+            if license_info is None:
+                return False, "许可证解码失败"
 
             # 检查是否永久授权
             if license_info.get('permanent', False):
@@ -135,7 +163,14 @@ class LicenseManager:
         try:
             # 读取现有许可证
             with open(self.license_file, 'r', encoding='utf-8') as f:
-                license_info = json.load(f)
+                file_content = json.load(f)
+
+            # 解码许可证数据
+            encoded_data = file_content.get('license', '')
+            license_info = self.decode_license_data(encoded_data)
+
+            if license_info is None:
+                return False, "许可证解码失败"
 
             if code_type == 'long_term':
                 # 长期激活码：设置为永久授权
@@ -150,9 +185,11 @@ class LicenseManager:
             else:
                 return False, "未知的激活码类型"
 
-            # 保存更新后的许可证
+            # 重新编码并保存许可证
+            encoded_data = self.encode_license_data(license_info)
+
             with open(self.license_file, 'w', encoding='utf-8') as f:
-                json.dump(license_info, f)
+                json.dump({'license': encoded_data}, f)
 
             return True, f"{code_type} 激活码应用成功"
 
