@@ -10,8 +10,9 @@ class LicenseExpiredDialog(QDialog):
         super().__init__(parent)
         self.license_manager = license_manager
         self.setModal(True)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        # 移除 FramelessWindowHint，保留 WindowStaysOnTopHint
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        # 不设置 WA_TranslucentBackground 属性
         self.setup_ui()
 
     def setup_ui(self):
@@ -21,11 +22,12 @@ class LicenseExpiredDialog(QDialog):
         # 设置样式
         self.setStyleSheet("""
             QDialog {
-                background-color: rgba(0, 0, 0, 180);
+                background-color: rgb(192, 192, 192);  /* 灰色底色 */
                 border-radius: 15px;
+                border: 1px solid gray;  /* 添加边框确保可见性 */
             }
             QLabel {
-                color: white;
+                color: black;  /* 改为黑色以提高可读性 */
                 font-size: 18px;
                 font-weight: bold;
             }
@@ -148,8 +150,20 @@ class LicenseExpiredDialog(QDialog):
 
     def open_activation_dialog(self):
         """打开激活码输入对话框"""
+        # 暂时停止置顶定时器，以便激活码对话框可以显示在最前
+        if hasattr(self, 'top_timer'):
+            self.top_timer.stop()
+
         dialog = ActivationCodeDialog(parent=self, license_manager=self.license_manager)
+
+        # 显示激活码对话框前，暂时降低过期对话框的层级
+        self.lower()
+
         result = dialog.exec_()
+
+        # 无论结果如何，都需要重启置顶定时器
+        if hasattr(self, 'top_timer'):
+            self.top_timer.start(1000)
 
         if result == QDialog.Accepted:
             # 激活码应用成功，检查许可证状态
@@ -166,3 +180,8 @@ class LicenseExpiredDialog(QDialog):
                     self.parent().check_license_after_activation()
             else:
                 print(f"激活码应用后许可证仍无效: {message}")
+        else:
+            # 如果用户取消了激活码对话框，重新将过期对话框置顶
+            self.raise_()
+            self.activateWindow()
+

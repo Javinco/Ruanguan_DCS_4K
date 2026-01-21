@@ -1,5 +1,5 @@
 # activation_code_dialog.py
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QApplication
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QApplication, QWidget, QWidget
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
@@ -9,7 +9,8 @@ class ActivationCodeDialog(QDialog):
         super().__init__(parent)
         self.license_manager = license_manager
         self.setModal(True)
-        self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)
+        # 使用模态对话框标志，确保显示在父窗口之上
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setup_ui()
 
@@ -17,15 +18,15 @@ class ActivationCodeDialog(QDialog):
         main_layout = QVBoxLayout()
         main_layout.setAlignment(Qt.AlignCenter)
 
-        # 设置样式
+        # 设置样式，与license_expired_dialog保持一致
         self.setStyleSheet("""
-            QDialog {
-                background-color: rgba(240, 240, 240, 230);
-                border-radius: 10px;
-                border: 2px solid #cccccc;
+            QWidget#container {
+                background-color: rgb(192, 192, 192);
+                border-radius: 15px;
+                border: 1px solid gray;
             }
             QLabel {
-                color: #333333;
+                color: black;  /* 改为黑色以提高可读性 */
                 font-size: 14px;
             }
             QLineEdit {
@@ -33,6 +34,7 @@ class ActivationCodeDialog(QDialog):
                 font-size: 14px;
                 border: 1px solid #cccccc;
                 border-radius: 5px;
+                background-color: white;  /* 输入框背景设为白色 */
             }
             QLineEdit:focus {
                 border: 2px solid #007ACC;
@@ -66,7 +68,7 @@ class ActivationCodeDialog(QDialog):
         input_layout.addStretch()
         code_label = QLabel("激活码:")
         self.code_input = QLineEdit()
-        self.code_input.setPlaceholderText("请输入激活码（如：SRT001XVJQKLMNPQR 或 LNG001PERMANENT）")
+        self.code_input.setPlaceholderText("请输入激活码:")
         self.code_input.setMaxLength(30)  # 支持更长的激活码
         input_layout.addWidget(code_label)
         input_layout.addWidget(self.code_input)
@@ -86,14 +88,20 @@ class ActivationCodeDialog(QDialog):
         self.cancel_button.clicked.connect(self.reject)
         self.code_input.returnPressed.connect(self.apply_activation_code)
 
-        # 添加到主布局
-        main_layout.addWidget(title_label)
-        main_layout.addSpacing(20)
-        main_layout.addLayout(input_layout)
-        main_layout.addSpacing(20)
-        main_layout.addLayout(button_layout)
-        main_layout.addSpacing(10)
+        # 使用容器 QWidget 承载所有内容并应用圆角灰色样式
+        container = QWidget()
+        container.setObjectName("container")
+        container_layout = QVBoxLayout(container)
+        container_layout.setAlignment(Qt.AlignCenter)
+        container_layout.addWidget(title_label)
+        container_layout.addSpacing(20)
+        container_layout.addLayout(input_layout)
+        container_layout.addSpacing(20)
+        container_layout.addLayout(button_layout)
+        container_layout.addSpacing(10)
 
+        # 将容器加入主布局
+        main_layout.addWidget(container)
         self.setLayout(main_layout)
 
         # 设置对话框大小
@@ -116,26 +124,75 @@ class ActivationCodeDialog(QDialog):
             y = (screen.height() - self.height()) // 2
             self.move(x, y)
 
+    def showEvent(self, event):
+        """重写显示事件，确保对话框显示在LicenseExpiredDialog之上"""
+        super().showEvent(event)
+        # 确保对话框显示在最前
+        self.raise_()
+        self.activateWindow()
+        # 确保焦点在当前对话框
+        self.setFocus()
+
+    def exec_(self):
+        """重写exec_方法，确保对话框正确显示"""
+        # 确保在显示前将父窗口降低层级
+        if self.parent():
+            self.parent().lower()
+        # 调用父类的exec_方法
+        result = super().exec_()
+        # 对话框关闭后，重新激活父窗口
+        if self.parent():
+            self.parent().raise_()
+            self.parent().activateWindow()
+        return result
+
     def apply_activation_code(self):
-        """应用激活码"""
         activation_code = self.code_input.text().strip().upper()
-
         if not activation_code:
-            QMessageBox.warning(self, "警告", "请输入激活码")
+            self._show_frameless_message("警告", "请输入激活码")
             return
-
         if len(activation_code) < 10:
-            QMessageBox.warning(self, "警告", "激活码长度不足")
+            self._show_frameless_message("警告", "激活码长度不足")
             return
-
-        # 验证并应用激活码
         success, message = self.license_manager.validate_and_apply_activation_code(activation_code)
-
         if success:
-            QMessageBox.information(self, "成功", message)
-            self.accept()  # 关闭对话框
+            self._show_frameless_message("成功", message)
+            self.accept()
         else:
-            QMessageBox.critical(self, "错误", message)
+            self._show_frameless_message("错误", message)
+
+    def _show_frameless_message(self, title, text):
+        dlg = QDialog(self)
+        dlg.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint)
+        dlg.setAttribute(Qt.WA_TranslucentBackground)
+        layout = QVBoxLayout(dlg)
+        container = QWidget()
+        container.setObjectName("msg_container")
+        container_layout = QVBoxLayout(container)
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignCenter)
+        btn = QPushButton("确定")
+        btn.clicked.connect(dlg.accept)
+        bl = QHBoxLayout()
+        bl.addStretch()
+        bl.addWidget(btn)
+        bl.addStretch()
+        container_layout.addWidget(label)
+        container_layout.addLayout(bl)
+        layout.addWidget(container)
+        dlg.setStyleSheet("QWidget#msg_container { background-color: rgb(192, 192, 192); border-radius: 15px; border: 1px solid gray; } QLabel { color: black; font-size: 14px; } QPushButton { background-color: #007ACC; color: white; border: none; padding: 6px 12px; border-radius: 5px; } QPushButton:hover { background-color: #005A9E; }")
+        dlg.resize(360, 140)
+        if self.isVisible():
+            pg = self.geometry()
+            x = pg.x() + (pg.width() - dlg.width()) // 2
+            y = pg.y() + (pg.height() - dlg.height()) // 2
+            dlg.move(x, y)
+        else:
+            screen = QApplication.primaryScreen().geometry()
+            x = (screen.width() - dlg.width()) // 2
+            y = (screen.height() - dlg.height()) // 2
+            dlg.move(x, y)
+        dlg.exec_()
 
     def keyPressEvent(self, event):
         """拦截ESC键关闭事件"""
