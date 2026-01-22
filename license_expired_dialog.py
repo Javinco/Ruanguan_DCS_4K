@@ -28,7 +28,7 @@ class LicenseExpiredDialog(QDialog):
             }
             QLabel {
                 color: black;  /* 改为黑色以提高可读性 */
-                font-size: 18px;
+                font-size: 28px;
                 font-weight: bold;
             }
             QPushButton {
@@ -36,7 +36,7 @@ class LicenseExpiredDialog(QDialog):
                 color: white;
                 border: none;
                 padding: 10px 20px;
-                font-size: 16px;
+                font-size: 26px;
                 font-weight: bold;
                 border-radius: 5px;
             }

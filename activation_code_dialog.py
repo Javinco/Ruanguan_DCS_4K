@@ -27,11 +27,11 @@ class ActivationCodeDialog(QDialog):
             }
             QLabel {
                 color: black;  /* 改为黑色以提高可读性 */
-                font-size: 14px;
+                font-size: 28px;
             }
             QLineEdit {
                 padding: 8px;
-                font-size: 14px;
+                font-size: 28px;
                 border: 1px solid #cccccc;
                 border-radius: 5px;
                 background-color: white;  /* 输入框背景设为白色 */
@@ -44,7 +44,7 @@ class ActivationCodeDialog(QDialog):
                 color: white;
                 border: none;
                 padding: 8px 16px;
-                font-size: 14px;
+                font-size: 28px;
                 border-radius: 5px;
             }
             QPushButton:hover {
