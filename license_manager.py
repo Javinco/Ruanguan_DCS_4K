@@ -97,9 +97,10 @@ class LicenseManager:
             initial_date = datetime.now()
             license_data = {
                 'install_date': initial_date.isoformat(),
-                'expiry_date': (initial_date + timedelta(days=0.01)).isoformat(),  # 0.1天有效期，约2.4小时，用于测试
+                'expiry_date': (initial_date + timedelta(days=30)).isoformat(),  # 0.1天有效期，约2.4小时，用于测试
                 'status': 'active',
-                'permanent': False  # 是否永久授权
+                'permanent': False,  # 是否永久授权
+                'used_codes': []     # 已使用的激活码列表
             }
 
             # 将许可证数据编码后保存
@@ -152,13 +153,28 @@ class LicenseManager:
         # 支持输入激活码时包含分隔符的情况，移除分隔符
         clean_code = activation_code.replace('-', '').replace(' ', '').strip().upper()
 
+        # 读取现有许可证以检查已使用的激活码
+        with open(self.license_file, 'r', encoding='utf-8') as f:
+            file_content = json.load(f)
+        encoded_data = file_content.get('license', '')
+        license_info = self.decode_license_data(encoded_data)
+
+        if license_info is None:
+            return False, "许可证解码失败"
+
+        # 检查激活码是否已被使用
+        used_codes = license_info.get('used_codes', [])
+        if clean_code in used_codes:
+            return False, "激活码已被使用，无法重复使用"
+
         if clean_code not in self.valid_codes:
             return False, "激活码无效或不存在"
 
         code_info = self.valid_codes[clean_code]
-        return self._apply_activation_code(code_info["type"], code_info["days"])
+        result = self._apply_activation_code(code_info["type"], code_info["days"], clean_code)
+        return result
 
-    def _apply_activation_code(self, code_type, days):
+    def _apply_activation_code(self, code_type, days, used_code):
         """应用激活码到许可证"""
         try:
             # 读取现有许可证
@@ -184,6 +200,12 @@ class LicenseManager:
                 license_info['permanent'] = False
             else:
                 return False, "未知的激活码类型"
+
+            # 添加已使用的激活码到列表
+            used_codes = license_info.get('used_codes', [])
+            if used_code not in used_codes:
+                used_codes.append(used_code)
+            license_info['used_codes'] = used_codes
 
             # 重新编码并保存许可证
             encoded_data = self.encode_license_data(license_info)
