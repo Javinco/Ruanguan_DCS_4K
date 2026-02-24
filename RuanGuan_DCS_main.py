@@ -4,10 +4,11 @@ from datetime import datetime, timedelta
 import socket
 import serial
 import threading
+import cv2
 # 从PyQt5导入需要的组件
-from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QTableWidgetItem, QLabel
 from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal, QThread
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QImage, QPixmap
 # 导入自动生成的UI界面类
 from Ui_MainWindow import Ui_MainWindow
 from Ui_pop_parameter import Ui_Dialog_Pop_Parameter
@@ -1564,6 +1565,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             y_limits=(-1, 1)
         )
 
+        # 创建视频显示标签
+        self.video_label = QLabel(self.curve6)
+        self.video_label.setGeometry(0, 0, 740, 490)  # 设置标签大小与curve6容器一致
+        self.video_label.setStyleSheet("background-color: black;")
+        self.video_label.setAlignment(Qt.AlignCenter)
+        self.video_label.setText("正在连接摄像头...")
+        self.video_label.setStyleSheet("""
+            color: white;
+            font-size: 18px;
+            background-color: black;
+        """)
+        self.video_thread = None
+        self.rtsp_url = "rtsp://admin:MuBai@monitor01@192.168.1.64:554/Streaming/Channels/101"
+
         # 在初始化曲线后添加事件穿透设置
         self.curve_plotter1.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
         self.curve_plotter2.canvas.setAttribute(Qt.WA_TransparentForMouseEvents, True)
@@ -1575,6 +1590,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.license_check_timer = QTimer(self)
         self.license_check_timer.timeout.connect(self.check_license_status)
         self.license_check_timer.start(5000)  # 每5秒检查一次许可证状态
+        # 启动视频监控
+        self._start_video_monitor()
 
     def check_license_at_startup(self):
         """启动时检查许可证"""
@@ -1846,10 +1863,56 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pop_alarm_dialog.raise_()  # 提升窗口层级
         event.accept()  # 接受事件，阻止进一步传播
 
+    def _start_video_monitor(self):
+        """启动视频监控"""
+        if self.video_thread is None or not self.video_thread.isRunning():
+            self.video_thread = VideoThread(self.rtsp_url)
+            self.video_thread.changePixmap.connect(self.set_video_image)
+            self.video_thread.connectionLost.connect(self.on_video_connection_lost)
+            self.video_thread.connectionRestored.connect(self.on_video_connection_restored)
+            self.video_thread.start()
+            print("视频监控线程已启动")
+
+    def set_video_image(self, image):
+        """设置视频图像显示"""
+        if hasattr(self, 'video_label'):
+            pixmap = QPixmap.fromImage(image)
+            self.video_label.setPixmap(pixmap)
+            self.video_label.setScaledContents(True)  # 自动缩放图像以适应标签大小
+
+    def on_video_connection_lost(self):
+        """视频连接丢失处理"""
+        print("视频连接已断开")
+        if hasattr(self, 'video_label'):
+            self.video_label.setText("连接已断开，正在重连...")
+            self.video_label.setStyleSheet("""
+                color: red;
+                font-size: 18px;
+                background-color: black;
+            """)
+
+    def on_video_connection_restored(self):
+        """视频连接恢复处理"""
+        print("视频连接已恢复")
+        if hasattr(self, 'video_label'):
+            self.video_label.setText("")  # 清空文本，让视频图像显示
+            self.video_label.setStyleSheet("""
+                background-color: black;
+            """)
+
+    def stop_video_monitor(self):
+        """停止视频监控"""
+        if self.video_thread and self.video_thread.isRunning():
+            self.video_thread.stop()
+            self.video_thread.wait()
+            print("视频监控已停止")
+
     # 重写关闭事件，确保线程正确停止
     # 添加closeEvent方法，确保通过系统关闭按钮关闭时也能级联关闭所有窗口
     def closeEvent(self, event):
         """处理关闭事件：关闭所有已打开的窗口"""
+        # 停止视频监控线程
+        self.stop_video_monitor()
         # 检查许可证状态，如果已过期，强制关闭所有窗口
         is_valid, message = license_manager.check_license_validity()
         if not is_valid:
@@ -1866,7 +1929,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             print(f"停止线程时出错: {e}")
                     thread.quit()  # 退出线程
                     thread.wait(1000)  # 等待线程退出，最多等待1秒
-    
+
             # 关闭所有参数弹窗
             if hasattr(self, 'pop_dialog'):
                 self.pop_dialog.close()
@@ -2209,6 +2272,85 @@ class AlarmHistoryQueryWorker(QObject, PublicDataUpdate):
             self.error.emit(f"查询失败: {str(e)}")  # type: ignore[attr-defined]
         finally:
             self.finished.emit()  # type: ignore[attr-defined]
+
+
+# ---------------------------------视频监控线程类---------------------------------
+class VideoThread(QThread):
+    """视频监控线程类，负责从RTSP流获取视频帧"""
+    changePixmap = pyqtSignal(QImage)  # 发送图像信号
+    connectionLost = pyqtSignal()  # 连接丢失信号
+    connectionRestored = pyqtSignal()  # 连接恢复信号
+
+    def __init__(self, rtsp_url, parent=None):
+        super().__init__(parent)
+        self.rtsp_url = rtsp_url
+        self.running = True
+        self.connected = False
+        self.reconnect_delay = 5000  # 重连延迟5秒
+
+    def run(self):
+        """线程主运行方法"""
+        while self.running:
+            cap = None
+            try:
+                # 尝试连接摄像头
+                cap = cv2.VideoCapture(self.rtsp_url)
+                if not cap.isOpened():
+                    raise Exception("无法打开视频流")
+
+                self.connected = True
+                self.connectionRestored.emit()
+                print(f"视频连接已建立: {self.rtsp_url}")
+
+                # 设置缓冲区大小以减少延迟
+                cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+                while self.running and self.connected:
+                    ret, frame = cap.read()
+                    if ret:
+                        # 转换颜色格式
+                        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                        h, w, ch = rgb_image.shape
+                        bytes_per_line = ch * w
+
+                        # 转换为QImage
+                        convert_to_qt_format = QImage(
+                            rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888
+                        )
+
+                        # 缩放到适合显示的大小
+                        p = convert_to_qt_format.scaled(740, 490, Qt.KeepAspectRatio)
+                        self.changePixmap.emit(p)
+
+                        # 控制帧率，避免过度占用CPU
+                        QThread.msleep(30)  # 约33fps
+                    else:
+                        # 读取失败，可能是连接断开
+                        print("视频流读取失败，尝试重连...")
+                        self.connected = False
+                        self.connectionLost.emit()
+                        break
+
+            except Exception as e:
+                print(f"视频连接异常: {str(e)}")
+                self.connected = False
+                self.connectionLost.emit()
+
+            finally:
+                if cap:
+                    cap.release()
+
+            # 如果仍在运行且连接失败，等待后重连
+            if self.running and not self.connected:
+                print(f"等待 {self.reconnect_delay / 1000} 秒后重连...")
+                QThread.msleep(self.reconnect_delay)
+
+    def stop(self):
+        """停止线程"""
+        self.running = False
+        self.connected = False
+        self.quit()
+        self.wait()
 
 
 # ---------------------------------程序入口---------------------------------
