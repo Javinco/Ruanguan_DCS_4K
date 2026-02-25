@@ -1,5 +1,6 @@
 # 导入系统模块
 import sys
+import os
 from datetime import datetime, timedelta
 import socket
 import serial
@@ -273,7 +274,7 @@ class PublicDataUpdate:
             # 如果已经可见，则将其置于前台
             self.dialog_realtime.activateWindow()  # 激活窗口（置于前台）
             self.dialog_realtime.raise_()  # 提升窗口层级
-            
+
     def set_time_interval(self, minutes):
         """设置曲线显示的时间间隔（分钟）"""
         try:
@@ -318,12 +319,12 @@ class PublicDataUpdate:
 
         # 信号连接
         thread.started.connect(worker.run)  # type: ignore[attr-defined]
-        worker.finished.connect(thread.quit)    # type: ignore[attr-defined]
-        worker.finished.connect(worker.deleteLater)# type: ignore[attr-defined]
-        thread.finished.connect(thread.deleteLater)# type: ignore[attr-defined]
+        worker.finished.connect(thread.quit)  # type: ignore[attr-defined]
+        worker.finished.connect(worker.deleteLater)  # type: ignore[attr-defined]
+        thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]
 
         # 连接数据更新信号到处理方法
-        worker.data_ready.connect(self._handle_historical_data)# type: ignore[attr-defined]
+        worker.data_ready.connect(self._handle_historical_data)  # type: ignore[attr-defined]
         # 连接完成信号，清除查询标志
         worker.finished.connect(self._on_query_finished)
 
@@ -351,6 +352,7 @@ class PublicDataUpdate:
             if data:
                 # 更新界面标签（取第一条/唯一一条数据）
                 self._update_ui_labels(table_name, data)
+
 
 # ---------------------------------参数弹窗类（继承QDialog和UI类）---------------------------------
 class ParameterDialog(QDialog, Ui_Dialog_Pop_Parameter, PublicDataUpdate):
@@ -816,8 +818,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         self.center_dialog()  # 初始居中显示
         self.dateTimeEdit.setDateTime(datetime.now())
         # 定义需要查询的数据表列表
-        self.tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj" , "factory1_1_set_data_curve",
-                  "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
+        self.tables = ["factory1_1_realtime_data_jcj", "factory1_1_realtime_data_fjj", "factory1_1_realtime_data_zdj", "factory1_1_set_data_curve",
+                       "factory1_1_set_data_jcj", "factory1_1_set_data_fjj", "factory1_1_set_data_zdj"]
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
         # 连接时间设置输入框的信号
@@ -835,9 +837,9 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_1_set_data_curve",  # 对应的数据库表名
-            params_config = {
+            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name="factory1_1_set_data_curve",  # 对应的数据库表名
+            params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -845,14 +847,14 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
+            colors=CLASS_COLORS1,  # 曲线颜色配置
+            y_limits=(-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_1_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name="factory1_1_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -862,8 +864,8 @@ class HistoricalParameterDialog(QDialog, Ui_Dialog_Pop_Historical_Parameter, Pub
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2,  # 曲线颜色配置
+            y_limits=(0, 200)  # Y轴最大范围200
         )
 
     # 添加新方法：处理数据更新
@@ -939,8 +941,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         self.center_dialog()  # 初始居中显示
         self.dateTimeEdit.setDateTime(datetime.now())
         # 定义需要查询的数据表列表
-        self.tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj" , "factory1_2_set_data_curve",
-                  "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
+        self.tables = ["factory1_2_realtime_data_jcj", "factory1_2_realtime_data_fjj", "factory1_2_realtime_data_zdj", "factory1_2_set_data_curve",
+                       "factory1_2_set_data_jcj", "factory1_2_set_data_fjj", "factory1_2_set_data_zdj"]
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
         # 连接时间设置输入框的信号
@@ -958,9 +960,9 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_2_set_data_curve",  # 对应的数据库表名
-            params_config = {
+            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name="factory1_2_set_data_curve",  # 对应的数据库表名
+            params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -968,14 +970,14 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
+            colors=CLASS_COLORS1,  # 曲线颜色配置
+            y_limits=(-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_2_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name="factory1_2_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -985,8 +987,8 @@ class HistoricalParameterDialogFactory1Device2(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2,  # 曲线颜色配置
+            y_limits=(0, 200)  # Y轴最大范围200
         )
 
     # 添加新方法：处理数据更新
@@ -1063,8 +1065,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         self.center_dialog()  # 初始居中显示
         self.dateTimeEdit.setDateTime(datetime.now())
         # 定义需要查询的数据表列表
-        self.tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj" , "factory1_3_set_data_curve",
-                  "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
+        self.tables = ["factory1_3_realtime_data_jcj", "factory1_3_realtime_data_fjj", "factory1_3_realtime_data_zdj", "factory1_3_set_data_curve",
+                       "factory1_3_set_data_jcj", "factory1_3_set_data_fjj", "factory1_3_set_data_zdj"]
         # 连接查询按钮
         self.pushButton_historical_query.clicked.connect(self.handle_historical_query)
         # 连接时间设置输入框的信号
@@ -1082,9 +1084,9 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
         """初始化历史曲线组件"""
         # 管径历史曲线 (创建历史曲线绘制组件)
         self.hist_curve1 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
-            table_name = "factory1_3_set_data_curve",  # 对应的数据库表名
-            params_config = {
+            parent_widget=self.widget_pop_historical_parameter_curve1,  # 指定父容器控件
+            table_name="factory1_3_set_data_curve",  # 对应的数据库表名
+            params_config={
                 'curve1': 'upper_limit_alarm',
                 'curve2': 'upper_limit_warning',
                 'curve3': 'diameter_difference',
@@ -1092,14 +1094,14 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve5': 'lower_limit_warning',
                 'curve6': 'lower_limit_alarm'
             },
-            colors = CLASS_COLORS1, #曲线颜色配置
-            y_limits = (-1, 1)  # Y轴显示范围
+            colors=CLASS_COLORS1,  # 曲线颜色配置
+            y_limits=(-1, 1)  # Y轴显示范围
         )
 
         # 挤出机历史曲线 (第二组历史曲线)
         self.hist_curve2 = HistoricalCurvePlotter(
-            parent_widget = self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
-            table_name = "factory1_3_realtime_data_jcj",  # 挤出机实时数据表
+            parent_widget=self.widget_pop_historical_parameter_curve2,  # 第二个曲线容器的父控件
+            table_name="factory1_3_realtime_data_jcj",  # 挤出机实时数据表
             params_config={
                 'curve1': 'temperature1',
                 'curve2': 'temperature2',
@@ -1109,8 +1111,8 @@ class HistoricalParameterDialogFactory1Device3(QDialog, Ui_Dialog_Pop_Historical
                 'curve6': 'inverter_current'
             },
             # 参数映射关系
-            colors=CLASS_COLORS2, #曲线颜色配置
-            y_limits = (0, 200)  # Y轴最大范围200
+            colors=CLASS_COLORS2,  # 曲线颜色配置
+            y_limits=(0, 200)  # Y轴最大范围200
         )
 
     # 添加新方法：处理数据更新
@@ -1249,13 +1251,13 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
         worker.moveToThread(thread)
 
         # 信号连接
-        thread.started.connect(worker.run)  #type: ignore[arg-type]# 线程启动时执行run方法
-        worker.finished.connect(thread.quit)  #type: ignore[arg-type]# 工作完成时退出线程
-        worker.finished.connect(worker.deleteLater)  #type: ignore[arg-type]# 工作完成后销毁worker对象
-        thread.finished.connect(thread.deleteLater)  #type: ignore[arg-type]# 线程退出后销毁线程对象
+        thread.started.connect(worker.run)  # type: ignore[arg-type]# 线程启动时执行run方法
+        worker.finished.connect(thread.quit)  # type: ignore[arg-type]# 工作完成时退出线程
+        worker.finished.connect(worker.deleteLater)  # type: ignore[arg-type]# 工作完成后销毁worker对象
+        thread.finished.connect(thread.deleteLater)  # type: ignore[arg-type]# 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_alarm_update)  #type: ignore[arg-type]
+        worker.data_updated.connect(self._handle_alarm_update)  # type: ignore[arg-type]
 
         # 存储线程引用
         self.threads['data_update_alarm'] = (thread, worker)
@@ -1433,7 +1435,6 @@ class AlarmDialog(QDialog, Ui_Dialog_alarm):
 
         print(f"共查询到 {len(all_alarms)} 条历史报警记录")
 
-
     def _stop_threads(self):
         if not hasattr(self, 'threads'):
             return
@@ -1469,11 +1470,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         # 调用父类构造方法
         super().__init__()
-        
+
         # 首先检查授权
         self.license_expired_dialog = None
         self.check_license_at_startup()
-        
+
         # 初始化UI界面
         self.setupUi(self)
         # 设置窗口全屏显示
@@ -1566,8 +1567,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
         # 创建视频显示标签
-        self.video_label = QLabel(self.curve6)
-        self.video_label.setGeometry(0, 0, 740, 490)  # 设置标签大小与curve6容器一致
+        self.video_label = QLabel(self.curve16)
+        self.video_label.setGeometry(0, 0, 930, 490)  # 设置标签大小与curve16容器一致
         self.video_label.setStyleSheet("background-color: black;")
         self.video_label.setAlignment(Qt.AlignCenter)
         self.video_label.setText("正在连接摄像头...")
@@ -1576,6 +1577,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             font-size: 18px;
             background-color: black;
         """)
+        # 性能优化设置
+        self.video_label.setAttribute(Qt.WA_OpaquePaintEvent, True)  # 启用不透明绘制优化
+        self.video_label.setAttribute(Qt.WA_NoSystemBackground, True)  # 禁用系统背景
         self.video_thread = None
         self.rtsp_url = "rtsp://admin:MuBai@monitor01@192.168.1.64:554/Streaming/Channels/101"
 
@@ -1663,7 +1667,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thread.finished.connect(thread.deleteLater)  # type: ignore[attr-defined]# 线程退出后销毁线程对象
 
         # 连接数据更新信号到处理方法
-        worker.data_updated.connect(self._handle_data_update)   # type: ignore[attr-defined]
+        worker.data_updated.connect(self._handle_data_update)  # type: ignore[attr-defined]
 
         # 存储线程引用
         self.threads['data_update'] = (thread, worker)
@@ -1680,9 +1684,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # 创建策略映射字典（与原来相同）
         update_strategies = {
-            "factory1_1_set_data_curve":  self.curve_plotter1.update_plot,
-            "factory1_2_set_data_curve":  self.curve_plotter2.update_plot,
-            "factory1_3_set_data_curve":  self.curve_plotter3.update_plot,
+            "factory1_1_set_data_curve": self.curve_plotter1.update_plot,
+            "factory1_2_set_data_curve": self.curve_plotter2.update_plot,
+            "factory1_3_set_data_curve": self.curve_plotter3.update_plot,
             "factory1_1_production_data": self._update_curve1_realtime,
             "factory1_2_production_data": self._update_curve2_realtime,
             "factory1_3_production_data": self._update_curve3_realtime
@@ -1692,9 +1696,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if strategy := update_strategies.get(table_name):
             if isinstance(strategy, list):  # 处理多个方法的情况。isinstance() 是 Python 的一个内置函数，用于检查一个对象是否属于指定的类型（或类型的元组）。在你的代码中，它被用来判断 strategy 是否是一个列表(list)。
                 for method in strategy:
-                    method(data)    # type: ignore[attr-defined]
+                    method(data)  # type: ignore[attr-defined]
             else:
                 strategy(data)  # type: ignore[attr-defined]
+
     # 分解原有的大更新方法为多个私有方法
 
     # 分解原有的大更新方法为多个私有方法
@@ -1780,7 +1785,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 关闭报警弹窗（先停止线程再关闭）
         if hasattr(self, 'pop_alarm_dialog'):
             if hasattr(self.pop_alarm_dialog, '_stop_threads'):
-                self.pop_alarm_dialog._stop_threads() # type: ignore[attr-defined]
+                self.pop_alarm_dialog._stop_threads()  # type: ignore[attr-defined]
             self.pop_alarm_dialog.close()
 
         # 关闭主窗口
@@ -1864,47 +1869,43 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         event.accept()  # 接受事件，阻止进一步传播
 
     def _start_video_monitor(self):
-        """启动视频监控"""
+        """启动视频监控 - 使用最简化版本"""
         if self.video_thread is None or not self.video_thread.isRunning():
-            self.video_thread = VideoThread(self.rtsp_url)
+            self.video_thread = MinimalVideoThread(self.rtsp_url)
             self.video_thread.changePixmap.connect(self.set_video_image)
             self.video_thread.connectionLost.connect(self.on_video_connection_lost)
-            self.video_thread.connectionRestored.connect(self.on_video_connection_restored)
             self.video_thread.start()
             print("视频监控线程已启动")
 
     def set_video_image(self, image):
-        """设置视频图像显示"""
+        """设置视频图像显示 - 最简化处理"""
         if hasattr(self, 'video_label'):
-            pixmap = QPixmap.fromImage(image)
-            self.video_label.setPixmap(pixmap)
-            self.video_label.setScaledContents(True)  # 自动缩放图像以适应标签大小
+            self.video_label.setPixmap(QPixmap.fromImage(image))
 
     def on_video_connection_lost(self):
-        """视频连接丢失处理"""
-        print("视频连接已断开")
+        """简单的连接丢失处理"""
+        print("视频连接断开，触发重连...")
+        # 简单的状态提示
         if hasattr(self, 'video_label'):
-            self.video_label.setText("连接已断开，正在重连...")
-            self.video_label.setStyleSheet("""
-                color: red;
-                font-size: 18px;
-                background-color: black;
-            """)
-
-    def on_video_connection_restored(self):
-        """视频连接恢复处理"""
-        print("视频连接已恢复")
-        if hasattr(self, 'video_label'):
-            self.video_label.setText("")  # 清空文本，让视频图像显示
-            self.video_label.setStyleSheet("""
-                background-color: black;
-            """)
+            self.video_label.setText("🔄 正在重连...")
 
     def stop_video_monitor(self):
         """停止视频监控"""
         if self.video_thread and self.video_thread.isRunning():
-            self.video_thread.stop()
-            self.video_thread.wait()
+            print("正在强制停止视频监控线程...")
+            # 强制终止线程
+            self.video_thread.running = False
+            self.video_thread.connected = False
+
+            # 给线程一小段时间来自然退出
+            self.video_thread.wait(1000)
+
+            # 如果线程还没有退出，强制终止
+            if self.video_thread.isRunning():
+                print("视频线程未响应，强制终止...")
+                self.video_thread.terminate()
+                self.video_thread.wait(2000)  # 等待终止完成
+
             print("视频监控已停止")
 
     # 重写关闭事件，确保线程正确停止
@@ -1937,7 +1938,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.pop_dialog_factory1_2.close()
             if hasattr(self, 'pop_dialog_factory1_3'):
                 self.pop_dialog_factory1_3.close()
-    
+
             # 关闭所有历史参数弹窗
             if hasattr(self, 'dialog_historical'):
                 self.dialog_historical.close()
@@ -1945,13 +1946,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.dialog_historical_factory1_2.close()
             if hasattr(self, 'dialog_historical_factory1_3'):
                 self.dialog_historical_factory1_3.close()
-    
+
             # 关闭报警弹窗
             if hasattr(self, 'pop_alarm_dialog'):
                 self.pop_alarm_dialog.close()
-    
+
             # 调用父类的关闭事件处理
             super().closeEvent(event)
+
 
 # ---------------------------------数据更新工作线程类---------------------------------
 class DataUpdateWorker(QObject):
@@ -1986,7 +1988,7 @@ class DataUpdateWorker(QObject):
                     data = self.data_manager.get_realtime_data(table_name)
                     if data:  # 确保数据有效
                         # 发送信号，将表名和数据传递给主线程
-                        self.data_updated.emit(table_name, data)    # type: ignore[attr-defined]
+                        self.data_updated.emit(table_name, data)  # type: ignore[attr-defined]
                     # 更新本地版本号
                     self.data_versions[table_name] = current_versions[table_name]
 
@@ -1996,7 +1998,8 @@ class DataUpdateWorker(QObject):
     def stop(self):
         """停止线程运行"""
         self.running = False
-        self.finished.emit()    # type: ignore[attr-defined]
+        self.finished.emit()  # type: ignore[attr-defined]
+
 
 # ---------------------------------数据库异步，工作线程类---------------------------------
 class InsertWorker(QObject):
@@ -2274,83 +2277,77 @@ class AlarmHistoryQueryWorker(QObject, PublicDataUpdate):
             self.finished.emit()  # type: ignore[attr-defined]
 
 
-# ---------------------------------视频监控线程类---------------------------------
-class VideoThread(QThread):
-    """视频监控线程类，负责从RTSP流获取视频帧"""
-    changePixmap = pyqtSignal(QImage)  # 发送图像信号
-    connectionLost = pyqtSignal()  # 连接丢失信号
-    connectionRestored = pyqtSignal()  # 连接恢复信号
+# ---------------------------------最简化的视频监控线程类---------------------------------
+class MinimalVideoThread(QThread):
+    """最简化的视频监控线程类 - 基于monitor.py的成功模式"""
+    changePixmap = pyqtSignal(QImage)
+    connectionLost = pyqtSignal()  # 简单的断连信号
 
     def __init__(self, rtsp_url, parent=None):
         super().__init__(parent)
         self.rtsp_url = rtsp_url
         self.running = True
-        self.connected = False
-        self.reconnect_delay = 5000  # 重连延迟5秒
+        self.reconnect_delay = 2000  # 2秒重连间隔
 
     def run(self):
-        """线程主运行方法"""
+        """最简化的运行方法 - 直接复制monitor.py的核心逻辑"""
         while self.running:
-            cap = None
-            try:
-                # 尝试连接摄像头
-                cap = cv2.VideoCapture(self.rtsp_url)
-                if not cap.isOpened():
-                    raise Exception("无法打开视频流")
+            if not self.running:
+                break
 
-                self.connected = True
-                self.connectionRestored.emit()
+            # 直接连接，不加复杂参数
+            cap = cv2.VideoCapture(self.rtsp_url)
+
+            if cap.isOpened():
                 print(f"视频连接已建立: {self.rtsp_url}")
+                consecutive_failures = 0
 
-                # 设置缓冲区大小以减少延迟
-                cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+                # 最简单的帧处理循环
+                while self.running:
+                    if not self.running:
+                        break
 
-                while self.running and self.connected:
                     ret, frame = cap.read()
                     if ret:
-                        # 转换颜色格式
+                        consecutive_failures = 0
+                        # 最基础的图像转换
                         rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                         h, w, ch = rgb_image.shape
                         bytes_per_line = ch * w
-
-                        # 转换为QImage
                         convert_to_qt_format = QImage(
                             rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888
                         )
-
-                        # 缩放到适合显示的大小
-                        p = convert_to_qt_format.scaled(740, 490, Qt.KeepAspectRatio)
+                        p = convert_to_qt_format.scaled(930, 490, Qt.IgnoreAspectRatio)
                         self.changePixmap.emit(p)
-
-                        # 控制帧率，避免过度占用CPU
-                        QThread.msleep(30)  # 约33fps
                     else:
-                        # 读取失败，可能是连接断开
-                        print("视频流读取失败，尝试重连...")
-                        self.connected = False
-                        self.connectionLost.emit()
-                        break
+                        consecutive_failures += 1
+                        print(f"读取失败 ({consecutive_failures}次)")
 
-            except Exception as e:
-                print(f"视频连接异常: {str(e)}")
-                self.connected = False
+                        # 快速检测断连 - 只要连续2次失败就重连
+                        if consecutive_failures >= 2:
+                            print("检测到连接断开")
+                            self.connectionLost.emit()
+                            break
+
+                        # 短暂等待
+                        QThread.msleep(50)
+            else:
+                print("初始连接失败")
                 self.connectionLost.emit()
 
-            finally:
-                if cap:
-                    cap.release()
+            # 清理资源
+            try:
+                cap.release()
+            except:
+                pass
 
-            # 如果仍在运行且连接失败，等待后重连
-            if self.running and not self.connected:
-                print(f"等待 {self.reconnect_delay / 1000} 秒后重连...")
+            # 快速重连
+            if self.running:
+                print(f"{self.reconnect_delay / 1000}秒后重连...")
                 QThread.msleep(self.reconnect_delay)
 
     def stop(self):
-        """停止线程"""
         self.running = False
-        self.connected = False
-        self.quit()
-        self.wait()
 
 
 # ---------------------------------程序入口---------------------------------
